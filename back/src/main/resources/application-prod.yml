@@ -5,8 +5,8 @@ spring:
     port: 8125
 
   datasource:
-    url: jdbc:mysql://localhost:3308/template_bdd
-    username: admin
+    url: jdbc:mysql://localhost:3308/mindbloom_bdd
+    username: root
     password: admin
 
   jpa:

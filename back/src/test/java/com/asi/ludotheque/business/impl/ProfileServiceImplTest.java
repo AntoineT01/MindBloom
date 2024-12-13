@@ -1,13 +1,13 @@
-package com.tanguylegoff.templateapp.business.impl;
+package com.tux.mindbloom.business.impl;
 
 
-import com.tanguylegoff.templateapp.api.models.ProfileDto;
-import com.tanguylegoff.templateapp.api.models.ProfileDtoData;
-import com.tanguylegoff.templateapp.business.ProfileService;
-import com.tanguylegoff.templateapp.business.mappers.ProfileMapper;
-import com.tanguylegoff.templateapp.config.exceptions.EntityNotFoundException;
-import com.tanguylegoff.templateapp.dao.db.ProfileRepository;
-import com.tanguylegoff.templateapp.dao.db.entities.ProfileData;
+import com.tux.mindbloom.api.models.ProfileDto;
+import com.tux.mindbloom.api.models.ProfileDtoData;
+import com.tux.mindbloom.business.ProfileService;
+import com.tux.mindbloom.business.mappers.ProfileMapper;
+import com.tux.mindbloom.config.exceptions.EntityNotFoundException;
+import com.tux.mindbloom.dao.db.ProfileRepository;
+import com.tux.mindbloom.dao.db.entities.ProfileData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static com.tanguylegoff.templateapp.config.Constants.Roles.ROLE_NORMAL;
+import static com.tux.mindbloom.config.Constants.Roles.ROLE_NORMAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;

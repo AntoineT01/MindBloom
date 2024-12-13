@@ -1,9 +1,9 @@
-package com.tanguylegoff.templateapp.api;
+package com.tux.mindbloom.api;
 
-import com.tanguylegoff.templateapp.api.models.AccountDto;
-import com.tanguylegoff.templateapp.api.models.AccountDtoData;
-import com.tanguylegoff.templateapp.business.AccountService;
-import com.tanguylegoff.templateapp.util.helper.RestControllerTestHelper;
+import com.tux.mindbloom.api.models.AccountDto;
+import com.tux.mindbloom.api.models.AccountDtoData;
+import com.tux.mindbloom.business.AccountService;
+import com.tux.mindbloom.util.helper.RestControllerTestHelper;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static com.tanguylegoff.templateapp.config.Constants.Api.ACCOUNTS;
+import static com.tux.mindbloom.config.Constants.Api.ACCOUNTS;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;

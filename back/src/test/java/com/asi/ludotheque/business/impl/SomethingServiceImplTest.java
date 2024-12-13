@@ -1,13 +1,13 @@
-package com.tanguylegoff.templateapp.business.impl;
+package com.tux.mindbloom.business.impl;
 
-import com.tanguylegoff.templateapp.api.models.SomethingDto;
-import com.tanguylegoff.templateapp.api.models.SomethingDtoData;
-import com.tanguylegoff.templateapp.business.SomethingService;
-import com.tanguylegoff.templateapp.business.mappers.SomethingMapper;
-import com.tanguylegoff.templateapp.config.exceptions.EntityNotFoundException;
-import com.tanguylegoff.templateapp.dao.db.SomethingRepository;
-import com.tanguylegoff.templateapp.dao.db.entities.Something;
-import com.tanguylegoff.templateapp.dao.db.entities.SomethingData;
+import com.tux.mindbloom.api.models.SomethingDto;
+import com.tux.mindbloom.api.models.SomethingDtoData;
+import com.tux.mindbloom.business.SomethingService;
+import com.tux.mindbloom.business.mappers.SomethingMapper;
+import com.tux.mindbloom.config.exceptions.EntityNotFoundException;
+import com.tux.mindbloom.dao.db.SomethingRepository;
+import com.tux.mindbloom.dao.db.entities.Something;
+import com.tux.mindbloom.dao.db.entities.SomethingData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

@@ -1,9 +1,9 @@
-package com.tanguylegoff.templateapp.api.models;
+package com.tux.mindbloom.api.models;
 
 import java.util.List;
 
-import static com.tanguylegoff.templateapp.config.Constants.Roles.ROLE_ADMINISTRATOR;
-import static com.tanguylegoff.templateapp.config.Constants.Roles.ROLE_NORMAL;
+import static com.tux.mindbloom.config.Constants.Roles.ROLE_ADMINISTRATOR;
+import static com.tux.mindbloom.config.Constants.Roles.ROLE_NORMAL;
 
 public final class ProfileDtoData {
 

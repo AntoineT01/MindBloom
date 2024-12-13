@@ -1,11 +1,11 @@
-package com.tanguylegoff.templateapp.business.impl;
+package com.tux.mindbloom.business.impl;
 
-import com.tanguylegoff.templateapp.api.models.AccountDto;
-import com.tanguylegoff.templateapp.business.AccountRequestService;
-import com.tanguylegoff.templateapp.business.mappers.AccountMapper;
-import com.tanguylegoff.templateapp.dao.db.AccountRepository;
-import com.tanguylegoff.templateapp.dao.db.entities.Account;
-import com.tanguylegoff.templateapp.dao.db.entities.AccountData;
+import com.tux.mindbloom.api.models.AccountDto;
+import com.tux.mindbloom.business.AccountRequestService;
+import com.tux.mindbloom.business.mappers.AccountMapper;
+import com.tux.mindbloom.dao.db.AccountRepository;
+import com.tux.mindbloom.dao.db.entities.Account;
+import com.tux.mindbloom.dao.db.entities.AccountData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

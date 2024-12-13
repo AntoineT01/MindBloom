@@ -8,7 +8,7 @@ services:
     restart: always
     environment:
       TZ: Europe/Paris
-      MYSQL_DATABASE: 'template_bdd'
+      MYSQL_DATABASE: 'mindbloom_bdd'
       # So you don't have to use root, but you can if you like
       MYSQL_USER: 'admin'
       # You can use whatever password you like
@@ -25,20 +25,20 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
 
-#  maildev:
-#    image: maildev/maildev
-#    restart: always
-#    environment:
-#      - TZ=Europe/Paris
-#      - MAILDEV_WEB_PORT=1080
-#      - MAILDEV_SMTP_PORT=1025
-#    logging:
-#      driver: "json-file"
-#      options:
-#        max-size: "1m"
-#    ports:
-#      - "8180:1080"
-#      - "8125:1025"
+  maildev:
+    image: maildev/maildev
+    restart: always
+    environment:
+      - TZ=Europe/Paris
+      - MAILDEV_WEB_PORT=1080
+      - MAILDEV_SMTP_PORT=1025
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+    ports:
+      - "8180:1080"
+      - "8125:1025"
 
 
 volumes:

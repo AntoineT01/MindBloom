@@ -1,4 +1,4 @@
-package com.tanguylegoff.templateapp.api.models;
+package com.tux.mindbloom.api.models;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
-package com.tanguylegoff.templateapp.business.impl;
+package com.tux.mindbloom.business.impl;
 
-import com.tanguylegoff.templateapp.TemplateApplication;
-import com.tanguylegoff.templateapp.business.EmailService;
+import com.tux.mindbloom.TemplateApplication;
+import com.tux.mindbloom.business.EmailService;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.store.FolderException;

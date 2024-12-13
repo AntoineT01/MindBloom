@@ -1,4 +1,4 @@
-package com.tanguylegoff.templateapp.util.helper;
+package com.tux.mindbloom.util.helper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
-import static com.tanguylegoff.templateapp.config.Constants.Roles.ROLE_ADMINISTRATOR;
-import static com.tanguylegoff.templateapp.config.Constants.Roles.ROLE_NORMAL;
+import static com.tux.mindbloom.config.Constants.Roles.ROLE_ADMINISTRATOR;
+import static com.tux.mindbloom.config.Constants.Roles.ROLE_NORMAL;
 
 public abstract class RestControllerTestHelper {
 

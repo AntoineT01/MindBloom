@@ -1,4 +1,4 @@
-package com.tanguylegoff.templateapp.dao.db.entities;
+package com.tux.mindbloom.dao.db.entities;
 
 import java.util.Calendar;
 import java.util.Date;

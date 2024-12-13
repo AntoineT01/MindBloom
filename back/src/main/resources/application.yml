@@ -24,7 +24,7 @@ spring:
       hibernate:
         format_sql: false
         dialect: org.hibernate.dialect.MySQL8Dialect
-        default_schema: template_bdd
+        default_schema: mindbloom_bdd
         generate_statistics: false
         current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
     hibernate:
@@ -34,14 +34,14 @@ spring:
   flyway:
     baseline-on-migrate: true
     enabled: true
-    schemas: template_bdd
-    default-schema: template_bdd
+    schemas: mindbloom_bdd
+    default-schema: mindbloom_bdd
     create-schemas: true
     driver-class-name: com.mysql.cj.jdbc.Driver
     locations:
       - classpath:db/migration
     placeholders:
-      schema: template_bdd
+      schema: mindbloom_bdd
   servlet:
     multipart:
       max-file-size: 16MB
@@ -52,7 +52,7 @@ hibernate:
     batch_size: 100
 
 springdoc:
-  packagesToScan: com.tanguylegoff.templateapp.api
+  packagesToScan: com.tux.mindbloom.api
   pathsToMatch: /**
   swagger-ui:
     tagsSorter: alpha

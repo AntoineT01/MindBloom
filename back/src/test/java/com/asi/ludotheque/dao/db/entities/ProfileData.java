@@ -1,9 +1,9 @@
-package com.tanguylegoff.templateapp.dao.db.entities;
+package com.tux.mindbloom.dao.db.entities;
 
 import java.util.List;
 
-import static com.tanguylegoff.templateapp.config.Constants.Roles.ROLE_ADMINISTRATOR;
-import static com.tanguylegoff.templateapp.config.Constants.Roles.ROLE_NORMAL;
+import static com.tux.mindbloom.config.Constants.Roles.ROLE_ADMINISTRATOR;
+import static com.tux.mindbloom.config.Constants.Roles.ROLE_NORMAL;
 
 public final class ProfileData {
 

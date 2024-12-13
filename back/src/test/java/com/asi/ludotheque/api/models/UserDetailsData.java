@@ -1,4 +1,4 @@
-package com.tanguylegoff.templateapp.api.models;
+package com.tux.mindbloom.api.models;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -7,8 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
-import static com.tanguylegoff.templateapp.config.Constants.Roles.ROLE_ADMINISTRATOR;
-import static com.tanguylegoff.templateapp.config.Constants.Roles.ROLE_NORMAL;
+import static com.tux.mindbloom.config.Constants.Roles.ROLE_ADMINISTRATOR;
+import static com.tux.mindbloom.config.Constants.Roles.ROLE_NORMAL;
 
 public final class UserDetailsData {
   private final static BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();

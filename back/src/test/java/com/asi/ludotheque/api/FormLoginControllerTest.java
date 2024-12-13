@@ -1,9 +1,9 @@
-package com.tanguylegoff.templateapp.api;
+package com.tux.mindbloom.api;
 
-import com.tanguylegoff.templateapp.api.models.FormLoginDto;
-import com.tanguylegoff.templateapp.api.models.FormLoginDtoData;
-import com.tanguylegoff.templateapp.api.models.UserDetailsData;
-import com.tanguylegoff.templateapp.util.helper.RestControllerTestHelper;
+import com.tux.mindbloom.api.models.FormLoginDto;
+import com.tux.mindbloom.api.models.FormLoginDtoData;
+import com.tux.mindbloom.api.models.UserDetailsData;
+import com.tux.mindbloom.util.helper.RestControllerTestHelper;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.tanguylegoff.templateapp.config.Constants.Api.LOGIN;
+import static com.tux.mindbloom.config.Constants.Api.LOGIN;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

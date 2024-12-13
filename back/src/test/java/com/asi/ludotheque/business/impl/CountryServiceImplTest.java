@@ -1,12 +1,12 @@
-package com.tanguylegoff.templateapp.business.impl;
+package com.tux.mindbloom.business.impl;
 
-import com.tanguylegoff.templateapp.api.models.CountryDto;
-import com.tanguylegoff.templateapp.api.models.CountryDtoData;
-import com.tanguylegoff.templateapp.business.CountriesService;
-import com.tanguylegoff.templateapp.business.mappers.CountriesMapper;
-import com.tanguylegoff.templateapp.config.exceptions.EntityNotFoundException;
-import com.tanguylegoff.templateapp.dao.db.entities.Country;
-import com.tanguylegoff.templateapp.dao.db.entities.CountryData;
+import com.tux.mindbloom.api.models.CountryDto;
+import com.tux.mindbloom.api.models.CountryDtoData;
+import com.tux.mindbloom.business.CountriesService;
+import com.tux.mindbloom.business.mappers.CountriesMapper;
+import com.tux.mindbloom.config.exceptions.EntityNotFoundException;
+import com.tux.mindbloom.dao.db.entities.Country;
+import com.tux.mindbloom.dao.db.entities.CountryData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

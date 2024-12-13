@@ -1,10 +1,10 @@
-package com.tanguylegoff.templateapp.api;
+package com.tux.mindbloom.api;
 
-import com.tanguylegoff.templateapp.api.models.CountryDto;
-import com.tanguylegoff.templateapp.api.models.CountryDtoData;
-import com.tanguylegoff.templateapp.business.impl.CountriesServiceImpl;
-import com.tanguylegoff.templateapp.business.mappers.CountriesMapper;
-import com.tanguylegoff.templateapp.util.helper.RestControllerTestHelper;
+import com.tux.mindbloom.api.models.CountryDto;
+import com.tux.mindbloom.api.models.CountryDtoData;
+import com.tux.mindbloom.business.impl.CountriesServiceImpl;
+import com.tux.mindbloom.business.mappers.CountriesMapper;
+import com.tux.mindbloom.util.helper.RestControllerTestHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,8 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.tanguylegoff.templateapp.config.Constants.Api.COUNTRIES;
-import static com.tanguylegoff.templateapp.utils.JacksonPrinter.toJson;
+import static com.tux.mindbloom.config.Constants.Api.COUNTRIES;
+import static com.tux.mindbloom.utils.JacksonPrinter.toJson;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
