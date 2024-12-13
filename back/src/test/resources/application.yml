@@ -1,0 +1,41 @@
+# APP
+info:
+  build:
+    version: test
+
+# SERVER
+server:
+  port: 8081
+
+# DATABASE
+spring:
+  mail:
+    host: 127.0.0.1
+    port: 3025
+    username: ludotheque
+    password: ludotheque
+    protocol: smtp
+    test-connection: false
+
+  profiles:
+    active: test
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:ludotheque;DB_CLOSE_DELAY=-1;MODE=MySQL;NON_KEYWORDS=USER
+    username: admin
+    password: admin
+
+  jpa:
+    properties:
+      hibernate.format_sql: false
+      hibernate.dialect:  org.hibernate.dialect.H2Dialect
+      hibernate:
+        show_sql: true
+  flyway:
+    driver-class-name: org.h2.Driver
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace

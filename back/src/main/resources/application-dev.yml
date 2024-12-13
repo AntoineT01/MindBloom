@@ -1,0 +1,30 @@
+# DATABASE
+spring:
+  mail:
+    host: localhost
+    port: 8125
+
+  datasource:
+    url: jdbc:mysql://localhost:3308/template_bdd
+    username: admin
+    password: admin
+
+  jpa:
+    show-sql: false
+    properties:
+      hibernate.format_sql: false
+      hibernate:
+        show_sql: false
+  flyway:
+    locations:
+      - classpath:db/migration
+      - classpath:db/data
+
+app:
+  base-url: http://localhost:5173
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace

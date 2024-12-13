@@ -1,0 +1,60 @@
+# APP
+info:
+  build:
+    version: ${version}
+
+# SERVER
+server:
+  port: 8081
+# DATABASE
+spring:
+  mail:
+    host: localhost
+    port: 8125
+
+  profiles:
+    active: dev
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        default_schema: template_bdd
+        generate_statistics: false
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+    hibernate:
+      ddl-auto: validate
+  jackson:
+    default-property-inclusion: non_null
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    schemas: template_bdd
+    default-schema: template_bdd
+    create-schemas: true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    locations:
+      - classpath:db/migration
+    placeholders:
+      schema: template_bdd
+  servlet:
+    multipart:
+      max-file-size: 16MB
+      max-request-size: 16MB
+
+hibernate:
+  jdbc:
+    batch_size: 100
+
+springdoc:
+  packagesToScan: com.tanguylegoff.templateapp.api
+  pathsToMatch: /**
+  swagger-ui:
+    tagsSorter: alpha
+    operationsSorter: method
+
