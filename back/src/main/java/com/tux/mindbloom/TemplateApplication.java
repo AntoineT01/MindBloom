@@ -1,5 +1,6 @@
 package com.tux.mindbloom;
 
+import com.tux.mindbloom.config.env.EnvConfig;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -29,6 +30,8 @@ public class TemplateApplication {
   public static void main(String[] args) {
     // Force TZ before @PostConstruct, it's useful sometimes
     TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
+    EnvConfig envConfig = new EnvConfig();
+    envConfig.loadEnv();
     SpringApplication.run(TemplateApplication.class, args);
     log.info("Swagger on http://localhost:8081/swagger-ui.html");
   }

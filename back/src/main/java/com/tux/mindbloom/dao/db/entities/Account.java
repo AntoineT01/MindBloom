@@ -1,4 +1,6 @@
 package com.tux.mindbloom.dao.db.entities;
+// TODO: Corriger le lancement du jar avec dockerfile pour la co avec la bdd de prod
+// TODO: Mettre le tout en V8 pour mysql
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

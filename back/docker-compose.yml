@@ -4,7 +4,7 @@ services:
     build:
       context: docker/timezoned-mysql
       args:
-        MYSQL_VERSION: latest
+        MYSQL_VERSION: 9
     restart: always
     environment:
       TZ: Europe/Paris
