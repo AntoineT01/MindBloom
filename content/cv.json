@@ -1,0 +1,47 @@
+{
+  "title": "Mon CV",
+  "name": "Antoine THOMAS",
+  "profession": "Développeur Junior",
+  "summary": "Actuellement en alternance chez CGI, je suis passionné par le développement web et logiciel.",
+ "skills": [
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "Node.js",
+    "Vue.js",
+    "Nuxt.js",
+    "SQL",
+    "MongoDB",
+    "Java",
+    "C",
+   "Git"
+ ],
+  "experience": [
+    {
+        "title": "Développeur logiciel en stage",
+        "company": "CGI",
+        "period": "avril à août 2024",
+        "description": "Développement d'un site web statique pour la gestion de projet en interne. Mise en place d'une gestion d'expiration de mot de passe."
+        },
+        {
+        "title": "Developpeur logiciel en alternance",
+        "company": "CGI",
+        "period": "depuis septembre 2024",
+        "description": "Développement logiciel"
+    }
+  ],
+  "education": [
+    {
+      "degree": "Master Informatique TIIL-A ",
+      "subject": "Technologies de l'information et ingénierie du logiciel par alternance",
+      "school": "Université de Bretagne Occidentale - UBO",
+      "period": "2023-2025"
+    },
+    {
+      "degree": "Licence Informatique",
+      "subject": "Informatique",
+      "school": "Université de Bretagne Occidentale - UBO",
+      "period": "2020-2023"
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "PARTIES_NORMALES": {
+    "coeur": {
+      "description": "Le cœur est un organe essentiel qui agit comme une pompe pour faire circuler le sang dans tout le corps. Il transporte l'oxygène, les nutriments, et les déchets métaboliques. En parallèle, les courants océaniques jouent un rôle similaire pour répartir la chaleur, les nutriments, et les gaz dissous à travers le globe, garantissant un équilibre écologique.",
+      "titre": "Le cœur",
+      "src": "/assets/human_body/sketch_coeur.png",
+      "position": { "top": "39%", "left": "60%" },
+      "size": "10%",
+      "zIndex": 10,
+      "info_complementaire": [
+        {
+          "titre": "Être humain",
+          "contenu": "Le sang circule dans le corps via le système cardiovasculaire, transportant l’oxygène, les nutriments, et les déchets."
+        },
+        {
+          "titre": "Océan",
+          "contenu": "Les courants marins agissent comme un système circulatoire, transportant la chaleur, les nutriments, et les gaz dissous à travers le globe."
+        }
+      ]
+    },
+    "poumon": {
+      "description": "Les poumons jouent un rôle vital dans l'échange gazeux, absorbant l'oxygène et éliminant le dioxyde de carbone. De manière parallèle, les océans sont également impliqués dans les échanges gazeux, fournissant une grande partie de l'oxygène nécessaire à la vie sur Terre.",
+      "titre": "Les poumons",
+      "src": "/assets/human_body/sketch_poumons.png",
+      "position": { "top": "37%", "left": "57%" },
+      "size": "30%",
+      "zIndex": 1,
+      "info_complementaire": [
+        {
+          "titre": "Être humain",
+          "contenu": "Les poumons assurent les échanges d'oxygène et de dioxyde de carbone, essentiels au maintien des fonctions vitales."
+        },
+        {
+          "titre": "Océan",
+          "contenu": "L’oxygène est utilisé par les organismes marins pour respirer et le phytoplancton produit environ 50 % de l'oxygène sur Terre. Les océans respirent donc en quelque sorte grâce au phytoplancton, et aux échanges gazeux à la surface de l’eau."
+        }
+      ]
+    },
+    "epiderme/peau": {
+      "description": "La peau humaine est une barrière protectrice qui régule la température corporelle et l'équilibre hydrique. L'océan, tout comme la peau, joue un rôle vital en régulant le climat global et en équilibrant les cycles chimiques.",
+      "titre": "La peau",
+      "src": "/assets/human_body/sketch_peau.png",
+      "position": { "top": "42%", "left": "25%" },
+      "size": "13%",
+      "zIndex": 1,
+      "info_complementaire": [
+        {
+          "titre": "Être humain",
+          "contenu": "Le corps humain maintient son équilibre interne grâce à l'homéostasie. Par exemple, la température corporelle, le pH sanguin, et l'équilibre hydrique sont régulés en permanence."
+        },
+        {
+          "titre": "Océan",
+          "contenu": "L'océan régule le climat global en absorbant et redistribuant la chaleur, en régulant le cycle du carbone, et en maintenant l'équilibre chimique de ses eaux."
+        }
+      ]
+    },
+    "jambe": {
+      "description": "Les jambes permettent la mobilité et jouent un rôle clé dans l'équilibre du corps. La composition chimique du plasma humain est comparable à celle de l’eau de mer, soulignant des connexions évolutives fascinantes entre les organismes et leur environnement marin.",
+      "titre": "Les jambes",
+      "src": "/assets/human_body/sketch_os.webp",
+      "position": { "top": "80%", "left": "78%" },
+      "size": "13%",
+      "zIndex": 1,
+      "info_complementaire": [
+        {
+          "titre": "Être humain",
+          "contenu": "Le corps humain est composé d’environ 60 % d’eau salée. La composition ionique du plasma sanguin est similaire à celle de l’eau de mer (notamment en sodium et en chlorure)."
+        },
+        {
+          "titre": "Océan",
+          "contenu": "L'eau de mer contient des sels et des minéraux en proportions proches de celles trouvées dans les fluides corporels."
+        }
+      ]
+    },
+    "sueur": {
+      "description": "La sueur est essentielle pour réguler la température corporelle grâce à l'évaporation. À l'échelle planétaire, l'océan agit de manière similaire en absorbant la chaleur et en la redistribuant pour équilibrer le climat global.",
+      "titre": "La sueur",
+      "src": "/assets/human_body/sketch_sueur.webp",
+      "position": { "top": "45%", "left": "82%" },
+      "size": "13%",
+      "zIndex": 1,
+      "info_complementaire": [
+        {
+          "titre": "Être humain",
+          "contenu": "La sueur aide à évacuer la chaleur corporelle, en régulant la température via l'évaporation à la surface de la peau."
+        },
+        {
+          "titre": "Océan",
+          "contenu": "Les océans absorbent la majeure partie de la chaleur excédentaire générée par le réchauffement climatique, redistribuant cette énergie pour maintenir un équilibre thermique global."
+        }
+      ]
+    },
+    "systeme_digestif": {
+      "description": "Le système digestif humain est un réseau complexe d'organes travaillant ensemble pour transformer les aliments en énergie et en nutriments. De manière similaire, les écosystèmes marins agissent comme des réseaux interdépendants où chaque composant joue un rôle crucial dans le maintien de l'équilibre écologique.",
+      "titre": "Le système digestif",
+      "src": "/assets/human_body/sketch_systeme_digestif.png",
+      "position": { "top": "51%", "left": "58%" },
+      "size": "13%",
+      "zIndex": 1,
+      "info_complementaire": [
+        {
+          "titre": "Être humain",
+          "contenu": "Le système digestif décompose les aliments en éléments nutritifs essentiels, absorbés par le corps pour fournir énergie et maintenir les fonctions vitales."
+        },
+        {
+          "titre": "Océan",
+          "contenu": "Les écosystèmes marins, à travers des interactions comme la prédation, la décomposition et la symbiose, transforment l'énergie solaire et chimique pour soutenir la vie océanique."
+        }
+      ]
+    },
+    "cerveau": {
+      "description": "Le cerveau régule les fonctions vitales et les rythmes biologiques, tels que le cycle circadien. Dans les océans, les marées suivent également des rythmes réguliers, influençant les écosystèmes marins et côtiers.",
+      "titre": "Le cerveau",
+      "src": "/assets/human_body/sketch_systeme_nerveux_central.png",
+      "position": { "top": "27%", "left": "61%" },
+      "size": "17%",
+      "zIndex": 1,
+      "info_complementaire": [
+        {
+          "titre": "Être humain",
+          "contenu": "Les rythmes biologiques (comme le cycle circadien) régulent le sommeil, l'activité, et les fonctions métaboliques."
+        },
+        {
+          "titre": "Océan",
+          "contenu": "Les marées, influencées par la gravité lunaire, suivent des cycles réguliers qui rythment la vie marine et côtière."
+        }
+      ]
+    }
+  }
+}
