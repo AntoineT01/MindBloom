@@ -33,13 +33,13 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'NDI 2024', // Ceci sera le titre par défaut
+      title: 'MindBloom', // Ceci sera le titre par défaut
       titleTemplate: '%s - TUX', // Ceci permet d'ajouter un suffixe à chaque titre de page
       meta: [
         { name: 'description', content: 'NDI - 2024 - TUX' }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon3.ico' }
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }
       ],
       script: [
         {
