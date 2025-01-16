@@ -1,6 +1,6 @@
 package com.tux.mindbloom.api;
 
-import com.tux.mindbloom.api.models.ProfileDto;
+import com.tux.mindbloom.api.models.QuizDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
-import static com.tux.mindbloom.config.Constants.Api.PROFILES;
+import static com.tux.mindbloom.config.Constants.Api.QUIZ;
 
 /**
- * Endpoints for profiles
+ * Endpoints for quiz
  */
 @Tag(name = "Quiz")
-@RequestMapping(path = PROFILES)
+@RequestMapping(path = QUIZ)
 public interface QuizController {
 
   /**
