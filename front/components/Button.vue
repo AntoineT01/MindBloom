@@ -1,17 +1,23 @@
 <template>
   <div
       :class="[
-      'rounded-[90px] h-[50px] w-[200px] relative cursor-pointer',
+      'rounded-[90px] relative cursor-pointer',
+      className,
       buttonStyles[currentState],
-      className
+      isGoButton ? 'h-[45px] w-[45px]' : 'h-[50px] w-[200px]'
     ]"
       @mouseenter="handleMouseEnter"
       @mouseleave="handleMouseLeave"
       @mousedown="handleMouseDown"
       @mouseup="handleMouseUp"
   >
-    <div class="font-['Orbitron-Regular'] text-base absolute left-0 w-[200px] text-center top-[14px]"
-         :class="textStyles[currentState]">
+    <div
+        class="font-['Orbitron-Regular'] text-base absolute text-center"
+        :class="[
+        textStyles[currentState],
+        isGoButton ? 'w-[45px] top-[12px]' : 'w-[200px] top-[14px] left-0'
+      ]"
+    >
       <template v-if="['link-2', 'link2-click', 'link2-hover'].includes(currentState)">
         Se connecter
       </template>
@@ -23,6 +29,9 @@
       </template>
       <template v-if="['validation-click', 'validation-hover', 'validation'].includes(currentState)">
         Valider
+      </template>
+      <template v-if="['go', 'go-hover', 'go-click'].includes(currentState)">
+        GO
       </template>
     </div>
   </div>
@@ -48,6 +57,9 @@ const props = defineProps({
       "link2-click",
       "link-2",
       "validation-click",
+      "go",
+      "go-hover",
+      "go-click"
     ].includes(value),
   },
   className: {
@@ -59,7 +71,10 @@ const props = defineProps({
 const isHovered = ref(false)
 const isClicked = ref(false)
 
-// Calcule l'état actuel du bouton en fonction des interactions
+const isGoButton = computed(() => {
+  return ['go', 'go-hover', 'go-click'].includes(props.property1)
+})
+
 const currentState = computed(() => {
   if (isClicked.value) {
     switch (props.property1) {
@@ -67,6 +82,7 @@ const currentState = computed(() => {
       case 'link-2': return 'link2-click'
       case 'delete': return 'delete-click'
       case 'validation': return 'validation-click'
+      case 'go': return 'go-click'
       default: return props.property1
     }
   }
@@ -76,13 +92,13 @@ const currentState = computed(() => {
       case 'link-2': return 'link2-hover'
       case 'delete': return 'delete-hover'
       case 'validation': return 'validation-hover'
+      case 'go': return 'go-hover'
       default: return props.property1
     }
   }
   return props.property1
 })
 
-// Gestionnaires d'événements
 const handleMouseEnter = () => {
   isHovered.value = true
 }
@@ -100,8 +116,8 @@ const handleMouseUp = () => {
   isClicked.value = false
 }
 
-// Styles des boutons selon leur état
 const buttonStyles = {
+  // Styles existants
   'link2-click': 'bg-faux-blanc shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25)]',
   'validation': 'bg-vert shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
   'validation-hover': 'bg-faux-blanc shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
@@ -114,10 +130,13 @@ const buttonStyles = {
   'link2-hover': 'bg-faux-blanc shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
   'link1-click': 'bg-faux-blanc shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25)]',
   'link1-hover': 'bg-faux-blanc shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
+  'go': 'bg-violet-ple shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
+  'go-hover': 'bg-faux-blanc shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
+  'go-click': 'bg-faux-blanc shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25)]',
 }
 
-// Styles du texte selon l'état du bouton
 const textStyles = {
+  // Styles existants
   'link2-click': 'text-violet-fonc',
   'validation': 'text-faux-blanc',
   'validation-hover': 'text-vert',
@@ -130,5 +149,8 @@ const textStyles = {
   'link2-hover': 'text-violet-fonc',
   'link1-click': 'text-violet-clair',
   'link1-hover': 'text-violet-clair',
+  'go': 'text-violet-fonc',
+  'go-hover': 'text-violet-clair',
+  'go-click': 'text-violet-clair',
 }
 </script>

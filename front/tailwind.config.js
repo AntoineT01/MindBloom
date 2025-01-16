@@ -5,7 +5,8 @@ module.exports = {
         extend: {
             colors: {
                 // Couleurs de base pour les boutons
-                'faux-blanc': '#FFFFFF',
+                'faux-blanc': '#F4F4F4',
+                'blanc': '#FFFFFF',
                 'vert': '#8BC34A',
                 'violet': {
                     'ple': '#E1BEE7',    // violet pâle (pour link-2)
