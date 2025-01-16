@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS media (
 CREATE TABLE IF NOT EXISTS user_activity_log (
     id INT AUTO_INCREMENT PRIMARY KEY,
     -- Si account.id est INT UNSIGNED, faire pareil ici
-    account_id INT UNSIGNED NOT NULL,
+    account_id BIGINT NOT NULL,
     action VARCHAR(255) NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_user_activity_log_account
@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS participants (
     id INT AUTO_INCREMENT PRIMARY KEY,
     session_id INT NOT NULL,
     -- Si account.id est INT UNSIGNED, faire pareil ici
-    account_id INT UNSIGNED NOT NULL,
+    account_id BIGINT NOT NULL,
     nickname VARCHAR(255) NOT NULL,
     joined_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_participants_session
@@ -234,7 +234,7 @@ CREATE TABLE IF NOT EXISTS leaderboard (
 -- 16) Table 'account_trophies'
 CREATE TABLE IF NOT EXISTS account_trophies (
     -- Si account.id est INT UNSIGNED, faire pareil ici
-    account_id INT UNSIGNED NOT NULL,
+    account_id BIGINT NOT NULL,
     trophy_id INT NOT NULL,
     earned_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (account_id, trophy_id),
@@ -253,7 +253,7 @@ CREATE TABLE IF NOT EXISTS account_trophies (
 -- 17) Table 'account_badges'
 CREATE TABLE IF NOT EXISTS account_badges (
     -- Si account.id est INT UNSIGNED, faire pareil ici
-    account_id INT UNSIGNED NOT NULL,
+    account_id BIGINT NOT NULL,
     badge_id INT NOT NULL,
     awarded_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (account_id, badge_id),
