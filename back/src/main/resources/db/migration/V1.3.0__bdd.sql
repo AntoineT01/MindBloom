@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS quiz (
     title VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
     -- IMPORTANT : on suppose que account.id est INT UNSIGNED
-    creator_id INT UNSIGNED NOT NULL,
+    creator_id BIGINT NOT NULL,
     is_public BOOLEAN NOT NULL DEFAULT FALSE,
     show_answers BOOLEAN NOT NULL DEFAULT FALSE,
     show_final_score BOOLEAN NOT NULL DEFAULT TRUE,
@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS quiz (
         REFERENCES account(id)
         ON UPDATE CASCADE
         ON DELETE RESTRICT
+
 ) COMMENT = 'Table principale des quiz';
 
 -- 6) Table 'quiz_statistics'
