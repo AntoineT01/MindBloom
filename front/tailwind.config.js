@@ -12,6 +12,16 @@ module.exports = {
                     'clair': '#9C27B0',  // violet clair (pour link-1)
                     'fonc': '#4A154B'    // violet foncé (pour delete)
                 },
+                'Rouge':{
+                    'dark': '#740938',
+                    'light': '#CC2B52',
+                    'normal': '#AF1740'
+                },
+                'Or' : '#FFD700',
+                'Bronze' : '#CE8946',
+                'Argent' : '#C0C0C0',
+                'Pink' : '#DE7C7D',
+
 
                 // Couleurs thème originales conservées
                 primary: {
