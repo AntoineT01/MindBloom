@@ -4,7 +4,7 @@
     <div class="container mx-auto px-4">
       <div class="flex justify-between items-center py-4">
         <NuxtLink to="/" class="text-2xl font-bold text-secondary-light dark:text-secondary-dark hover:text-accent-1-light dark:hover:text-accent-1-dark transition-colors">
-          Mon Portfolio
+          MindBloom
         </NuxtLink>
         <div class="flex items-center space-x-6">
           <NuxtLink
@@ -31,9 +31,8 @@ import ThemeToggle from './ThemeToggle.vue'
 const route = useRoute()
 
 const navItems = [
-  { name: 'Accueil', path: '/' },
-  { name: 'CV', path: '/cv' },
-
+  { name: 'S \'inscrire', path: 'inscription' },
+  { name: 'Se connecter', path: 'connexion' },
 ]
 
 const isActive = (path: string) => {
