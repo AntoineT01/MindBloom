@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import Button from './Button.vue'
+import Button from '@/components/Button.vue'
 
 const props = defineProps({
   type: {
