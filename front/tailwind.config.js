@@ -1,11 +1,29 @@
-const colors = require('tailwindcss/colors')
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: 'class',
     theme: {
         extend: {
             colors: {
+                // Couleurs de base pour les boutons
+                'faux-blanc': '#FFFFFF',
+                'vert': '#8BC34A',
+                'violet': {
+                    'ple': '#E1BEE7',    // violet pâle (pour link-2)
+                    'clair': '#9C27B0',  // violet clair (pour link-1)
+                    'fonc': '#4A154B'    // violet foncé (pour delete)
+                },
+                'Rouge':{
+                    'dark': '#740938',
+                    'light': '#CC2B52',
+                    'normal': '#AF1740'
+                },
+                'Or' : '#FFD700',
+                'Bronze' : '#CE8946',
+                'Argent' : '#C0C0C0',
+                'Pink' : '#DE7C7D',
+
+
+                // Couleurs thème originales conservées
                 primary: {
                     50: '#fdf2f4',
                     100: '#fce7eb',
@@ -14,7 +32,7 @@ module.exports = {
                     400: '#ea7d94',
                     500: '#de536f',
                     600: '#cc3352',
-                    700: '#903749', // Couleur de base
+                    700: '#903749',
                     800: '#7a2f3e',
                     900: '#672c37',
                 },
@@ -48,34 +66,29 @@ module.exports = {
     plugins: [
         function({ addComponents, theme }) {
             addComponents({
-                '.btn': {
-                    padding: '.5rem 1rem',
-                    borderRadius: '.25rem',
-                    fontWeight: '600',
-                    transition: 'background-color 0.3s ease',
+                // Styles de base pour tous les boutons
+                '.button': {
+                    borderRadius: '90px',
+                    height: '50px',
+                    position: 'relative',
+                    width: '200px',
                 },
-                '.btn-primary': {
-                    backgroundColor: theme('colors.secondary.DEFAULT'),
-                    color: theme('colors.text.dark'),
-                    '&:hover': {
-                        backgroundColor: theme('colors.secondary.dark'),
-                    },
+                // Styles pour le texte des boutons
+                '.button-text': {
+                    fontFamily: 'Orbitron-Regular, Helvetica',
+                    fontSize: '16px',
+                    fontWeight: '400',
+                    letterSpacing: '0',
+                    lineHeight: 'normal',
+                    textAlign: 'center',
+                    width: '100%',
                 },
-                '.btn-secondary': {
-                    backgroundColor: theme('colors.accent.1.DEFAULT'),
-                    color: theme('colors.text.dark'),
-                    '&:hover': {
-                        backgroundColor: theme('colors.accent.1.dark'),
-                    },
+                // Ombres
+                '.button-shadow': {
+                    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                 },
-                // Ajout de classes pour le thème
-                '.theme-light': {
-                    backgroundColor: theme('colors.background.light'),
-                    color: theme('colors.text.light'),
-                },
-                '.theme-dark': {
-                    backgroundColor: theme('colors.background.dark'),
-                    color: theme('colors.text.dark'),
+                '.button-shadow-inset': {
+                    boxShadow: 'inset 0px 4px 4px rgba(0, 0, 0, 0.25)',
                 },
             })
         }
