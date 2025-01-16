@@ -1,6 +1,6 @@
 -- 1) Table 'badge'
 CREATE TABLE IF NOT EXISTS badge (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     text VARCHAR(255) NOT NULL,
     image LONGBLOB NULL
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS badge (
 
 -- 2) Table 'trophies'
 CREATE TABLE IF NOT EXISTS trophies (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     image VARCHAR(255) NOT NULL,
@@ -17,17 +17,16 @@ CREATE TABLE IF NOT EXISTS trophies (
 
 -- 4) Table 'categorie'
 CREATE TABLE IF NOT EXISTS categorie (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT
 ) COMMENT = 'Table listant les catégories possibles pour les quiz';
 
 -- 5) Table 'quiz'
 CREATE TABLE IF NOT EXISTS quiz (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
-    -- IMPORTANT : on suppose que account.id est INT UNSIGNED
     creator_id BIGINT NOT NULL,
     is_public BOOLEAN NOT NULL DEFAULT FALSE,
     show_answers BOOLEAN NOT NULL DEFAULT FALSE,
@@ -35,7 +34,7 @@ CREATE TABLE IF NOT EXISTS quiz (
     time_limit INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    status ENUM('active', 'inactive', 'deleted') NOT NULL DEFAULT 'active',
+    status ENUM('ACTIVE', 'INACTIVE', 'DELETED') NOT NULL DEFAULT 'ACTIVE',
     share_code VARCHAR(255) NOT NULL,
     CONSTRAINT uq_quiz_share_code UNIQUE (share_code),
     CONSTRAINT fk_quiz_account
@@ -48,8 +47,8 @@ CREATE TABLE IF NOT EXISTS quiz (
 
 -- 6) Table 'quiz_statistics'
 CREATE TABLE IF NOT EXISTS quiz_statistics (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    quiz_id INT NOT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    quiz_id BIGINT NOT NULL,
     total_participants INT NOT NULL DEFAULT 0,
     average_score DECIMAL(5,2) NOT NULL DEFAULT 0.00,
     average_time_per_question DECIMAL(5,2) NOT NULL DEFAULT 0.00,
@@ -62,8 +61,8 @@ CREATE TABLE IF NOT EXISTS quiz_statistics (
 
 -- 7) Table 'quiz_session'
 CREATE TABLE IF NOT EXISTS quiz_session (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    quiz_id INT NOT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    quiz_id BIGINT NOT NULL,
     session_mode VARCHAR(50) NOT NULL,
     status VARCHAR(50) NOT NULL,
     start_time TIMESTAMP NULL,
@@ -79,8 +78,8 @@ CREATE TABLE IF NOT EXISTS quiz_session (
 
 -- 8) Table 'question'
 CREATE TABLE IF NOT EXISTS question (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    quiz_id INT NOT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    quiz_id BIGINT NOT NULL,
     content TEXT NOT NULL,
     type VARCHAR(50) NOT NULL,
     points INT NOT NULL DEFAULT 0,
@@ -102,8 +101,8 @@ CREATE TABLE IF NOT EXISTS question (
 
 -- 9) Table 'answer'
 CREATE TABLE IF NOT EXISTS answer (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    question_id INT NOT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    question_id BIGINT NOT NULL,
     content TEXT NOT NULL,
     type VARCHAR(50) NOT NULL,
     is_correct BOOLEAN NOT NULL DEFAULT FALSE,
@@ -119,8 +118,8 @@ CREATE TABLE IF NOT EXISTS answer (
 
 -- 10) Table 'media'
 CREATE TABLE IF NOT EXISTS media (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    question_id INT NOT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    question_id BIGINT NOT NULL,
     type ENUM('image','video','audio') NOT NULL,
     url VARCHAR(255) NOT NULL,
     CONSTRAINT fk_media_question
@@ -132,8 +131,7 @@ CREATE TABLE IF NOT EXISTS media (
 
 -- 11) Table 'user_activity_log'
 CREATE TABLE IF NOT EXISTS user_activity_log (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    -- Si account.id est INT UNSIGNED, faire pareil ici
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     account_id BIGINT NOT NULL,
     action VARCHAR(255) NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -146,8 +144,8 @@ CREATE TABLE IF NOT EXISTS user_activity_log (
 
 -- 12) Table 'quiz_categories'
 CREATE TABLE IF NOT EXISTS quiz_categories (
-    quiz_id INT NOT NULL,
-    category_id INT NOT NULL,
+    quiz_id BIGINT NOT NULL,
+    category_id BIGINT NOT NULL,
     PRIMARY KEY (quiz_id, category_id),
     CONSTRAINT fk_quiz_categories_quiz
         FOREIGN KEY (quiz_id)
@@ -163,8 +161,8 @@ CREATE TABLE IF NOT EXISTS quiz_categories (
 
 -- 13) Table 'participants'
 CREATE TABLE IF NOT EXISTS participants (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    session_id INT NOT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    session_id BIGINT NOT NULL,
     -- Si account.id est INT UNSIGNED, faire pareil ici
     account_id BIGINT NOT NULL,
     nickname VARCHAR(255) NOT NULL,
@@ -183,11 +181,11 @@ CREATE TABLE IF NOT EXISTS participants (
 
 -- 14) Table 'session_responses'
 CREATE TABLE IF NOT EXISTS session_responses (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    session_id INT NOT NULL,
-    participant_id INT NOT NULL,
-    question_id INT NOT NULL,
-    answer_id INT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    session_id BIGINT NOT NULL,
+    participant_id BIGINT NOT NULL,
+    question_id BIGINT NOT NULL,
+    answer_id BIGINT NULL,
     response_text TEXT NULL,
     submitted_at TIMESTAMP NULL,
     is_correct INT NOT NULL DEFAULT 0,
@@ -215,9 +213,9 @@ CREATE TABLE IF NOT EXISTS session_responses (
 
 -- 15) Table 'leaderboard'
 CREATE TABLE IF NOT EXISTS leaderboard (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    quiz_session_id INT NOT NULL,
-    participant_id INT NOT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    quiz_session_id BIGINT NOT NULL,
+    participant_id BIGINT NOT NULL,
     score INT NOT NULL DEFAULT 0,
     CONSTRAINT fk_leaderboard_quiz_session
         FOREIGN KEY (quiz_session_id)
@@ -233,9 +231,8 @@ CREATE TABLE IF NOT EXISTS leaderboard (
 
 -- 16) Table 'account_trophies'
 CREATE TABLE IF NOT EXISTS account_trophies (
-    -- Si account.id est INT UNSIGNED, faire pareil ici
     account_id BIGINT NOT NULL,
-    trophy_id INT NOT NULL,
+    trophy_id BIGINT NOT NULL,
     earned_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (account_id, trophy_id),
     CONSTRAINT fk_account_trophies_account
@@ -252,9 +249,8 @@ CREATE TABLE IF NOT EXISTS account_trophies (
 
 -- 17) Table 'account_badges'
 CREATE TABLE IF NOT EXISTS account_badges (
-    -- Si account.id est INT UNSIGNED, faire pareil ici
     account_id BIGINT NOT NULL,
-    badge_id INT NOT NULL,
+    badge_id BIGINT NOT NULL,
     awarded_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (account_id, badge_id),
     CONSTRAINT fk_account_badges_account
