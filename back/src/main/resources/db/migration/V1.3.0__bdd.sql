@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS quiz (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
-    creator_id INT NOT NULL,
+    -- IMPORTANT : on suppose que account.id est INT UNSIGNED
+    creator_id INT UNSIGNED NOT NULL,
     is_public BOOLEAN NOT NULL DEFAULT FALSE,
     show_answers BOOLEAN NOT NULL DEFAULT FALSE,
     show_final_score BOOLEAN NOT NULL DEFAULT TRUE,
@@ -131,7 +132,8 @@ CREATE TABLE IF NOT EXISTS media (
 -- 11) Table 'user_activity_log'
 CREATE TABLE IF NOT EXISTS user_activity_log (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    account_id INT NOT NULL,
+    -- Si account.id est INT UNSIGNED, faire pareil ici
+    account_id INT UNSIGNED NOT NULL,
     action VARCHAR(255) NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_user_activity_log_account
@@ -162,7 +164,8 @@ CREATE TABLE IF NOT EXISTS quiz_categories (
 CREATE TABLE IF NOT EXISTS participants (
     id INT AUTO_INCREMENT PRIMARY KEY,
     session_id INT NOT NULL,
-    account_id INT NOT NULL,
+    -- Si account.id est INT UNSIGNED, faire pareil ici
+    account_id INT UNSIGNED NOT NULL,
     nickname VARCHAR(255) NOT NULL,
     joined_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_participants_session
@@ -229,7 +232,8 @@ CREATE TABLE IF NOT EXISTS leaderboard (
 
 -- 16) Table 'account_trophies'
 CREATE TABLE IF NOT EXISTS account_trophies (
-    account_id INT NOT NULL,
+    -- Si account.id est INT UNSIGNED, faire pareil ici
+    account_id INT UNSIGNED NOT NULL,
     trophy_id INT NOT NULL,
     earned_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (account_id, trophy_id),
@@ -247,7 +251,8 @@ CREATE TABLE IF NOT EXISTS account_trophies (
 
 -- 17) Table 'account_badges'
 CREATE TABLE IF NOT EXISTS account_badges (
-    account_id INT NOT NULL,
+    -- Si account.id est INT UNSIGNED, faire pareil ici
+    account_id INT UNSIGNED NOT NULL,
     badge_id INT NOT NULL,
     awarded_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (account_id, badge_id),
