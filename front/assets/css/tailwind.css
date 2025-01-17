@@ -38,4 +38,53 @@
     }
 }
 
+@font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-Black.ttf') format('truetype');
+    font-weight: 900; /* Black */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-Bold.ttf') format('truetype');
+    font-weight: 700; /* Bold */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-ExtraBold.ttf') format('truetype');
+    font-weight: 800; /* ExtraBold */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-Medium.ttf') format('truetype');
+    font-weight: 500; /* Medium */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-Regular.ttf') format('truetype');
+    font-weight: 400; /* Regular */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-SemiBold.ttf') format('truetype');
+    font-weight: 600; /* SemiBold */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900; /* Variable font supports multiple weights */
+    font-style: normal;
+  }
+  
 /* Vous pouvez ajouter d'autres styles personnalisés ici si nécessaire */

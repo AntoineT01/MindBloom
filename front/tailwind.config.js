@@ -3,6 +3,9 @@ module.exports = {
     darkMode: 'class',
     theme: {
         extend: {
+            fontFamily: {
+                orbitron: ['Orbitron', 'sans-serif'],
+            },
             colors: {
                 // Couleurs de base pour les boutons
                 'faux-blanc': '#F4F4F4',
@@ -63,8 +66,7 @@ module.exports = {
                 },
             },
         },
-    },
-    plugins: [
+    },plugins: [
         function({ addComponents, theme }) {
             addComponents({
                 // Styles de base pour tous les boutons
