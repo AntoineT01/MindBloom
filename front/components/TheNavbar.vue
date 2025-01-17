@@ -1,7 +1,7 @@
 <!-- components/TheNavbar.vue -->
 <template>
   <nav class="bg-[#E6E6E6] h-[90px] w-full relative">
-    <div class="container mx-auto h-full flex items-center pl-20">
+    <div class="container mx-auto h-full flex items-center pl-20 ">
       <!-- État déconnecté avec boutons Sinscrire et Se connecter -->
       <template v-if="type === 'connexion'">
         <div class="absolute left-1/2 transform -translate-x-1/2">
@@ -10,8 +10,8 @@
           </NuxtLink>
         </div>
         <div class="ml-auto flex items-center space-x-6">
-          <BaseButton property1="link-1" @click="navigateToSignup">Se connecter</BaseButton>
-          <BaseButton property1="link-2" @click="navigateToLogin">S'inscrire</BaseButton>
+          <BaseButton property1="link-1" />
+          <BaseButton property1="link-2" />
         </div>
       </template>
 
@@ -30,7 +30,7 @@
             <h1 class="text-[40px] font-['Orbitron-Regular'] text-violet-fonc">MindBloom</h1>
           </NuxtLink>
         </div>
-        <BaseButton class="ml-auto" property1="link-2">Se déconnecter</BaseButton>
+        <Button class="ml-auto" property1="link2-hover" text="Se déconnecter" />
       </template>
 
       <!-- État hover sur les boutons -->
@@ -41,8 +41,8 @@
           </NuxtLink>
         </div>
         <div class="ml-auto flex items-center space-x-6">
-          <BaseButton property1="link1-hover">Se connecter</BaseButton>
-          <BaseButton property1="link2-hover">S'inscrire</BaseButton>
+          <BaseButton property1="link1-hover" />
+          <BaseButton property1="link2-hover" />
         </div>
       </template>
     </div>
@@ -51,8 +51,6 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import BaseButton from '~/components/BaseButton.vue'
-import Button from "~/components/BaseButton.vue";
 
 const props = defineProps({
   type: {
@@ -65,13 +63,4 @@ const props = defineProps({
     default: '/default-avatar.png'
   }
 })
-
-const navigateToSignup = () => {
-  navigateTo('/inscription')
-
-}
-
-const navigateToLogin = () => {
-  navigateTo('/connexion')
-}
 </script>

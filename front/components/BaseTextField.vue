@@ -2,7 +2,7 @@
 <template>
   <div
       :class="[
-      'relative w-[412px] h-[45px] font-[Orbitron-Regular] rounded-[45px]',
+      'relative w-[412px] h-[45px] font-[Orbitron-Regular]',
       'transition-all duration-200 ease-in-out',
       isHovered && !isPressed ? 'shadow-lg' : '',
       isPressed ? 'button-shadow-inset' : 'button-shadow',
@@ -13,7 +13,7 @@
       @mouseup="handleMouseUp"
   >
     <div
-        class="rounded-[45px] bg-blanc w-full h-full flex items-center px-6 relative overflow-hidden"
+        class="rounded-[45px] bg-blanc w-full h-full flex items-center px-6 relative"
         :class="[
         isPressed ? 'button-shadow-inset' : 'button-shadow'
       ]"
@@ -109,8 +109,7 @@ const getIconSrc = computed(() => {
     email: '/icons/at-email.svg',
     password: '/icons/lock-on.svg',
     time: '/icons/stopwatch.svg',
-    points: '/icons/trophy.svg',
-    user: '/icons/user.svg'
+    points: '/icons/trophy.svg'
   }
   return iconMap[props.iconType]
 })
