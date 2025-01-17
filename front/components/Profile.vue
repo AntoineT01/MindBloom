@@ -28,7 +28,7 @@ const user = reactive({
           </div>
           <div
             v-if="user.tag"
-            class="min-h-[30px] min-w-[150px] max-w-[225x]  absolute bottom-[0px] left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-xl border-[5px] font-medium bg-white text-black flex items-center justify-center"
+            class="min-h-[30px] min-w-[150px] max-w-[225x]  absolute bottom-[0px] left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-xl border-[5px] font-orbitron font-medium bg-white text-black flex items-center justify-center"
             :style="{ borderColor: user.color, borderStyle: 'solid' }"
           >
             {{ user.name }}
