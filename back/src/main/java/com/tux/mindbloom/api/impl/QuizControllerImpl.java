@@ -40,4 +40,22 @@ public class QuizControllerImpl extends AbstractRestController implements QuizCo
     log.info("Rest : GET - {}", QUIZ);
     return logResponse(log, "GET", quizService.findAll());
   }
+
+  @Override
+  public QuizDto create(QuizDto dto) {
+    log.info("Rest : POST - {}", QUIZ);
+    return logResponse(log, "POST", quizService.create(dto));
+  }
+
+  @Override
+  public QuizDto updateById(Long id, QuizDto dto) {
+    log.info("Rest : PUT - {}", QUIZ);
+    return logResponse(log, "PUT", quizService.updateById(id,dto));
+  }
+
+  @Override
+  public Object deleteById(Long id) {
+    log.info("Rest : DELETE - {}", QUIZ);
+    return logResponse(log, "DELETE", quizService.deleteById(id));
+  }
 }
