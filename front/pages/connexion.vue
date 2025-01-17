@@ -25,9 +25,12 @@
         />
 
         <!-- Bouton de connexion -->
-        <div class="flex justify-center w-full">
-          <Button property1="link-1" @click="handleLogin">
-            Connexion
+        <div class="pt-4">
+          <Button
+              property1="link-1"
+              @click="handleLogin"
+          >
+            Se connecter
           </Button>
         </div>
       </form>
@@ -35,7 +38,10 @@
       <!-- Lien d'inscription -->
       <div class="text-center pt-4">
         <p class="text-violet-fonc mb-4">Vous n'avez pas de compte ?</p>
-        <Button property1="validation" @click="navigateToSignup">
+        <Button
+            property1="validation"
+            @click="navigateToSignup"
+        >
           S'inscrire
         </Button>
       </div>
@@ -63,8 +69,7 @@ const handleLogin = async () => {
 }
 
 const navigateToSignup = () => {
-  navigateTo('/inscription')
-
+  console.log('Navigation vers inscription')
 }
 </script>
 
