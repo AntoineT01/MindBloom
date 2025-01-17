@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import Navbar from '~/components/Navbar.vue'
+import Navbar from '~/components/TheNavbar.vue'
 
 const currentState = ref('connexion')
 const userImage = ref('https://avatar.iran.liara.run/public')
