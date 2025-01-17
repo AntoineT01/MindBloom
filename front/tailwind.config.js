@@ -7,11 +7,11 @@ module.exports = {
                 // Couleurs de base pour les boutons
                 'faux-blanc': '#F4F4F4',
                 'blanc': '#FFFFFF',
-                'vert': '#8BC34A',
+                'vert': '#88BE66',
                 'violet': {
-                    'ple': '#E1BEE7',    // violet pâle (pour link-2)
-                    'clair': '#9C27B0',  // violet clair (pour link-1)
-                    'fonc': '#4A154B'    // violet foncé (pour delete)
+                    'ple': '#E1BEE7',
+                    'clair': '#9C27B0',
+                    'fonc': '#4A154B'
                 },
                 'Rouge':{
                     'dark': '#740938',
