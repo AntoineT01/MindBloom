@@ -34,11 +34,12 @@ const defaultPlayerImage = 'https://via.placeholder.com/150';
     >
       <!-- Texte avec gestion des débordements -->
       <div
-        class="pl-[12%] pr-[6%] font-orbitron text-violet-defaut text-3xl break-words whitespace-normal overflow-hidden h-full"
+        class="pl-[8em] pr-[1em] pb-[10em] pt-[1em] font-orbitron text-violet-defaut text-3xl break-words whitespace-normal overflow-auto h-full"
       >
-        {{ texte }}qsdfqsfqsdfqsdfqsdfqsfqsdfqsdfqsdfqsfqsdfqsdfqsdfqsfqsdfqsdfqsdfqsfqsdfqsdfqsdfqsfqsdfqsdfqsdfqsfqsdfqsdfqsdfqsfqsdfqsdfqsdfqsfqsdfqsdfqsdfqsfqsdfqsdfqsdfqsfqsdfqsdfqsdfqsfqsdfqsdfqsdfqsfqsdfqsdfqsdfqsfqsdfqsdfqsdfqsfqsdfqsdfqsdfqsfqsdfqsdf <br />
+        {{ texte }} <br />
 
       </div>
     </div>
   </div>
 </template>
+
