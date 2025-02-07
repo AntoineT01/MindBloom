@@ -56,6 +56,7 @@ public final class Constants {
     public static final String PASSWORD = "/password";
     public static final String LOGOUT = "/logout";
     public static final String QUIZ = "/quiz";
+    public static final String QUESTION = "/question";
 
     private Api() {
     }

@@ -13,7 +13,7 @@ spring:
     port: 8125
 
   profiles:
-    active: prod
+    active: dev
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
