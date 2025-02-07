@@ -5,8 +5,8 @@ COPY . .
 RUN gradle clean bootJar -x test
 
 # Étape 2 : Utilisation d'une image légère JRE pour exécuter l'application
-FROM openjdk:21-jdk-slim
+FROM openjdk:17-jdk-slim
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
-EXPOSE 8080
+EXPOSE 8080 20657
 CMD ["java", "-jar", "app.jar"]

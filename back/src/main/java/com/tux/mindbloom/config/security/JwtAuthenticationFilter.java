@@ -54,7 +54,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       // Lire les informations de connexion (email et mot de passe chiffré)
       FormLoginDto user = new ObjectMapper().readValue(request.getInputStream(), FormLoginDto.class);
 
-      String decryptedPassword = PasswordUtils.decryptPassword(user.getPassword());
+//      String decryptedPassword = PasswordUtils.decryptPassword(user.getPassword());
+      String decryptedPassword = user.getPassword();
 
       // Créer un token d'authentification avec le mot de passe déchiffré
       Authentication authentication = new UsernamePasswordAuthenticationToken(
