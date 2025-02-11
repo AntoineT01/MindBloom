@@ -8,5 +8,5 @@ RUN gradle clean bootJar -x test
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
-EXPOSE 8080 20657
+EXPOSE 8080 8081 20657
 CMD ["java", "-jar", "app.jar"]
