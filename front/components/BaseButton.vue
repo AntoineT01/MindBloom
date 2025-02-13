@@ -1,3 +1,9 @@
+
+
+
+
+
+
 <template>
   <div
       :class="[
@@ -18,21 +24,7 @@
         isGoButton ? 'w-[45px] top-[12px]' : 'w-[200px] top-[14px] left-0'
       ]"
     >
-      <template v-if="['link-2', 'link2-click', 'link2-hover'].includes(currentState)">
-        Se connecter
-      </template>
-      <template v-if="['link-1', 'link1-click', 'link1-hover'].includes(currentState)">
-        S'inscrire
-      </template>
-      <template v-if="['delete-click', 'delete-hover', 'delete'].includes(currentState)">
-        Supprimer
-      </template>
-      <template v-if="['validation-click', 'validation-hover', 'validation'].includes(currentState)">
-        Valider
-      </template>
-      <template v-if="['go', 'go-hover', 'go-click'].includes(currentState)">
-        GO
-      </template>
+      <slot></slot>
     </div>
   </div>
 </template>

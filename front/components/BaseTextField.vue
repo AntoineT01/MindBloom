@@ -2,7 +2,7 @@
 <template>
   <div
       :class="[
-      'relative w-[412px] h-[45px] font-[Orbitron-Regular]',
+      'relative w-[412px] h-[45px] font-[Orbitron-Regular] rounded-[45px]',
       'transition-all duration-200 ease-in-out',
       isHovered && !isPressed ? 'shadow-lg' : '',
       isPressed ? 'button-shadow-inset' : 'button-shadow',
@@ -13,7 +13,7 @@
       @mouseup="handleMouseUp"
   >
     <div
-        class="rounded-[45px] bg-blanc w-full h-full flex items-center px-6 relative"
+        class="rounded-[45px] bg-blanc w-full h-full flex items-center px-6 relative overflow-hidden"
         :class="[
         isPressed ? 'button-shadow-inset' : 'button-shadow'
       ]"
