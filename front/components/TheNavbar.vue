@@ -10,8 +10,8 @@
           </NuxtLink>
         </div>
         <div class="ml-auto flex items-center space-x-6">
-          <BaseButton property1="link-1">Se connecter</BaseButton>
-          <BaseButton property1="link-2">S'inscrire</BaseButton>
+          <BaseButton property1="link-1" @click="navigateToSignup">Se connecter</BaseButton>
+          <BaseButton property1="link-2" @click="navigateToLogin">S'inscrire</BaseButton>
         </div>
       </template>
 
@@ -52,6 +52,7 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 import BaseButton from '~/components/BaseButton.vue'
+import Button from "~/components/BaseButton.vue";
 
 const props = defineProps({
   type: {
@@ -64,4 +65,13 @@ const props = defineProps({
     default: '/default-avatar.png'
   }
 })
+
+const navigateToSignup = () => {
+  navigateTo('/inscription')
+
+}
+
+const navigateToLogin = () => {
+  navigateTo('/connexion')
+}
 </script>
