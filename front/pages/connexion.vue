@@ -63,7 +63,8 @@ const handleLogin = async () => {
 }
 
 const navigateToSignup = () => {
-  console.log('Navigation vers inscription')
+  navigateTo('/inscription')
+
 }
 </script>
 
