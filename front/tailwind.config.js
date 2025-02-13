@@ -10,7 +10,7 @@ module.exports = {
         // Couleurs de base pour les boutons
         "faux-blanc": "#F4F4F4",
         blanc: "#FFFFFF",
-        vert: "#8BC34A",
+        vert: "#88BE66",
         violet: {
           fonc: "#2E073F", // violet foncé (pour delete)
           defaut: "#7A1CAC", // violet defaut
