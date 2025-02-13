@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="TemplateApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-    <module name="fullstack-web-app-back-template.main" />
+    <module name="mindbloom-back.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.tux.mindbloom.TemplateApplication" />
     <extension name="coverage">
       <pattern>

@@ -80,7 +80,8 @@ public class SignupServiceImpl implements SignupService {
     Profile normalProfile = profileRepository.findByLabel("Normal")
       .orElseThrow(() -> new EntityNotFoundException(Profile.class.getSimpleName(), "Normal"));
 
-    String decryptedPassword = PasswordUtils.decryptPassword(dto.getPassword());
+//    String decryptedPassword = PasswordUtils.decryptPassword(dto.getPassword());
+    String decryptedPassword = dto.getPassword();
 
     // Créer l'entité Account avec le mot de passe déchiffré et haché
     Account account = Account.builder()

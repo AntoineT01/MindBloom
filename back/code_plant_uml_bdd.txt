@@ -1,0 +1,185 @@
+@startuml
+title Diagramme corrigé pour la BDD de l'application de quiz
+
+entity "account" {
+  * id : int
+  * firstname : varchar
+  * lastname : varchar
+  * password : char(64)
+  * mail : varchar
+  * last_login : timestamp
+  * active : boolean
+  * created_at : timestamp
+  * updated_at : timestamp
+  * last_login_at : timestamp
+  * deleted_at : timestamp
+  * profile_id : int
+  * points : int
+}
+
+entity "profile" {
+  * id : int
+  * label : varchar
+}
+
+entity "quiz" {
+  * id : int
+  * title : varchar
+  * description : varchar
+  * creator_id : int
+  * is_public : boolean
+  * show_answers : boolean
+  * show_final_score : boolean
+  * time_limit : int
+  * created_at : timestamp
+  * updated_at : timestamp
+  * status : ENUM('active', 'inactive', 'deleted')
+  * share_code : varchar [unique]
+}
+
+entity "quiz_categories" {
+  * quiz_id : int
+  * category_id : int
+}
+
+entity "categorie" {
+  * id : int
+  * name : varchar
+  * description : text
+}
+
+entity "question" {
+  * id : int
+  * quiz_id : int
+  * content : text
+  * type : varchar
+  * points : int
+  * question_order : int
+  * is_required : boolean
+  * is_active : boolean
+  * display_time : int
+  * time_min : int [nullable]
+  * time_max : int [nullable]
+  * created_at : timestamp
+  * updated_at : timestamp
+  * imported : boolean
+}
+
+entity "answer" {
+  * id : int
+  * question_id : int
+  * content : text
+  * type : varchar
+  * is_correct : boolean
+  * answer_order : int
+  * created_at : timestamp
+  * updated_at : timestamp
+}
+
+entity "quiz_session" {
+  * id : int
+  * quiz_id : int
+  * session_mode : varchar
+  * status : varchar
+  * start_time : timestamp
+  * end_time : timestamp
+  * session_code : varchar [unique]
+}
+
+entity "participants" {
+  * id : int
+  * session_id : int
+  * account_id : int
+  * nickname : varchar
+  * joined_at : timestamp
+}
+
+entity "session_responses" {
+  * id : int
+  * session_id : int
+  * participant_id : int
+  * question_id : int
+  * answer_id : int [nullable]
+  * response_text : text [nullable]
+  * submitted_at : timestamp
+  * is_correct : int
+}
+
+entity "badge" {
+  * id : int
+  * name : varchar
+  * text : varchar
+  * image : Image
+}
+
+entity "account_badges" {
+  * account_id : int
+  * badge_id : int
+  * awarded_at : timestamp
+}
+
+entity "trophies" {
+  * id : int
+  * name : varchar
+  * description : text
+  * image : varchar
+  * points_required : int
+}
+
+entity "account_trophies" {
+  * account_id : int
+  * trophy_id : int
+  * earned_at : timestamp
+}
+
+entity "media" {
+  * id : int
+  * question_id : int
+  * type : ENUM('image', 'video', 'audio')
+  * url : varchar
+}
+
+entity "quiz_statistics" {
+  * id : int
+  * quiz_id : int
+  * total_participants : int
+  * average_score : decimal(5, 2)
+  * average_time_per_question : decimal(5, 2)
+}
+
+entity "user_activity_log" {
+  * id : int
+  * account_id : int
+  * action : varchar
+  * timestamp : timestamp
+}
+
+entity "leaderboard" {
+  * id : int
+  * quiz_session_id : int
+  * participant_id : int
+  * score : int
+}
+
+' Relations
+account ||--o{ profile : "has"
+account ||--o{ quiz : "creates"
+account ||--o{ participants : "joins"
+quiz ||--o{ quiz_categories : "belongs to"
+categorie ||--o{ quiz_categories : "categorizes"
+quiz ||--o{ question : "contains"
+question ||--o{ answer : "has"
+quiz ||--o{ quiz_session : "runs"
+quiz_session ||--o{ participants : "has"
+quiz_session ||--o{ session_responses : "records"
+participants ||--o{ session_responses : "submits"
+account ||--o{ account_badges : "earns"
+badge ||--o{ account_badges : "awards"
+account ||--o{ account_trophies : "earns"
+trophies ||--o{ account_trophies : "awards"
+question ||--o{ media : "has"
+quiz ||--o{ quiz_statistics : "has"
+account ||--o{ user_activity_log : "records"
+quiz_session ||--o{ leaderboard : "tracks"
+participants ||--o{ leaderboard : "tracks"
+@enduml
