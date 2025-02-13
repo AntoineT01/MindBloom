@@ -109,7 +109,8 @@ const getIconSrc = computed(() => {
     email: '/icons/at-email.svg',
     password: '/icons/lock-on.svg',
     time: '/icons/stopwatch.svg',
-    points: '/icons/trophy.svg'
+    points: '/icons/trophy.svg',
+    user: '/icons/user.svg'
   }
   return iconMap[props.iconType]
 })
