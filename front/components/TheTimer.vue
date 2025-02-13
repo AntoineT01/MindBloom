@@ -1,9 +1,9 @@
 <template>
-    <div class="flex items-center w-full max-w-md">
-    <div class=" w-[90%] flex items-center bg-violet-fonc rounded-full">
-      <div class="w[50%] h-2 bg-violet-clair rounded-full" :style="{ width: progress +'%'}"></div>
+    <div class="flex items-center w-full">
+    <div class="w-full flex items-center bg-violet-fonc rounded-full">
+      <div class=" h-2 bg-violet-clair rounded-full" :style="{ width: progress +'%'}"></div>
     </div>
-    <div class=" text-black font-bold">{{ formatTime(remainingTime) }}s</div>
+    <div class=" text-black font-bold text-3xl">{{ formatTime(remainingTime) }}s</div>
     </div>
 </template>
   
@@ -47,8 +47,6 @@ export default {
   }
 };
 </script>
-
-
   <style scoped>
-  </style>
+</style>
   
