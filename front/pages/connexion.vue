@@ -25,23 +25,15 @@
         />
 
         <!-- Bouton de connexion -->
-        <div class="pt-4">
-          <Button
-              property1="link-1"
-              @click="handleLogin"
-          >
-            Se connecter
-          </Button>
-        </div>
+        <Button property1="link-1" @click="handleLogin">
+          Connexion
+        </Button>
       </form>
 
       <!-- Lien d'inscription -->
       <div class="text-center pt-4">
         <p class="text-violet-fonc mb-4">Vous n'avez pas de compte ?</p>
-        <Button
-            property1="validation"
-            @click="navigateToSignup"
-        >
+        <Button property1="validation" @click="navigateToSignup">
           S'inscrire
         </Button>
       </div>
