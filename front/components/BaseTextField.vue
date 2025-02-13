@@ -82,7 +82,7 @@ const props = defineProps({
   },
   iconType: {
     type: String,
-    validator: value => ['email', 'password', 'time', 'points'].includes(value),
+    validator: value => ['email', 'password', 'time', 'points', 'user'].includes(value),
     default: 'email'
   },
   inputType: {
@@ -109,7 +109,8 @@ const getIconSrc = computed(() => {
     email: '/icons/at-email.svg',
     password: '/icons/lock-on.svg',
     time: '/icons/stopwatch.svg',
-    points: '/icons/trophy.svg'
+    points: '/icons/trophy.svg',
+    user: '/icons/user.svg'
   }
   return iconMap[props.iconType]
 })
