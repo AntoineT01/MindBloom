@@ -25,9 +25,11 @@
         />
 
         <!-- Bouton de connexion -->
-        <Button property1="link-1" @click="handleLogin">
-          Connexion
-        </Button>
+        <div class="flex justify-center w-full">
+          <Button property1="link-1" @click="handleLogin">
+            Connexion
+          </Button>
+        </div>
       </form>
 
       <!-- Lien d'inscription -->
