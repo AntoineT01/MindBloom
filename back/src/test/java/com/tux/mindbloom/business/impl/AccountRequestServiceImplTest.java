@@ -354,9 +354,7 @@ class AccountRequestServiceImplTest {
       assertThat(mailCaptor.getValue()).isNotNull().isEqualTo(accountDto.getMail());
 
       Map<String, Object> args = argCaptor.getValue();
-      assertThat(args).isNotNull().hasSize(3)
-        .containsEntry("firstname", accountDto.getFirstname())
-        .containsEntry("lastname", accountDto.getLastname())
+      assertThat(args).isNotNull().hasSize(2)
         .containsEntry("token", request.getToken());
     }
   }

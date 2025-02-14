@@ -17,12 +17,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserDetailsServiceImplTest {
@@ -52,8 +55,9 @@ class UserDetailsServiceImplTest {
 
     @Test
     void ShouldLoadUser() {
+      when(accountRepository.findByMail(account.getMail())).thenReturn(Optional.of(account));
 
-      UserDetails result = service.loadUserByUsername("Normal");
+      UserDetails result = service.loadUserByUsername("whatever@example.com");
 
       assertThat(result)
               .isNotNull()
@@ -66,9 +70,10 @@ class UserDetailsServiceImplTest {
 
     @Test
     void ShouldSendVerificationMailIfTheLoadedAccountIsInactive() {
+      when(accountRepository.findByMail(account.getMail())).thenReturn(Optional.of(account));
       account.setActive(false);
 
-      UserDetails result = service.loadUserByUsername("Normal");
+      UserDetails result = service.loadUserByUsername("whatever@example.com");
 
       assertThat(result)
               .isNotNull()

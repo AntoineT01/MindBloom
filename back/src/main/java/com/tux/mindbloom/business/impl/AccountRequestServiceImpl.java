@@ -30,16 +30,6 @@ import java.util.UUID;
 public class AccountRequestServiceImpl implements AccountRequestService {
 
   /**
-   * Key for the firstname arg in mail template
-   */
-  public static final String FIRSTNAME = "firstname";
-
-  /**
-   * Key for the lastname arg in mail template
-   */
-  public static final String LASTNAME = "lastname";
-
-  /**
    * Key for the token arg in mail template
    */
   public static final String TOKEN = "token";
@@ -133,8 +123,7 @@ public class AccountRequestServiceImpl implements AccountRequestService {
     repository.save(request);
 
     emailService.sendSetupPassword(parseIetfTag(dto.getLocale()), dto.getMail(), Map.of(
-      FIRSTNAME, dto.getFirstname(),
-      LASTNAME, dto.getLastname(),
+      URL, appConfig.getBaseUrl() + appConfig.getAccountVerifyPath(),
       TOKEN, request.getToken()
     ));
   }
@@ -148,8 +137,7 @@ public class AccountRequestServiceImpl implements AccountRequestService {
     repository.save(request);
 
     emailService.sendChangePasswordMail(parseIetfTag(dto.getLocale()), dto.getMail(), Map.of(
-      FIRSTNAME, dto.getFirstname(),
-      LASTNAME, dto.getLastname(),
+      URL, appConfig.getBaseUrl() + appConfig.getAccountVerifyPath(),
       TOKEN, request.getToken()
     ));
   }
@@ -163,8 +151,7 @@ public class AccountRequestServiceImpl implements AccountRequestService {
     repository.save(request);
 
     emailService.sendResetPasswordMail(parseIetfTag(dto.getLocale()), dto.getMail(), Map.of(
-      FIRSTNAME, dto.getFirstname(),
-      LASTNAME, dto.getLastname(),
+      URL, appConfig.getBaseUrl() + appConfig.getAccountVerifyPath(),
       TOKEN, request.getToken()
     ));
   }
