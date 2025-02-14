@@ -25,4 +25,8 @@ public class EntityNotFoundException extends BadArgumentException {
   public EntityNotFoundException(String entity, String value) {
     super("The " + entity + " \"" + value + "\" does not exist");
   }
+
+  public EntityNotFoundException(String quizCategories, Long quizId, Long categoryId) {
+    super("quizCategories :" + quizCategories + "quizId : " + quizId + "categoryId : " + categoryId);
+  }
 }
