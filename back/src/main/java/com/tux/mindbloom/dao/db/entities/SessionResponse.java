@@ -53,7 +53,6 @@ public class SessionResponse {
      * Le texte de la réponse saisie, si c'est une question ouverte.
      * Nullable pour les questions à choix multiples.
      */
-    @Lob
     @Column(name = "response_text")
     private String responseText;
 

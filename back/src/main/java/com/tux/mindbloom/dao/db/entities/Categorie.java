@@ -28,7 +28,6 @@ public class Categorie {
     /**
      * La description de la catégorie.
      */
-    @Lob
     @Column(name = "description")
     private String description;
 }
