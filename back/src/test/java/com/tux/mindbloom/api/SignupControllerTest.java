@@ -53,7 +53,6 @@ class SignupControllerTest extends RestControllerTestHelper {
               .andExpect(status().isCreated())
               .andExpect(content().contentType(MediaType.APPLICATION_JSON))
               .andExpect(jsonPath("$.id", equalTo(normalAccount.getId().intValue())))
-              .andExpect(jsonPath("$.handle", equalTo(normalAccount.getHandle())))
               .andDo(print());
 
       verify(signupService, times(1)).signup(normalSignup);

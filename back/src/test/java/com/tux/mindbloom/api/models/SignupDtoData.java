@@ -8,7 +8,6 @@ public final class SignupDtoData {
 
   public static SignupDto getAccount() {
     return SignupDto.builder()
-            .handle("normal")
             .firstname("The")
             .lastname("Normal")
             .locale("fr")

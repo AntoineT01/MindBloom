@@ -14,10 +14,9 @@ public final class AccountDtoData {
   public static AccountDto getAdmin() {
     return AccountDto.builder()
             .id(1L)
-            .handle(ROLE_ADMINISTRATOR)
             .firstname(ROLE_ADMINISTRATOR)
             .lastname(ROLE_ADMINISTRATOR)
-            .profile(ProfileDtoData.getAdmin())
+            .profile(com.tux.mindbloom.api.models.ProfileDtoData.getAdmin())
             .locale("fr")
             .mail("whatever@example.com")
             .build();
@@ -26,10 +25,9 @@ public final class AccountDtoData {
   public static AccountDto getNormal() {
     return AccountDto.builder()
             .id(2L)
-            .handle(ROLE_NORMAL)
             .firstname(ROLE_NORMAL)
             .lastname(ROLE_NORMAL)
-            .profile(ProfileDtoData.getAdmin())
+            .profile(com.tux.mindbloom.api.models.ProfileDtoData.getAdmin())
             .locale("fr")
             .mail("whatever@example.com")
             .build();

@@ -8,7 +8,7 @@ import com.tux.mindbloom.business.AccountRequestService;
 import com.tux.mindbloom.business.SignupService;
 import com.tux.mindbloom.business.mappers.AccountMapper;
 import com.tux.mindbloom.config.exceptions.EntityNotFoundException;
-import com.tux.mindbloom.config.exceptions.HandleAlreadyExistsException;
+import com.tux.mindbloom.config.exceptions.MailAlreadyExistsException;
 import com.tux.mindbloom.dao.db.AccountRepository;
 import com.tux.mindbloom.dao.db.ProfileRepository;
 import com.tux.mindbloom.dao.db.entities.Account;
@@ -97,8 +97,8 @@ class SignupServiceImplTest {
 
     @Test
     void ShouldProceedOnlyIfHandleDoesNotAlreadyExist() {
-      when(accountRepository.findByHandle(signupDto.getHandle())).thenReturn(Optional.of(AccountData.getNormal()));
-      assertThrows(HandleAlreadyExistsException.class, () -> service.signup(signupDto));
+      when(accountRepository.findByMail(signupDto.getMail())).thenReturn(Optional.of(AccountData.getNormal()));
+      assertThrows(MailAlreadyExistsException.class, () -> service.signup(signupDto));
 
       verify(accountRepository, never()).save(any(Account.class));
     }

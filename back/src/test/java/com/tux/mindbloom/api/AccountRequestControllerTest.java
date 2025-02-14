@@ -1,8 +1,8 @@
 package com.tux.mindbloom.api;
 
 
-import com.tux.mindbloom.api.models.AccountDto;
 import com.tux.mindbloom.api.models.AccountDtoData;
+import com.tux.mindbloom.api.models.AccountDto;
 import com.tux.mindbloom.api.models.AccountRequestDto;
 import com.tux.mindbloom.api.models.AccountRequestDtoData;
 import com.tux.mindbloom.business.AccountRequestService;
@@ -75,8 +75,8 @@ class AccountRequestControllerTest extends RestControllerTestHelper {
               .andExpect(status().isNoContent())
               .andDo(print());
 
-      verify(accountRequestService, times(1)).requestPasswordReset(accounts.getFirst());
-      verify(accountRequestService, times(1)).requestPasswordReset(accounts.getLast());
+      verify(accountRequestService, times(1)).requestPasswordReset(accounts.get(0));
+      verify(accountRequestService, times(1)).requestPasswordReset(accounts.get(accounts.size()-1));
     }
   }
 

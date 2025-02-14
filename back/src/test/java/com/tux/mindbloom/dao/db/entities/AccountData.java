@@ -18,7 +18,6 @@ public final class AccountData {
   public static Account getAdmin() {
     return Account.builder()
             .id(1L)
-            .handle(ROLE_ADMINISTRATOR)
             .firstname(ROLE_ADMINISTRATOR)
             .lastname(ROLE_ADMINISTRATOR)
             .password(ENCODER.encode(ROLE_ADMINISTRATOR))
@@ -32,7 +31,6 @@ public final class AccountData {
   public static Account getNormal() {
     return Account.builder()
             .id(2L)
-            .handle(ROLE_NORMAL)
             .firstname(ROLE_NORMAL)
             .lastname(ROLE_NORMAL)
             .password(ENCODER.encode(ROLE_NORMAL))

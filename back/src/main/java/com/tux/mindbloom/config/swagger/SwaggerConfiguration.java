@@ -62,7 +62,7 @@ public class SwaggerConfiguration {
     }
 
     Contact contact = new Contact();
-    contact.setName("Mathieu Bourhis");
+    contact.setName("PieTux");
 
     return new OpenAPI()
             .info(info

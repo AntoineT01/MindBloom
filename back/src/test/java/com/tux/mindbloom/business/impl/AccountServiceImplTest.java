@@ -6,7 +6,7 @@ import com.tux.mindbloom.business.AccountRequestService;
 import com.tux.mindbloom.business.AccountService;
 import com.tux.mindbloom.business.mappers.AccountMapper;
 import com.tux.mindbloom.config.exceptions.EntityNotFoundException;
-import com.tux.mindbloom.config.exceptions.HandleAlreadyExistsException;
+import com.tux.mindbloom.config.exceptions.MailAlreadyExistsException;
 import com.tux.mindbloom.dao.db.AccountRepository;
 import com.tux.mindbloom.dao.db.entities.Account;
 import com.tux.mindbloom.dao.db.entities.AccountData;
@@ -27,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -88,23 +87,9 @@ class AccountServiceImplTest {
   }
 
   @Nested
-  class FindAllByMail {
-    @Test
-    void ShouldFindAllByMail() {
-      when(repository.findByMail(anyString())).thenReturn(AccountData.getList());
-
-      List<AccountDto> result = service.findAllByMail("whatever@example.com");
-
-      assertThat(result).isEqualTo(AccountDtoData.getList());
-      verify(repository, times(1)).findByMail(anyString());
-    }
-  }
-
-  @Nested
   class Create {
     @Test
     void ShouldCreate() {
-      when(repository.findByHandle(account.getHandle())).thenReturn(Optional.empty());
       when(repository.save(any(Account.class))).thenReturn(account);
 
       AccountDto result = service.create(accountDto);
@@ -116,9 +101,9 @@ class AccountServiceImplTest {
 
     @Test
     void ShouldCreateOnlyIfHandleDoesNotAlreadyExists() {
-      when(repository.findByHandle(account.getHandle())).thenReturn(Optional.of(account));
+      when(repository.findByMail(account.getMail())).thenReturn(Optional.of(account));
 
-      assertThrows(HandleAlreadyExistsException.class, () -> service.create(accountDto));
+      assertThrows(MailAlreadyExistsException.class, () -> service.create(accountDto));
 
       verify(repository, never()).save(any(Account.class));
       verify(accountRequestService, never()).requestMailVerification(any(AccountDto.class));
@@ -176,7 +161,6 @@ class AccountServiceImplTest {
       assertThat(captor.getValue())
               .isNotNull()
               .extracting(
-                      Account::getHandle,
                       Account::getFirstname,
                       Account::getLastname,
                       Account::getMail,

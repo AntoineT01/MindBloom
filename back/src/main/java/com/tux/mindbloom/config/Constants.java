@@ -47,12 +47,10 @@ public final class Constants {
   public static final class Api {
     public static final String LOGIN = "/login";
     public static final String ME = "/me";
-    public static final String SOMETHING = "/somethings";
     public static final String ACCOUNTS = "/accounts";
     public static final String SIGNUPS = "/signup";
     public static final String ACCOUNT_REQUESTS = "/account-requests";
     public static final String PROFILES = "/profiles";
-    public static final String COUNTRIES = "/countries";
     public static final String PASSWORD = "/password";
     public static final String LOGOUT = "/logout";
     public static final String QUIZ = "/quiz";

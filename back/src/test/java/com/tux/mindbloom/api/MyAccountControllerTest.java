@@ -1,7 +1,7 @@
 package com.tux.mindbloom.api;
 
-import com.tux.mindbloom.api.models.AccountDto;
 import com.tux.mindbloom.api.models.AccountDtoData;
+import com.tux.mindbloom.api.models.AccountDto;
 import com.tux.mindbloom.business.AccountService;
 import com.tux.mindbloom.util.helper.RestControllerTestHelper;
 import org.junit.jupiter.api.Nested;
@@ -72,7 +72,6 @@ class MyAccountControllerTest extends RestControllerTestHelper {
               .andExpect(status().isOk())
               .andExpect(content().contentType(MediaType.APPLICATION_JSON))
               .andExpect(jsonPath("$.id", equalTo(dto.getId().intValue())))
-              .andExpect(jsonPath("$.handle", equalTo(dto.getHandle())))
               .andDo(print());
 
       verify(accountService, times(1)).findById(dto.getId());
@@ -114,7 +113,6 @@ class MyAccountControllerTest extends RestControllerTestHelper {
               .andExpect(status().isOk())
               .andExpect(content().contentType(MediaType.APPLICATION_JSON))
               .andExpect(jsonPath("$.id", equalTo(toUpdate.getId().intValue())))
-              .andExpect(jsonPath("$.handle", equalTo(toUpdate.getHandle())))
               .andDo(print());
 
       // We probably should check that only the wanted members were updated with a matcher
