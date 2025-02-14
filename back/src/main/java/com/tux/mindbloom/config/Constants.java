@@ -65,7 +65,7 @@ public final class Constants {
     public static final String PARTICIPANTS  = "/participants ";
     public static final String SESSION_RESPONSES  = "/session_responses ";
     public static final String QUIZ_CATEGORIES   = "/quiz_categories  ";
-    public static final String CATEGORIE  = "/categorie ";
+    public static final String CATEGORIES  = "/categorie ";
     public static final String BADGE = "/badge ";
     public static final String ACCOUNT_BADGES  = "/account_badges ";
     public static final String ACCOUNT_TROPHIES  = "/account_trophies ";
