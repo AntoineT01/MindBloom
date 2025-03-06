@@ -58,6 +58,15 @@ export default defineNuxtConfig({
     global: true,
     dirs: ['~/components']
   },
+  nitro: {
+    devProxy: {
+      '/api/': {
+        target: 'https://mindbloom-4ibi.onrender.com',
+        changeOrigin: true,
+        autoRewrite: true
+      }
+    }
+  },
 
   compatibilityDate: '2024-09-24'
 })

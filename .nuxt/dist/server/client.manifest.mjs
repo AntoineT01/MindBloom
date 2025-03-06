@@ -1,0 +1,1 @@
+export { default } from "file:///C:/Users/antoi/Documents/Fac/M2/S9/MindBloom/node_modules/@nuxt/vite-builder/dist/runtime/client.manifest.mjs"

@@ -109,6 +109,7 @@ public class WebSecurity {
     configuration.addAllowedOrigin("https://mindbloom-4ibi.onrender.com:8081");
     configuration.addAllowedOrigin("https://mindbloom-4ibi.onrender.com:8080");
     configuration.addAllowedOrigin("https://mindbloom-4ibi.onrender.com:5173");
+    configuration.addAllowedOrigin("http://localhost:3000");
     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     source.registerCorsConfiguration("/swagger-ui/**", configuration);

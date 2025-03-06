@@ -1,21 +1,17 @@
-
-
-
-
-
-
 <template>
   <div
       :class="[
       'rounded-[90px] relative cursor-pointer',
       className,
       buttonStyles[currentState],
-      isGoButton ? 'h-[45px] w-[45px]' : 'h-[50px] w-[200px]'
+      isGoButton ? 'h-[45px] w-[45px]' : 'h-[50px] w-[200px]',
+      disabled ? 'opacity-50 cursor-not-allowed' : ''
     ]"
       @mouseenter="handleMouseEnter"
       @mouseleave="handleMouseLeave"
       @mousedown="handleMouseDown"
       @mouseup="handleMouseUp"
+      @click="handleClick"
   >
     <div
         class="font-['Orbitron-Regular'] text-base absolute text-center"
@@ -58,7 +54,14 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  disabled: {
+    type: Boolean,
+    default: false
+  }
 })
+
+// Définir les émetteurs d'événements
+const emit = defineEmits(['click'])
 
 const isHovered = ref(false)
 const isClicked = ref(false)
@@ -68,6 +71,11 @@ const isGoButton = computed(() => {
 })
 
 const currentState = computed(() => {
+  if (props.disabled) {
+    // Retourner l'état de base lorsque le bouton est désactivé
+    return props.property1
+  }
+
   if (isClicked.value) {
     switch (props.property1) {
       case 'link-1': return 'link1-click'
@@ -92,20 +100,35 @@ const currentState = computed(() => {
 })
 
 const handleMouseEnter = () => {
-  isHovered.value = true
+  if (!props.disabled) {
+    isHovered.value = true
+  }
 }
 
 const handleMouseLeave = () => {
-  isHovered.value = false
-  isClicked.value = false
+  if (!props.disabled) {
+    isHovered.value = false
+    isClicked.value = false
+  }
 }
 
 const handleMouseDown = () => {
-  isClicked.value = true
+  if (!props.disabled) {
+    isClicked.value = true
+  }
 }
 
 const handleMouseUp = () => {
-  isClicked.value = false
+  if (!props.disabled) {
+    isClicked.value = false
+  }
+}
+
+// Nouvelle fonction pour gérer les clics - sans preventDefault
+const handleClick = (event) => {
+  if (!props.disabled) {
+    emit('click')
+  }
 }
 
 const buttonStyles = {
