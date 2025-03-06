@@ -10,8 +10,8 @@
           </NuxtLink>
         </div>
         <div class="ml-auto flex items-center space-x-6">
-          <BaseButton property1="link-1" @click="navigateToSignup">Se connecter</BaseButton>
-          <BaseButton property1="link-2" @click="navigateToLogin">S'inscrire</BaseButton>
+          <BaseButton property1="link-1" @click="navigateToSignup">S'inscrire</BaseButton>
+          <BaseButton property1="link-2" @click="navigateToLogin">Se connecter</BaseButton>
         </div>
       </template>
 
