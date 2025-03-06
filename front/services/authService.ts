@@ -13,8 +13,15 @@ interface LoginResponse {
 
 export async function loginUser(data: LoginData): Promise<LoginResponse> {
     try {
-        // Utiliser le proxy configuré dans nuxt.config.ts
-        const response = await fetch('/api/login', {
+        console.log('Tentative de connexion avec:', data);
+
+        // Utiliser directement /api/login qui sera géré par la règle de rewrite Vercel
+        const url = '/api/login';
+
+        console.log('URL de l\'API:', url);
+
+        // Effectuer la requête
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
