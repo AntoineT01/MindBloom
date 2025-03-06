@@ -1,14 +1,13 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-
     <div class="flex justify-center m-8">
       <RejoindreEvenement @join-event="handleJoinEvent" />
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
+import RejoindreEvenement from '~/components/EventJoin.vue'
 
 const handleJoinEvent = (code: string) => {
   console.log('Tentative de rejoindre l\'événement avec le code:', code)
