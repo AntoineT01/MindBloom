@@ -4,15 +4,15 @@
 
 @layer base {
     body {
-        @apply bg-neutral-50 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100;
+        @apply bg-neutral-50 text-neutral-800;
     }
 
     h1, h2, h3, h4, h5, h6 {
-        @apply text-primary-800 dark:text-primary-200 font-bold;
+        @apply text-primary-800 font-bold;
     }
 
     a {
-        @apply text-secondary-700 dark:text-secondary-300 hover:text-secondary-800 dark:hover:text-secondary-200 transition-colors duration-300;
+        @apply text-secondary-700 hover:text-secondary-800 transition-colors duration-300;
     }
 }
 
@@ -22,20 +22,69 @@
     }
 
     .btn-primary {
-        @apply bg-primary-700 text-white hover:bg-primary-800 dark:bg-primary-600 dark:hover:bg-primary-700;
+        @apply bg-primary-700 text-white hover:bg-primary-800;
     }
 
     .btn-secondary {
-        @apply bg-secondary-600 text-white hover:bg-secondary-700 dark:bg-secondary-500 dark:hover:bg-secondary-600;
+        @apply bg-secondary-600 text-white hover:bg-secondary-700;
     }
 
     .card {
-        @apply bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6;
+        @apply bg-white rounded-lg shadow-md p-6;
     }
 
     .input {
-        @apply bg-neutral-100 dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400;
+        @apply bg-neutral-100 border border-neutral-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500;
     }
 }
 
+@font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-Black.ttf') format('truetype');
+    font-weight: 900; /* Black */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-Bold.ttf') format('truetype');
+    font-weight: 700; /* Bold */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-ExtraBold.ttf') format('truetype');
+    font-weight: 800; /* ExtraBold */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-Medium.ttf') format('truetype');
+    font-weight: 500; /* Medium */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-Regular.ttf') format('truetype');
+    font-weight: 400; /* Regular */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-SemiBold.ttf') format('truetype');
+    font-weight: 600; /* SemiBold */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900; /* Variable font supports multiple weights */
+    font-style: normal;
+  }
+  
 /* Vous pouvez ajouter d'autres styles personnalisés ici si nécessaire */
