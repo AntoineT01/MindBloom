@@ -29,7 +29,7 @@ public class EmailServiceImpl implements EmailService {
   /**
    * The mail sender
    */
-  public static final String MAIL_SENDER = "no-reply@asi.fr";
+  public static final String MAIL_SENDER = "no-reply@mindbloom.fr";
 
   /**
    * The morse logo cid to replace in the thymeleaf templates

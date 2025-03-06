@@ -1,9 +1,15 @@
-# DATABASE
 spring:
   mail:
-    host: localhost
-    port: 8125
-
+    host: ${MAILGUN_HOST}
+    port: ${MAILGUN_PORT}
+    username: ${MAILGUN_USERNAME}
+    password: ${MAILGUN_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
@@ -23,7 +29,7 @@ app:
   base-url: ${APP_BASE_URL}
 
 server:
-  port: ${PORT:8081}
+  port: ${PORT}
 
 logging:
   level:

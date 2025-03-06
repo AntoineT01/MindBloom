@@ -31,7 +31,7 @@ public interface SignupController {
    *
    * @return the created account
    */
-  @Operation(security = {@SecurityRequirement(name = "bearer-key")}, summary = """
+  @Operation(summary = """
     Public endpoint for signup.
     Profile defaulted to normal
     """)
