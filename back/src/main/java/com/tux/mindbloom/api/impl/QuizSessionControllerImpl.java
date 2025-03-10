@@ -46,4 +46,11 @@ public class QuizSessionControllerImpl extends AbstractRestController implements
         log.info("Rest : DELETE - {}", Constants.Api.QUIZ_SESSION);
         return logResponse(log, "DELETE", quizSessionService.deleteById(id));
     }
+
+    @Override
+    public QuizSessionDto findBySessionCode(String sessionCode) {
+        log.info("Rest : GET - {}/{}", Constants.Api.QUIZ_SESSION, sessionCode);
+        return logResponse(log, "GET", quizSessionService.findBySessionCode(sessionCode));
+    }
+
 }

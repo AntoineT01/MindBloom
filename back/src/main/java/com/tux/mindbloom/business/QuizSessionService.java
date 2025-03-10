@@ -51,4 +51,7 @@ public interface QuizSessionService {
      * @return un objet représentant le résultat de la suppression (true ou un message)
      */
     Object deleteById(Long id);
+
+    QuizSessionDto findBySessionCode(String sessionCode);
+
 }

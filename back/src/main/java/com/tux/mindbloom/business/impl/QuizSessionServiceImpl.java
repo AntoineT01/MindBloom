@@ -78,4 +78,12 @@ public class QuizSessionServiceImpl implements QuizSessionService {
         // Retour
         return true;
     }
+
+    @Override
+    public QuizSessionDto findBySessionCode(String sessionCode) {
+        QuizSession session = quizSessionRepository.findBySessionCode(sessionCode)
+                .orElseThrow(() -> new EntityNotFoundException(QuizSession.class.getSimpleName(), sessionCode));
+        return quizSessionMapper.toDto(session);
+    }
+
 }

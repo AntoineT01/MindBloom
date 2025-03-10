@@ -74,4 +74,13 @@ public interface QuizSessionController {
             @Min(1)
             @PathVariable Long id
     );
+
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")}, summary = "Retourne une session de quiz par son code")
+    @GetMapping(path = "/{sessionCode}")
+    @ResponseStatus(HttpStatus.OK)
+    QuizSessionDto findBySessionCode(
+            @Parameter(required = true, description = "Le code de la session de quiz")
+            @PathVariable String sessionCode
+    );
+
 }
