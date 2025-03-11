@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 services:
   db:
     build:
@@ -9,21 +9,20 @@ services:
     environment:
       TZ: Europe/Paris
       MYSQL_DATABASE: 'mindbloom_bdd'
-      # So you don't have to use root, but you can if you like
       MYSQL_USER: 'admin'
-      # You can use whatever password you like
       MYSQL_PASSWORD: 'admin'
-      # Password for root access
       MYSQL_ROOT_PASSWORD: 'admin'
     ports:
-      # <Port exposed> : < MySQL Port running inside container>
       - '3308:3306'
     expose:
-      # Opens port 3306 on the container
       - '3306'
-      # Where our data will be persisted
     volumes:
       - mysql-data:/var/lib/mysql
+    healthcheck:  # Ajout du healthcheck pour s'assurer que MySQL est prêt
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   maildev:
     image: maildev/maildev
@@ -39,6 +38,32 @@ services:
     ports:
       - "8180:1080"
       - "8125:1025"
+
+  swagger:
+    build: 
+      context: .  # Chemin vers le répertoire contenant le Dockerfile
+      dockerfile: Dockerfile  # Assurez-vous que ce fichier existe
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    env_file:
+      - ./.env
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: db  # Doit correspondre au nom du service MySQL
+      PMA_USER: admin
+      PMA_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: admin
+    depends_on:
+      - db
+    ports:
+      - "8082:80"  # Accès via http://localhost:8082
 
 
 volumes:
