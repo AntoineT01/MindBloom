@@ -161,7 +161,7 @@ const handleLogin = async () => {
     popup.showPopup("Connexion réussie !", "Succès");
 
     console.log('Navigating to homeConnected');
-    await navigateTo('/homeConnected');
+    await navigateTo('/accueilConnecte');
   } catch (error) {
     console.error('Login error:', error);
 
