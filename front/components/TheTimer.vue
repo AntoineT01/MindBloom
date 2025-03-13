@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
   <div class="flex items-center w-full">
     <div class="w-full flex items-center bg-violet-fonc rounded-full">
       <div class="h-2 bg-violet-clair rounded-full" :style="{ width: progress + '%' }"></div>
@@ -11,18 +10,6 @@
 <script>
 export default {
   name: 'TheTimer',
-=======
-    <div class="flex items-center w-full">
-    <div class="w-full flex items-center bg-violet-fonc rounded-full">
-      <div class=" h-2 bg-violet-clair rounded-full" :style="{ width: progress +'%'}"></div>
-    </div>
-    <div class=" text-black font-bold text-3xl">{{ formatTime(remainingTime) }}s</div>
-    </div>
-</template>
-  
-<script>
-export default {
->>>>>>> dev-front
   props: {
     duration: {
       type: Number,
