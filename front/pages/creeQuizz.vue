@@ -193,7 +193,6 @@
   import Button from '~/components/BaseButton.vue'
   import GlobalPopup from '~/components/GlobalPopup.vue'
   import { usePopup } from '~/composables/usePopup'
-  import { createQuiz } from '~/services/quizService'
   import { createQuestion, createAnswer, createMedia } from '~/services/questionService'
   
   // Interface pour nos questions locales
