@@ -22,4 +22,6 @@ public interface QuizService {
   QuizDto updateById(Long id, QuizDto dto);
 
   Object deleteById(Long id);
+
+  List<QuizDto> findByUserId(@NotNull Long userId);
 }

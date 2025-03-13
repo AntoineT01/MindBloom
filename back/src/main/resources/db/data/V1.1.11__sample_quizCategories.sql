@@ -1,4 +1,4 @@
--- V1.1.10__sample_quizCategories.sql
+-- V1.1.11__sample_quizCategories.sql
 -- Exemple d'insertion de données pour la table "quiz_categories"
 -- Colonnes : (quiz_id, category_id)
 

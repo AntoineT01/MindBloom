@@ -58,4 +58,10 @@ public class QuizControllerImpl extends AbstractRestController implements QuizCo
     log.info("Rest : DELETE - {}", QUIZ);
     return logResponse(log, "DELETE", quizService.deleteById(id));
   }
+
+  @Override
+  public List<QuizDto> getByUserId(Long id) {
+    log.info("Rest: GET quizzes for user id: {}/user/{}", QUIZ, id);
+    return logResponse(log, "GET", quizService.findByUserId(id));
+  }
 }
