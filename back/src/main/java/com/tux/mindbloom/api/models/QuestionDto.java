@@ -1,9 +1,11 @@
 package com.tux.mindbloom.api.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tux.mindbloom.config.validation.annotation.MustBeAbsentForCreation;
 import com.tux.mindbloom.config.validation.annotation.MustBePresentForUpdate;
 import com.tux.mindbloom.config.validation.annotation.MustBeTheSameAsInPathOrMyself;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -45,6 +47,8 @@ public class QuestionDto {
   @Schema(example = "1", description = "Identifier of the quiz to which this question belongs")
   @NotNull
   @Min(1)
+  @Column(name = "quiz_id")
+  @JsonProperty("quizId")
   private Long quizId;
 
   /**
