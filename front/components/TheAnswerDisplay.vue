@@ -19,10 +19,10 @@ const defaultPlayerImage = 'https://via.placeholder.com/150';
   <div class="relative flex items-center p-4 w-full">
     <!-- Section Profil -->
     <div v-if="profileEnabled" class="flex-shrink-0 relative z-10">
-      <Profile
+      <!-- <Profile
         :name="playerName || defaultPlayerName"
         :image="playerImage || defaultPlayerImage"
-      />
+      /> -->
     </div>
 
     <!-- Section Texte -->
