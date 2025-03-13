@@ -11,7 +11,7 @@
     </div>
 
     <!-- Réponses pour le type "slots" -->
-    <div v-if="type === 'slots'" class="w-1/2 grid grid-cols-2 gap-4 mt-6">
+    <div v-if="type === 'multiple_choice'" class="w-1/2 grid grid-cols-2 gap-4 mt-6">
       <ReponseSlots
         v-for="(rep, index) in reponses"
         :key="index"
@@ -27,7 +27,7 @@
 
     <!-- Bouton de validation et timer -->
     <div class="w-full fixed bottom-10 flex flex-col items-center">
-      <div v-if="type === 'slots'" class="mt-6">
+      <div v-if="type === 'multiple_choice'" class="mt-6">
         <BaseButton property1="validation" @click="emitNext">
           Valider
         </BaseButton>

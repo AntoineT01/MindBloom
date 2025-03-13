@@ -1,52 +1,87 @@
 <template>
-
-    <div class="flex flex-col items-center w-full bg-gray-100 min-h-screen p-6">
-      <!-- Zone de Question (3/5 de l'écran) -->
-      <div class="w-3/4 flex flex-col items-center bg-white shadow-lg rounded-lg p-6 h-3/5">
-        <div class="w-full flex justify-center">
-          <div class="w-3/4">
-            <slot name="video"></slot>
-          </div>
-        </div>
-        <h2 class="text-center text-xl font-bold mt-4 text-purple-700">{{ question }}</h2>
-      </div>
-  
-      <!-- Réponses (juste après la zone de question) -->
-      <div class="w-3/4 grid grid-cols-2 gap-4 mt-6">
-        <ReponseSlots v-for="(rep, index) in reponses" :key="index" :letter="rep.letter" :question="rep.text"/>
-      </div>
-      <!-- Validation et Timer en bas de la page -->
-      <div class="w-full fixed bottom-10 flex flex-col items-center">
-        <BaseButton />
-
-        <div class="mt-4 w-3/4">
-        <TheTimer :duration="duration"/>
-      </div>
-        </div>
+  <div>
+    <!-- Affichage du quiz si les données sont chargées et qu'il reste des questions -->
+    <QuizzDisplay
+      v-if="loaded && !quizEnded"
+      :question="question"
+      :reponses="reponses"
+      :duration="duration"
+      :type="type"
+      @next="handleNext"
+    />
+    <!-- Affichage du message de fin du quiz -->
+    <div v-else-if="quizEnded" class="flex items-center justify-center min-h-screen">
+      <h2 class="text-2xl font-bold">Fin du quiz !</h2>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    props: {
-      question: {
-        type: String,
-        required: true
-      },
-      reponses: {
-        type: Array,
-        required: true
-      },
-      duration: {
-        type: Number,
-        required: true
-      }
-    }
-  };
-  </script>
-  
-  <style scoped>
-  body {
-    background-color: #f4f4f9;
+    <!-- Indicateur de chargement -->
+    <div v-else class="flex items-center justify-center min-h-screen">
+      Chargement du quiz...
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import { getQuizz } from '@/services/quizzService.ts'  // Ajustez le chemin selon votre projet
+
+// La prop quizzId permet d'identifier le quiz à charger
+const props = defineProps({
+  quizzId: {
+    type: Number,
+    required: true
   }
-  </style>
+})
+
+// Déclaration des données réactives
+const question = ref('')
+const reponses = ref([])
+const duration = ref(0)
+const type = ref('')
+const loaded = ref(false)
+const quizEnded = ref(false)
+const currentIndex = ref(0)
+const questionsList = ref([])
+
+onMounted(async () => {
+  try {
+    // Appel à la fonction getQuizz en passant l'ID du quiz (converti en chaîne)
+    const quizResponse = await getQuizz(1)
+    
+    // Stocker l'ensemble des questions dans questionsList
+    questionsList.value = quizResponse.quizz
+
+    if (questionsList.value.length > 0) {
+      updateQuestion(0)
+      loaded.value = true
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération du quiz :', error)
+  }
+})
+
+// Fonction pour mettre à jour la question affichée selon l'index
+function updateQuestion(index) {
+  const currentQuestion = questionsList.value[index]
+  question.value = currentQuestion.question
+  duration.value = currentQuestion.time
+  type.value = currentQuestion.type
+
+  // Transformation du tableau de réponses (tableau de string) en objets avec lettre et texte.
+  const letters = ['A', 'B', 'C', 'D', 'E', 'F']
+  reponses.value = currentQuestion.reponse.map((text, index) => ({
+    letter: letters[index] || '',
+    text
+  }))
+}
+
+// Méthode appelée lorsque le composant QuizzDisplay émet l'événement "next"
+function handleNext() {
+  if (currentIndex.value < questionsList.value.length - 1) {
+    currentIndex.value++
+    updateQuestion(currentIndex.value)
+  } else {
+    // Plus de question suivante, le quiz est terminé
+    quizEnded.value = true
+  }
+}
+</script>
