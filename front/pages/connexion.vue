@@ -88,86 +88,89 @@ const loading = ref(false)
 // Rediriger si déjà connecté
 onMounted(() => {
   if (process.client) {
-    auth.checkAuth()
+    auth.checkAuth();
     if (auth.isAuthenticated.value) {
-      navigateTo('/accueil-connecte')
+      navigateTo('/accueilConnecte');
     }
   }
 })
 
 // Validation du formulaire
 const validateForm = () => {
-  let isValid = true
+  let isValid = true;
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!loginForm.email) {
-    formErrors.email = 'L\'email est requis'
-    isValid = false
+    formErrors.email = 'L\'email est requis';
+    isValid = false;
   } else if (!emailRegex.test(loginForm.email)) {
-    formErrors.email = 'Email invalide'
-    isValid = false
+    formErrors.email = 'Email invalide';
+    isValid = false;
   } else {
-    formErrors.email = ''
+    formErrors.email = '';
   }
 
   if (!loginForm.password) {
-    formErrors.password = 'Le mot de passe est requis'
-    isValid = false
-  } else if (loginForm.password.length < 6) {
-    formErrors.password = 'Le mot de passe doit contenir au moins 6 caractères'
-    isValid = false
+    formErrors.password = 'Le mot de passe est requis';
+    isValid = false;
   } else {
-    formErrors.password = ''
+    formErrors.password = '';
   }
 
-  return isValid
-}
+  return isValid;
+};
 
 // Vérification des erreurs
 const hasErrors = computed(() => {
-  return !!formErrors.email || !!formErrors.password
-})
+  return !!formErrors.email || !!formErrors.password;
+});
 
 // État du popup
-const popupOpen = computed(() => popup.isOpen.value)
-const popupMessage = computed(() => popup.message.value)
-const popupTitle = computed(() => popup.title.value)
+const popupOpen = computed(() => popup.isOpen.value);
+const popupMessage = computed(() => popup.message.value);
+const popupTitle = computed(() => popup.title.value);
 
 // Fermeture du popup
 const handleClosePopup = () => {
-  popup.closePopup()
-}
+  popup.closePopup();
+};
 
 // Connexion
 const handleLogin = async () => {
   if (!validateForm()) {
-    return
+    return;
   }
 
-  loading.value = true
+  loading.value = true;
 
   try {
-    const success = await auth.login(loginForm.email, loginForm.password)
+    const success = await auth.login(loginForm.email, loginForm.password);
 
     if (success) {
-      popup.showPopup("Connexion réussie !", "Succès")
-      await navigateTo('/accueil-connecte')
+      popup.showPopup("Connexion réussie !", "Succès");
+      await navigateTo('/accueilConnecte');
     } else {
-      popup.showPopup(auth.error.value || "Échec de la connexion", "Erreur")
+      popup.showPopup(auth.error.value || "Échec de la connexion", "Erreur");
     }
   } catch (error) {
-    console.error('Login error:', error)
+    console.error('Login error:', error);
     popup.showPopup(
         error instanceof Error ? error.message : "Erreur de connexion au serveur",
         "Erreur"
-    )
+    );
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 // Navigation vers la page d'inscription
 const navigateToSignup = () => {
-  navigateTo('/inscription')
-}
+  navigateTo('/inscription');
+};
 </script>
+
+<style scoped>
+.font-orbitron {
+  font-family: "Orbitron-Regular", sans-serif;
+}
+</style>

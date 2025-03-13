@@ -1,8 +1,7 @@
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { logoutUser as logoutUserService, getUserData, isUserLoggedIn, loginUser as loginUserService } from '~/services/authService'
 
 export const useAuth = () => {
-    const token = useCookie('auth_token')
     const user = ref(null)
     const loading = ref(false)
     const error = ref(null)
@@ -11,43 +10,46 @@ export const useAuth = () => {
     // Vérifier si l'utilisateur est authentifié
     const checkAuth = () => {
         if (process.client) {
-            isAuthenticated.value = !!token.value || isUserLoggedIn()
+            isAuthenticated.value = isUserLoggedIn();
             if (isUserLoggedIn()) {
-                user.value = getUserData()
+                user.value = getUserData();
             }
         }
-    }
+    };
 
     // Initialiser l'état d'authentification au montage
     onMounted(() => {
-        checkAuth()
-    })
+        checkAuth();
+    });
 
     const login = async (email: string, password: string) => {
-        loading.value = true
-        error.value = null
+        loading.value = true;
+        error.value = null;
+
         try {
-            const response = await loginUserService({ email, password })
-            token.value = response.token
-            user.value = response.user
-            isAuthenticated.value = true
-            checkAuth() // Mettre à jour l'état d'authentification
-            return true
+            const response = await loginUserService({ email, password });
+
+            if (response.success) {
+                user.value = response.user;
+                isAuthenticated.value = true;
+                return true;
+            } else {
+                throw new Error(response.message || 'Échec de la connexion');
+            }
         } catch (e) {
-            error.value = e.message
-            return false
+            error.value = e.message;
+            return false;
         } finally {
-            loading.value = false
+            loading.value = false;
         }
-    }
+    };
 
     const logout = async () => {
-        logoutUserService()
-        token.value = null
-        user.value = null
-        isAuthenticated.value = false
-        await navigateTo('/')
-    }
+        logoutUserService();
+        user.value = null;
+        isAuthenticated.value = false;
+        await navigateTo('/');
+    };
 
     return {
         login,
@@ -57,5 +59,5 @@ export const useAuth = () => {
         error,
         isAuthenticated,
         checkAuth
-    }
-}
+    };
+};

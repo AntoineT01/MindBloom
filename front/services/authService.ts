@@ -11,14 +11,28 @@ interface SignupData {
 }
 
 interface LoginResponse {
-    token?: string;
     user?: any;
     message?: string;
+    success?: boolean;
 }
 
 interface SignupResponse {
     message?: string;
     success?: boolean;
+}
+
+interface UpdateProfileData {
+    id: number;
+    firstname: string;
+    lastname: string;
+    mail: string;
+    profile?: {
+        id: number;
+        label: string;
+    };
+    locale?: string;
+    oauthProvider?: string;
+    oauthId?: string;
 }
 
 export async function loginUser(data: LoginData): Promise<LoginResponse> {
@@ -33,6 +47,7 @@ export async function loginUser(data: LoginData): Promise<LoginResponse> {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',  // Important pour recevoir et envoyer les cookies
             body: JSON.stringify({
                 email: data.email,
                 password: data.password
@@ -40,27 +55,26 @@ export async function loginUser(data: LoginData): Promise<LoginResponse> {
         });
         console.log('Response status:', response.status);
 
-        // Si la connexion est réussie, requête HTTP 200 sans corps
+        // Si la connexion est réussie
         if (response.status === 200) {
-            console.log('Connexion réussie');
+            console.log('Connexion réussie - Cookie JWT reçu');
+
+            // Marquer l'utilisateur comme connecté dans le localStorage
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('is_authenticated', 'true');
+            }
 
             // Récupération des informations de l'utilisateur
             const userData = await fetchUserData();
 
-            // Création d'un token fictif pour stocker l'état de connexion
-            // Puisque l'API ne renvoie pas de token
-            if (typeof window !== 'undefined') {
-                const sessionToken = 'connected_' + new Date().getTime();
-                localStorage.setItem('auth_token', sessionToken);
-                if (userData) {
-                    localStorage.setItem('user_data', JSON.stringify(userData));
-                }
+            if (userData && typeof window !== 'undefined') {
+                localStorage.setItem('user_data', JSON.stringify(userData));
             }
 
             return {
-                token: 'connected',
                 user: userData,
-                message: 'Connexion réussie'
+                message: 'Connexion réussie',
+                success: true
             };
         }
 
@@ -96,10 +110,9 @@ export async function registerUser(data: SignupData): Promise<SignupResponse> {
         const signupData = {
             firstname: data.firstname,
             lastname: data.lastname,
-            mail: data.mail,         // C'est bien 'mail' et non 'email'
+            mail: data.mail,
             password: data.password,
-            locale: "fr"             // Valeur par défaut requise selon le Swagger
-            // oauthProvider et oauthId sont optionnels
+            locale: "fr"
         };
 
         console.log('Données envoyées à l\'API:', JSON.stringify(signupData, null, 2));
@@ -170,8 +183,9 @@ async function fetchUserData(): Promise<any> {
         const response = await fetch('/api/accounts/me', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-            }
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'  // Important pour envoyer les cookies d'authentification
         });
 
         if (!response.ok) {
@@ -188,6 +202,7 @@ async function fetchUserData(): Promise<any> {
             lastname: userData.lastname,
             email: userData.mail,
             profile: userData.profile,
+            locale: userData.locale,
             // Génération d'un avatar basé sur le nom si aucun n'est fourni
             avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${userData.firstname}+${userData.lastname}`
         };
@@ -197,20 +212,88 @@ async function fetchUserData(): Promise<any> {
     }
 }
 
+export async function updateUserProfile(profileData: UpdateProfileData): Promise<any> {
+    try {
+        console.log('Tentative de mise à jour du profil:', profileData);
+
+        // Utilisation de la bonne route API selon la documentation Swagger
+        const url = `/api/accounts/me`;
+        console.log('URL de l\'API:', url);
+
+        // Vérifier si l'utilisateur est authentifié
+        if (!isUserLoggedIn()) {
+            throw new Error('Utilisateur non authentifié');
+        }
+
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',  // Important pour envoyer les cookies d'authentification
+            body: JSON.stringify(profileData),
+        });
+        console.log('Response status:', response.status);
+
+        if (!response.ok) {
+            // Essayer de lire les détails de l'erreur
+            try {
+                const errorData = await response.json();
+                console.error('Détails de l\'erreur:', errorData);
+
+                // Afficher tous les messages d'erreur spécifiques
+                if (errorData.errors && errorData.errors.length > 0) {
+                    console.error('Messages d\'erreur spécifiques:');
+                    errorData.errors.forEach((err: any, index: number) => {
+                        console.error(`Erreur ${index + 1}:`, err.code, '-', err.message);
+                    });
+
+                    // Construire un message d'erreur avec tous les détails
+                    const errorMessages = errorData.errors.map((err: any) => err.message).join('; ');
+                    throw new Error(errorMessages || `Erreur ${response.status}: ${response.statusText}`);
+                }
+            } catch (e) {
+                // Si on ne peut pas lire le JSON ou s'il n'y a pas de détails d'erreur
+                console.error('Impossible de parser les détails de l\'erreur:', e);
+                throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+            }
+            throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+        }
+
+        // Si la mise à jour est réussie
+        const updatedUserData = await response.json();
+        console.log('Mise à jour du profil réussie:', updatedUserData);
+
+        // Mettre à jour les données utilisateur dans le localStorage
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('user_data', JSON.stringify({
+                id: updatedUserData.id,
+                firstname: updatedUserData.firstname,
+                lastname: updatedUserData.lastname,
+                email: updatedUserData.mail,
+                profile: updatedUserData.profile,
+                locale: updatedUserData.locale,
+                avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${updatedUserData.firstname}+${updatedUserData.lastname}`
+            }));
+        }
+
+        return updatedUserData;
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error('Erreur lors de la mise à jour du profil');
+    }
+}
+
 // Fonction pour vérifier si l'utilisateur est connecté
 export function isUserLoggedIn(): boolean {
     if (typeof window === 'undefined') return false;
-    const token = localStorage.getItem('auth_token');
-    // Vérification simplifiée - vérifier si un token est stocké
-    return !!token;
+    return localStorage.getItem('is_authenticated') === 'true';
 }
 
-// Fonction pour récupérer le token d'authentification
-export function getAuthToken(): string | null {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem('auth_token');
-}
-
+// Fonction pour récupérer les données utilisateur stockées localement
 export function getUserData(): any | null {
     if (typeof window === 'undefined') return null;
 
@@ -226,10 +309,23 @@ export function getUserData(): any | null {
     return null;
 }
 
+// Fonction de déconnexion
 export function logoutUser(): void {
     if (typeof window !== 'undefined') {
-        localStorage.removeItem('auth_token');
+        // Supprimer les données locales
+        localStorage.removeItem('is_authenticated');
         localStorage.removeItem('user_data');
-        console.log('Déconnexion réussie, tokens supprimés');
+
+        // Appeler l'API de déconnexion pour supprimer le cookie côté serveur
+        fetch('/api/logout', {
+            method: 'POST',
+            credentials: 'include'  // Important pour envoyer les cookies d'authentification
+        }).then(() => {
+            console.log('Déconnexion réussie côté serveur');
+        }).catch(error => {
+            console.error('Erreur lors de la déconnexion côté serveur:', error);
+        });
+
+        console.log('Déconnexion réussie, données supprimées');
     }
 }

@@ -37,9 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, onBeforeMount, onUnmounted } from 'vue'
 import BaseButton from '~/components/BaseButton.vue'
-import { isUserLoggedIn, getUserData } from '~/services/authService'
 import { useAuth } from '~/composables/useAuth'
 
 const auth = useAuth()
@@ -49,53 +48,60 @@ const isLoggedIn = ref(false)
 
 // Données utilisateur
 const userAvatar = ref('/default-avatar.png')
-const userName = ref('utilisateur')
+const userName = ref('Utilisateur')
 
-// Vérifier la connexion au chargement
+// Mise à jour des données utilisateur
+const updateUserData = () => {
+  isLoggedIn.value = auth.isAuthenticated.value;
+
+  if (isLoggedIn.value && auth.user.value) {
+    userName.value = auth.user.value.firstname || 'Utilisateur';
+    userAvatar.value = auth.user.value.avatar || '/default-avatar.png';
+  }
+};
+
+// Initialisation côté client uniquement
+onBeforeMount(() => {
+  if (process.client) {
+    auth.checkAuth();
+  }
+});
+
 onMounted(() => {
   if (process.client) {
-    checkLoginStatus()
+    updateUserData();
 
-    // Vérifier périodiquement le statut d'authentification
-    setInterval(checkLoginStatus, 1000)
+    // Vérifier périodiquement l'état d'authentification
+    const interval = setInterval(() => {
+      auth.checkAuth();
+      updateUserData();
+    }, 5000);
+
+    // Nettoyer l'intervalle lorsque le composant est détruit
+    onUnmounted(() => {
+      clearInterval(interval);
+    });
   }
-})
-
-// Vérifie si l'utilisateur est connecté
-function checkLoginStatus() {
-  if (process.client) {
-    const loggedIn = isUserLoggedIn()
-    isLoggedIn.value = loggedIn
-
-    if (loggedIn) {
-      const userData = getUserData()
-      if (userData) {
-        userName.value = userData.firstname || 'Utilisateur'
-        userAvatar.value = userData.avatar || '/default-avatar.png'
-      }
-    }
-  }
-}
+});
 
 // Navigation
 const navigateToSignup = () => {
-  navigateTo('/inscription')
-}
+  navigateTo('/inscription');
+};
 
 const navigateToLogin = () => {
-  navigateTo('/connexion')
-}
+  navigateTo('/connexion');
+};
 
 const navigateToProfile = () => {
-  navigateTo('/profil')
-}
+  navigateTo('/profil');
+};
 
 // Déconnexion
 const handleLogout = async () => {
   if (process.client) {
-    await auth.logout()
-    isAuthenticated.value = false
-    // Redirection gérée dans le composable useAuth
+    await auth.logout();
+    isLoggedIn.value = false;
   }
-}
+};
 </script>

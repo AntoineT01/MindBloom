@@ -39,6 +39,10 @@
                     <span class="text-sm text-gray-500">Email</span>
                     <span class="font-medium">{{ userData.email || 'Non renseigné' }}</span>
                   </div>
+                  <div class="flex flex-col">
+                    <span class="text-sm text-gray-500">Langue</span>
+                    <span class="font-medium">{{ getLocaleLabel(userData.locale) }}</span>
+                  </div>
                 </div>
               </div>
 
@@ -83,11 +87,22 @@
 import { ref, onMounted } from 'vue'
 import BaseButton from '~/components/BaseButton.vue'
 import { getUserData, isUserLoggedIn } from '~/services/authService'
-import { useAuth } from '~/composables/useAuth'
 
-const auth = useAuth()
 const userData = ref<any>({})
 const userEvents = ref<any[]>([])
+
+// Mapping des codes langue vers des labels plus lisibles
+const locales = {
+  'fr': 'Français',
+  'en': 'Anglais',
+  'es': 'Espagnol',
+  'de': 'Allemand'
+}
+
+// Fonction pour obtenir le label d'une langue
+const getLocaleLabel = (localeCode: string) => {
+  return locales[localeCode as keyof typeof locales] || localeCode || 'Non renseigné'
+}
 
 onMounted(() => {
   if (process.client) {
@@ -102,19 +117,18 @@ onMounted(() => {
     if (user) {
       userData.value = user
     }
-  }
 
-  // Exemple de données d'événements pour démonstration
-  userEvents.value = [
-    { id: 1, title: 'Quiz Science', date: '15 mars 2025' },
-    { id: 2, title: 'Quiz Culture générale', date: '10 mars 2025' },
-    { id: 3, title: 'Quiz Histoire', date: '5 mars 2025' }
-  ]
+    // Exemple de données d'événements pour démonstration
+    userEvents.value = [
+      { id: 1, title: 'Quiz Science', date: '15 mars 2025' },
+      { id: 2, title: 'Quiz Culture générale', date: '10 mars 2025' },
+      { id: 3, title: 'Quiz Histoire', date: '5 mars 2025' }
+    ]
+  }
 })
 
 const navigateToEditProfile = () => {
-  // À implémenter: navigation vers la page d'édition de profil
-  console.log('Navigation vers la page d\'édition de profil')
+  navigateTo('/edit-profile')
 }
 
 const navigateToEvent = (eventId: number) => {
