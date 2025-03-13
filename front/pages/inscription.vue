@@ -12,7 +12,6 @@
             :error="formErrors.firstname"
             class="w-full"
         />
-
         <ChampText
             v-model="lastname"
             :withIcon="true"
@@ -23,18 +22,16 @@
             :error="formErrors.lastname"
             class="w-full"
         />
-
         <ChampText
-            v-model="mail"
+            v-model="email"
             :withIcon="true"
             :withButton="false"
             iconType="email"
             inputType="email"
             placeholder="Votre email"
-            :error="formErrors.mail"
+            :error="formErrors.email"
             class="w-full"
         />
-
         <ChampText
             v-model="password"
             :withIcon="true"
@@ -45,7 +42,6 @@
             :error="formErrors.password"
             class="w-full"
         />
-
         <ChampText
             v-model="confirmPassword"
             :withIcon="true"
@@ -56,7 +52,6 @@
             :error="formErrors.confirmPassword"
             class="w-full"
         />
-
         <div class="flex justify-center w-full">
           <Button
               property1="validation"
@@ -68,7 +63,6 @@
           </Button>
         </div>
       </form>
-
       <div class="text-center pt-4 w-full">
         <p class="text-violet-fonc mb-4">Vous avez déjà un compte ?</p>
         <div class="flex justify-center w-full">
@@ -79,7 +73,6 @@
       </div>
     </div>
 
-    <!-- Popup pour les messages -->
     <GlobalPopup
         :is-open="popupOpen"
         :message="popupMessage"
@@ -99,36 +92,31 @@ import { registerUser } from '~/services/authService'
 
 const firstname = ref('')
 const lastname = ref('')
-const mail = ref('')
+const email = ref('')  // Changement de 'mail' à 'email' pour plus de clarté
 const password = ref('')
 const confirmPassword = ref('')
 const loading = ref(false)
 const popup = usePopup()
 
-// Erreurs de validation
 const formErrors = reactive({
   firstname: '',
   lastname: '',
-  mail: '',
+  email: '',  // Changement de 'mail' à 'email'
   password: '',
   confirmPassword: ''
 })
 
-// Computed properties
 const popupOpen = computed(() => popup.isOpen.value)
 const popupMessage = computed(() => popup.message.value)
 const popupTitle = computed(() => popup.title.value)
 
-// Handlers
 const handleClosePopup = () => {
   popup.closePopup()
 }
 
-// Validation du formulaire
 const validateForm = () => {
   let isValid = true
 
-  // Validation prénom
   if (!firstname.value) {
     formErrors.firstname = 'Le prénom est requis'
     console.log('le prénom est requis')
@@ -137,7 +125,6 @@ const validateForm = () => {
     formErrors.firstname = ''
   }
 
-  // Validation nom
   if (!lastname.value) {
     formErrors.lastname = 'Le nom est requis'
     console.log('le nom est requis')
@@ -146,21 +133,19 @@ const validateForm = () => {
     formErrors.lastname = ''
   }
 
-  // Validation email
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!mail.value) {
-    formErrors.mail = 'L\'email est requis'
+  if (!email.value) {
+    formErrors.email = 'L\'email est requis'
     console.log('l\'email est requis')
     isValid = false
-  } else if (!emailRegex.test(mail.value)) {
-    formErrors.mail = 'Email invalide'
+  } else if (!emailRegex.test(email.value)) {
+    formErrors.email = 'Email invalide'
     console.log('email invalide')
     isValid = false
   } else {
-    formErrors.mail = ''
+    formErrors.email = ''
   }
 
-  // Validation mot de passe
   if (!password.value) {
     formErrors.password = 'Le mot de passe est requis'
     console.log('le mot de passe est requis')
@@ -173,7 +158,6 @@ const validateForm = () => {
     formErrors.password = ''
   }
 
-  // Validation confirmation mot de passe
   if (!confirmPassword.value) {
     formErrors.confirmPassword = 'La confirmation du mot de passe est requise'
     console.log('la confirmation du mot de passe est requise')
@@ -192,7 +176,6 @@ const validateForm = () => {
 const handleSignup = async () => {
   try {
     console.log('Tentative d\'inscription')
-
     if (!validateForm()) {
       console.error('Formulaire invalide')
       return
@@ -203,34 +186,31 @@ const handleSignup = async () => {
     const signupData = {
       firstname: firstname.value,
       lastname: lastname.value,
-      mail: mail.value,
+      mail: email.value,  // Important: garder 'mail' ici si l'API utilise 'mail'
       password: password.value
     }
 
     console.log('Envoi des données d\'inscription:', signupData)
 
-    // Appel au service d'inscription
     await registerUser(signupData)
 
     console.log('Inscription réussie')
 
-    // Affichage du message de succès
     popup.showPopup(
         "Inscription réussie ! Veuillez vérifier votre email pour activer votre compte.",
         "Succès"
     )
 
-    // Réinitialisation du formulaire
+    // Réinitialisation des champs du formulaire
     firstname.value = ''
     lastname.value = ''
-    mail.value = ''
+    email.value = ''
     password.value = ''
     confirmPassword.value = ''
 
   } catch (error) {
     console.error('Erreur lors de l\'inscription:', error)
 
-    // Affichage du message d'erreur
     popup.showPopup(
         error instanceof Error ? error.message : "Erreur lors de l'inscription",
         "Erreur"

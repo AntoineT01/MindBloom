@@ -85,6 +85,85 @@ export async function loginUser(data: LoginData): Promise<LoginResponse> {
     }
 }
 
+export async function registerUser(data: SignupData): Promise<SignupResponse> {
+    try {
+        console.log('Tentative d\'inscription avec:', data);
+
+        const url = '/api/signup';
+        console.log('URL de l\'API:', url);
+
+        // Format exactement selon le Swagger
+        const signupData = {
+            firstname: data.firstname,
+            lastname: data.lastname,
+            mail: data.mail,         // C'est bien 'mail' et non 'email'
+            password: data.password,
+            locale: "fr"             // Valeur par défaut requise selon le Swagger
+            // oauthProvider et oauthId sont optionnels
+        };
+
+        console.log('Données envoyées à l\'API:', JSON.stringify(signupData, null, 2));
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(signupData),
+        });
+        console.log('Response status:', response.status);
+
+        if (!response.ok) {
+            // Essayer de lire les détails de l'erreur
+            try {
+                const errorData = await response.json();
+                console.error('Détails de l\'erreur:', errorData);
+
+                // Afficher tous les messages d'erreur spécifiques
+                if (errorData.errors && errorData.errors.length > 0) {
+                    console.error('Messages d\'erreur spécifiques:');
+                    errorData.errors.forEach((err: any, index: number) => {
+                        console.error(`Erreur ${index + 1}:`, err.code, '-', err.message);
+                    });
+
+                    // Construire un message d'erreur avec tous les détails
+                    const errorMessages = errorData.errors.map((err: any) => err.message).join('; ');
+                    throw new Error(errorMessages || `Erreur ${response.status}: ${response.statusText}`);
+                }
+            } catch (e) {
+                // Si on ne peut pas lire le JSON ou s'il n'y a pas de détails d'erreur
+                console.error('Impossible de parser les détails de l\'erreur:', e);
+                throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+            }
+            throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+        }
+
+        try {
+            // Si la réponse est OK, on essaie de lire les données de réponse
+            const responseData = await response.json();
+            console.log('Inscription réussie:', responseData);
+
+            return {
+                success: true,
+                message: 'Inscription réussie. Veuillez vérifier votre email pour confirmer votre compte.'
+            };
+        } catch (e) {
+            // Si la réponse ne contient pas de JSON valide
+            console.log('La réponse ne contient pas de JSON valide');
+            return {
+                success: true,
+                message: 'Inscription réussie. Veuillez vérifier votre email pour confirmer votre compte.'
+            };
+        }
+    } catch (error) {
+        console.error('Registration error in service:', error);
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error('Erreur lors de l\'inscription');
+    }
+}
+
 // Fonction pour récupérer les données de l'utilisateur connecté
 async function fetchUserData(): Promise<any> {
     try {
@@ -118,76 +197,6 @@ async function fetchUserData(): Promise<any> {
     }
 }
 
-export async function registerUser(data: SignupData): Promise<SignupResponse> {
-    try {
-        console.log('Tentative d\'inscription avec:', data);
-
-        const url = '/api/signup';
-        console.log('URL de l\'API:', url);
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                firstname: data.firstname,
-                lastname: data.lastname,
-                mail: data.mail,
-                password: data.password
-            }),
-        });
-        console.log('Response status:', response.status);
-
-        const contentType = response.headers.get('content-type');
-        const hasContent = contentType && contentType.includes('application/json');
-        if (!response.ok) {
-            if (hasContent) {
-                try {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || 'Échec de l\'inscription');
-                } catch (jsonError) {
-                    throw new Error(`Erreur ${response.status}: ${response.statusText}`);
-                }
-            } else {
-                throw new Error(`Erreur ${response.status}: ${response.statusText}`);
-            }
-        }
-        if (!hasContent) {
-            console.log('La réponse ne contient pas de JSON valide');
-            return {
-                success: true,
-                message: 'Inscription réussie. Veuillez vérifier votre email pour confirmer votre compte.'
-            };
-        }
-        try {
-            const responseData = await response.json();
-            console.log('Registration successful:', responseData);
-            return responseData;
-        } catch (jsonError) {
-            console.error('Erreur lors du parsing JSON:', jsonError);
-            return {
-                success: true,
-                message: 'Inscription réussie. Veuillez vérifier votre email pour confirmer votre compte.'
-            };
-        }
-    } catch (error) {
-        console.error('Registration error in service:', error);
-        if (error instanceof Error) {
-            throw error;
-        }
-        throw new Error('Erreur lors de l\'inscription');
-    }
-}
-
-export function logoutUser(): void {
-    if (typeof window !== 'undefined') {
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user_data');
-        console.log('Déconnexion réussie, tokens supprimés');
-    }
-}
-
 // Fonction pour vérifier si l'utilisateur est connecté
 export function isUserLoggedIn(): boolean {
     if (typeof window === 'undefined') return false;
@@ -215,4 +224,12 @@ export function getUserData(): any | null {
         }
     }
     return null;
+}
+
+export function logoutUser(): void {
+    if (typeof window !== 'undefined') {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user_data');
+        console.log('Déconnexion réussie, tokens supprimés');
+    }
 }
