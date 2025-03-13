@@ -1,44 +1,37 @@
-// composables/useAuth.ts
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { logoutUser as logoutUserService, getUserData, isUserLoggedIn, loginUser as loginUserService } from '~/services/authService'
 
 export const useAuth = () => {
     const token = useCookie('auth_token')
     const user = ref(null)
     const loading = ref(false)
     const error = ref(null)
+    const isAuthenticated = ref(false)
+
+    // Vérifier si l'utilisateur est authentifié
+    const checkAuth = () => {
+        if (process.client) {
+            isAuthenticated.value = !!token.value || isUserLoggedIn()
+            if (isUserLoggedIn()) {
+                user.value = getUserData()
+            }
+        }
+    }
+
+    // Initialiser l'état d'authentification au montage
+    onMounted(() => {
+        checkAuth()
+    })
 
     const login = async (email: string, password: string) => {
         loading.value = true
         error.value = null
-
         try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            })
-
-            if (!response.ok) {
-                switch (response.status) {
-                    case 400:
-                        throw new Error('Données invalides')
-                    case 401:
-                        throw new Error('Email ou mot de passe incorrect')
-                    case 409:
-                        throw new Error('Conflit avec les données existantes')
-                    case 500:
-                        throw new Error('Erreur serveur')
-                    default:
-                        throw new Error('Une erreur est survenue')
-                }
-            }
-
-            const data = await response.json()
-            token.value = data.token // Ajustez selon la réponse de votre API
-            user.value = data.user // Ajustez selon la réponse de votre API
-
+            const response = await loginUserService({ email, password })
+            token.value = response.token
+            user.value = response.user
+            isAuthenticated.value = true
+            checkAuth() // Mettre à jour l'état d'authentification
             return true
         } catch (e) {
             error.value = e.message
@@ -48,9 +41,12 @@ export const useAuth = () => {
         }
     }
 
-    const logout = () => {
+    const logout = async () => {
+        logoutUserService()
         token.value = null
         user.value = null
+        isAuthenticated.value = false
+        await navigateTo('/')
     }
 
     return {
@@ -59,6 +55,7 @@ export const useAuth = () => {
         user,
         loading,
         error,
-        isAuthenticated: computed(() => !!token.value)
+        isAuthenticated,
+        checkAuth
     }
 }

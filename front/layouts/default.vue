@@ -1,10 +1,6 @@
-<!-- layouts/default.vue -->
 <template>
   <div class="min-h-screen flex flex-col bg-background-light dark:bg-background-dark">
-    <Navbar
-        :type="currentState"
-        :userImage="userImage"
-    />
+    <TheNavbar />
     <main class="flex-grow">
       <slot />
     </main>
@@ -17,14 +13,5 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import Navbar from '~/components/TheNavbar.vue'
-
-const currentState = ref('connexion')
-const userImage = ref('https://avatar.iran.liara.run/public')
-
-// Si vous avez besoin de gérer l'état de connexion
-const updateState = (isConnected: boolean) => {
-  currentState.value = isConnected ? 'connect' : 'connexion'
-}
+import TheNavbar from '~/components/TheNavbar.vue'
 </script>

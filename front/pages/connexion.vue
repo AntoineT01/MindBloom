@@ -1,4 +1,3 @@
-# pages/connexion.vue
 <template>
   <div class="container mx-auto px-4">
     <div class="flex flex-col items-center justify-center min-h-[80vh] max-w-md mx-auto space-y-8">
@@ -38,7 +37,7 @@
         </div>
       </form>
 
-      <!-- Lien d'inscription -->
+      <!-- Lien vers l'inscription -->
       <div class="text-center pt-4">
         <p class="text-violet-fonc mb-4">Vous n'avez pas de compte ?</p>
         <Button
@@ -51,7 +50,7 @@
       </div>
     </div>
 
-    <!-- Popup pour les messages -->
+    <!-- Popup de notification -->
     <GlobalPopup
         :is-open="popupOpen"
         :message="popupMessage"
@@ -67,33 +66,39 @@ import ChampText from '~/components/BaseTextField.vue'
 import Button from '~/components/BaseButton.vue'
 import GlobalPopup from '~/components/GlobalPopup.vue'
 import { usePopup } from '~/composables/usePopup'
-import { loginUser } from '~/services/authService'
+import { useAuth } from '~/composables/useAuth'
 
-interface LoginData {
-  email: string;
-  password: string;
-}
-
-const loading = ref(false)
-const popup = usePopup()
-
-// Formulaire de connexion
+// État du formulaire
 const loginForm = reactive({
   email: '',
   password: ''
 })
 
-// Erreurs de validation
+// État des erreurs du formulaire
 const formErrors = reactive({
   email: '',
   password: ''
+})
+
+// Composables
+const popup = usePopup()
+const auth = useAuth()
+const loading = ref(false)
+
+// Rediriger si déjà connecté
+onMounted(() => {
+  if (process.client) {
+    auth.checkAuth()
+    if (auth.isAuthenticated.value) {
+      navigateTo('/accueilConnecte')
+    }
+  }
 })
 
 // Validation du formulaire
 const validateForm = () => {
   let isValid = true
 
-  // Validation email
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!loginForm.email) {
     formErrors.email = 'L\'email est requis'
@@ -105,7 +110,6 @@ const validateForm = () => {
     formErrors.email = ''
   }
 
-  // Validation mot de passe
   if (!loginForm.password) {
     formErrors.password = 'Le mot de passe est requis'
     isValid = false
@@ -119,69 +123,51 @@ const validateForm = () => {
   return isValid
 }
 
-// Computed properties
+// Vérification des erreurs
 const hasErrors = computed(() => {
   return !!formErrors.email || !!formErrors.password
 })
 
+// État du popup
 const popupOpen = computed(() => popup.isOpen.value)
 const popupMessage = computed(() => popup.message.value)
 const popupTitle = computed(() => popup.title.value)
 
-// Handlers
+// Fermeture du popup
 const handleClosePopup = () => {
   popup.closePopup()
 }
 
-// Fonction de débogage
-onMounted(() => {
-  console.log('Page de connexion montée');
-})
-
+// Connexion
 const handleLogin = async () => {
-  console.log('Handle login clicked');
+  if (!validateForm()) {
+    return
+  }
 
-  // if (!validateForm()) {
-  //   console.log('Form validation failed');
-  //   return;
-  // }
-
-  loading.value = true;
-  console.log('Loading started');
+  loading.value = true
 
   try {
-    console.log('Sending login request');
+    const success = await auth.login(loginForm.email, loginForm.password)
 
-    await loginUser({
-      email: loginForm.email,
-      password: loginForm.password
-    });
-
-    console.log('Login successful');
-    popup.showPopup("Connexion réussie !", "Succès");
-
-    console.log('Navigating to homeConnected');
-    await navigateTo('/accueilConnecte');
+    if (success) {
+      popup.showPopup("Connexion réussie !", "Succès")
+      await navigateTo('/accueilConnecte')
+    } else {
+      popup.showPopup(auth.error.value || "Échec de la connexion", "Erreur")
+    }
   } catch (error) {
-    console.error('Login error:', error);
-
+    console.error('Login error:', error)
     popup.showPopup(
         error instanceof Error ? error.message : "Erreur de connexion au serveur",
         "Erreur"
-    );
+    )
   } finally {
-    loading.value = false;
-    console.log('Loading ended');
+    loading.value = false
   }
 }
 
+// Navigation vers la page d'inscription
 const navigateToSignup = () => {
   navigateTo('/inscription')
 }
 </script>
-
-<style scoped>
-.font-orbitron {
-  font-family: "Orbitron-Regular", sans-serif;
-}
-</style>
