@@ -1,14 +1,15 @@
 <template>
-    <div class="flex items-center w-full">
+  <div class="flex items-center w-full">
     <div class="w-full flex items-center bg-violet-fonc rounded-full">
-      <div class=" h-2 bg-violet-clair rounded-full" :style="{ width: progress +'%'}"></div>
+      <div class="h-2 bg-violet-clair rounded-full" :style="{ width: progress + '%' }"></div>
     </div>
-    <div class=" text-black font-bold text-3xl">{{ formatTime(remainingTime) }}s</div>
-    </div>
+    <div class="text-black font-bold text-3xl">{{ formatTime(remainingTime) }}s</div>
+  </div>
 </template>
-  
+
 <script>
 export default {
+  name: 'TheTimer',
   props: {
     duration: {
       type: Number,
@@ -35,9 +36,10 @@ export default {
       this.interval = setInterval(() => {
         const elapsed = (performance.now() - this.startTime) / 1000;
         this.remainingTime = Math.max(this.duration - elapsed, 0);
-        this.progress = Math.max((this.remainingTime / this.duration) * 100, 0).toFixed(2); // Arrondi pour éviter les erreurs de flottants
+        this.progress = Math.max((this.remainingTime / this.duration) * 100, 0).toFixed(2);
         if (this.remainingTime <= 0) {
           clearInterval(this.interval);
+          this.$emit('timeUp');
         }
       }, 10);
     },
@@ -47,6 +49,6 @@ export default {
   }
 };
 </script>
-  <style scoped>
+
+<style scoped>
 </style>
-  

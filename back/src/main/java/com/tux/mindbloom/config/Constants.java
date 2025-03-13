@@ -47,17 +47,27 @@ public final class Constants {
   public static final class Api {
     public static final String LOGIN = "/login";
     public static final String ME = "/me";
-    public static final String SOMETHING = "/somethings";
     public static final String ACCOUNTS = "/accounts";
     public static final String SIGNUPS = "/signup";
     public static final String ACCOUNT_REQUESTS = "/account-requests";
     public static final String PROFILES = "/profiles";
-    public static final String COUNTRIES = "/countries";
     public static final String PASSWORD = "/password";
     public static final String LOGOUT = "/logout";
     public static final String QUIZ = "/quiz";
     public static final String QUESTION = "/question";
     public static final String ANSWER = "/answer";
+    public static final String MEDIA = "/media";
+    public static final String QUIZ_STATISTICS  = "/quiz_statistics ";
+    public static final String QUIZ_SESSION  = "/quiz_session  ";
+    public static final String LEADERBOARD   = "/leaderboard  ";
+    public static final String PARTICIPANTS  = "/participants ";
+    public static final String SESSION_RESPONSES  = "/session_responses ";
+    public static final String QUIZ_CATEGORIES   = "/quiz_categories  ";
+    public static final String CATEGORIES  = "/categorie ";
+    public static final String BADGE = "/badge ";
+    public static final String ACCOUNT_BADGES  = "/account_badges ";
+    public static final String ACCOUNT_TROPHIES  = "/account_trophies ";
+    public static final String TROPHIES  = "/trophies  ";
 
     private Api() {
     }

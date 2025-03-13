@@ -3,6 +3,9 @@ info:
   build:
     version: test
 
+app:
+  base-url: http://localhost
+
 # SERVER
 server:
   port: 8081
@@ -28,9 +31,10 @@ spring:
   jpa:
     properties:
       hibernate.format_sql: false
-      hibernate.dialect:  org.hibernate.dialect.H2Dialect
+      hibernate.dialect: org.hibernate.dialect.H2Dialect
       hibernate:
         show_sql: true
+
   flyway:
     driver-class-name: org.h2.Driver
 

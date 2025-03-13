@@ -106,6 +106,7 @@ public class WebSecurity {
     configuration.addAllowedOrigin("http://localhost:8080");
     configuration.addAllowedOrigin("http://localhost:8081");
     configuration.addAllowedOrigin("http://localhost:5173");
+    configuration.addAllowedOrigin("http://localhost:3000");
     configuration.addAllowedOrigin("https://mindbloom-4ibi.onrender.com:8081");
     configuration.addAllowedOrigin("https://mindbloom-4ibi.onrender.com:8080");
     configuration.addAllowedOrigin("https://mindbloom-4ibi.onrender.com:5173");
