@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * implementation of {@link com.tux.mindbloom.business.QuizService}
@@ -134,5 +135,14 @@ public class QuizServiceImpl implements QuizService {
   }
 
 
-
+  @Override
+  public List<QuizDto> findByUserId(Long userId) {
+    List<Quiz> quizzes = repository.findByCreatorId(userId);
+    if (quizzes == null || quizzes.isEmpty()) {
+      throw new EntityNotFoundException("Quizzes", userId);
+    }
+    return quizzes.stream()
+      .map(mapper::toDto)
+      .toList();
+  }
 }

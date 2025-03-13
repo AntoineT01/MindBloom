@@ -73,4 +73,19 @@ public interface QuizController {
             @Min(1)
             @PathVariable Long id
     );
-}
+
+  /**
+   * Returns all quizzes for a given user id.
+   *
+   * @param id the user id (must be greater than 0)
+   * @return the list of quizzes created by the specified user
+   */
+  @Operation(security = { @SecurityRequirement(name = "bearer-key") }, summary = "Returns all quizzes for a given user id")
+  @GetMapping(path = "/user/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  @PreAuthorize(NORMAL)
+  List<QuizDto> getByUserId(
+    @Parameter(required = true, example = "1", description = "The required user id, must be set and greater than 0")
+    @Min(1)
+    @PathVariable Long id
+  );}
