@@ -7,15 +7,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue'
-
-
-</script>
-
-<style scoped>
-.font-orbitron {
-  font-family: "Orbitron-Regular", sans-serif;
-}
-</style>

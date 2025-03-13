@@ -35,7 +35,7 @@ public class AnswerServiceImpl implements AnswerService {
     return answerRepository.findAll()
       .stream()
       .map(answerMapper::toDto)
-      .collect(Collectors.toList());
+      .toList();
   }
 
   @Override
@@ -55,7 +55,7 @@ public class AnswerServiceImpl implements AnswerService {
     }
     return answers.stream()
       .map(answerMapper::toDto)
-      .collect(Collectors.toList());
+      .toList();
   }
 
   @Override

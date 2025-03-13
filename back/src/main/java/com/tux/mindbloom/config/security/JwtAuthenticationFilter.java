@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tux.mindbloom.api.models.FormLoginDto;
 import com.tux.mindbloom.config.Constants;
 import com.tux.mindbloom.config.exceptions.JwtAuthenticationException;
-import com.tux.mindbloom.utils.PasswordUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
