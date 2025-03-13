@@ -24,7 +24,7 @@ services:
       timeout: 5s
       retries: 5
 
-  maildev:
+  maildev: 
     image: maildev/maildev
     restart: always
     environment:
