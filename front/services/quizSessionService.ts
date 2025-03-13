@@ -1,7 +1,5 @@
 // ~/services/quizSessionService.ts
 
-import { getAuthToken } from './authService'
-
 interface QuizSessionResponse {
     id?: string;
     code?: string;
@@ -25,18 +23,12 @@ export async function joinQuizSession(sessionCode: string): Promise<QuizSessionR
 
         console.log('URL de vérification:', checkUrl);
 
-        // Récupération du token d'authentification (si l'utilisateur est connecté)
-        const authToken = getAuthToken();
 
         // Headers pour la requête
         const headers: HeadersInit = {
             'Content-Type': 'application/json',
         };
 
-        // Ajouter le token d'authentification si disponible
-        if (authToken) {
-            headers['Authorization'] = `Bearer ${authToken}`;
-        }
 
         // Vérifier si la session existe
         const checkResponse = await fetch(checkUrl, {
@@ -108,15 +100,10 @@ export async function joinQuizSession(sessionCode: string): Promise<QuizSessionR
 export async function getQuizSession(sessionCode: string): Promise<QuizSessionResponse> {
     try {
         const url = `/api/quizzsession/${sessionCode}`;
-        const authToken = getAuthToken();
 
         const headers: HeadersInit = {
             'Content-Type': 'application/json',
         };
-
-        if (authToken) {
-            headers['Authorization'] = `Bearer ${authToken}`;
-        }
 
         const response = await fetch(url, {
             method: 'GET',

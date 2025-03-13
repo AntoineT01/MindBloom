@@ -1,7 +1,5 @@
 // ~/services/questionService.ts
 
-import { getAuthToken } from './authService';
-
 export interface Question {
   id?: number;
   quizId: number;
@@ -24,13 +22,9 @@ export interface Question {
  */
 export async function createQuestion(questionData: Question): Promise<Question> {
   try {
-    const authToken = getAuthToken();
     const headers: HeadersInit = {
       'Content-Type': 'application/json'
     };
-    if (authToken) {
-      headers['Authorization'] = `Bearer ${authToken}`;
-    }
     const response = await fetch('/api/question', {
       method: 'POST',
       headers,
@@ -63,13 +57,9 @@ export interface Answer {
  */
 export async function createAnswer(answerData: Answer): Promise<Answer> {
   try {
-    const authToken = getAuthToken();
     const headers: HeadersInit = {
       'Content-Type': 'application/json'
     };
-    if (authToken) {
-      headers['Authorization'] = `Bearer ${authToken}`;
-    }
     const response = await fetch('/api/answer', {
       method: 'POST',
       headers,
@@ -98,13 +88,9 @@ export interface Media {
  */
 export async function createMedia(mediaData: Media): Promise<Media> {
   try {
-    const authToken = getAuthToken();
     const headers: HeadersInit = {
       'Content-Type': 'application/json'
     };
-    if (authToken) {
-      headers['Authorization'] = `Bearer ${authToken}`;
-    }
     const response = await fetch('/api/media', {
       method: 'POST',
       headers,
