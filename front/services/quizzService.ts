@@ -11,14 +11,14 @@ interface QuizzResponse {
 }
 
 
-interface QuizzAnswer{
-  sessionId: Number;
-  participantId: Number;
-  questionId: Number;
-  answerId:Number;
-  responseText: String;
-  submittedAt: Date;
-  isCorrect: Boolean
+interface QuizzAnswer {
+    sessionId: number;
+    participantId: number;
+    questionId: number;
+    answerId?: number;
+    responseText: string;
+    submittedAt: Date;
+    isCorrect: boolean;
 }
 
 interface res {
@@ -32,47 +32,42 @@ interface res {
 
 
 export async function getQuizz(id: Number): Promise<QuizzResponse> {
-  const questionsUrl = '/api/question/quiz/' + id;
-  console.log('URL des questions:', questionsUrl);
+    const questionsUrl = '/api/question/quiz/' + id;
+    console.log('URL des questions:', questionsUrl);
+    const questionsResponse = await fetch(questionsUrl, { method: 'GET' });
+    const questions = await questionsResponse.json();
 
-  // Récupérer la liste des questions
-  const questionsResponse = await fetch(questionsUrl, { method: 'GET' });
-  const questions = await questionsResponse.json();
+    console.log('Questions brutes récupérées:', questions);
 
-  // Pour chaque question, récupérer les réponses et transformer les données
-  const quizz = await Promise.all(
-    questions.map(async (question: any) => {
-      const answersUrl = '/api/answer/question/' + question.id;
-      console.log('URL des réponses:', answersUrl);
+    // S'assurer que chaque question a bien un ID
+    const quizz = await Promise.all(
+        questions.map(async (question: any, questionIndex: number) => {
+            const answersUrl = '/api/answer/question/' + question.id;
+            console.log('URL des réponses pour question ID ' + question.id + ':', answersUrl);
+            const answersResponse = await fetch(answersUrl, { method: 'GET' });
+            const answers = await answersResponse.json();
 
-      const answersResponse = await fetch(answersUrl, { method: 'GET' });
-      const answers = await answersResponse.json();
-      console.log(answers);
+            // Créer un array de réponses formatées
+            const reponse: { id: number; content: string; isCorrect: boolean }[] = answers.map((answer: any) => ({
+                id: answer.id,
+                content: answer.content,
+                isCorrect: answer.isCorrect
+            }));
 
-      // Extraction du contenu des réponses
-      const reponse: { id: number; content: string }[] = answers.map((answer: any) => ({
-        id: answer.id,
-        content: answer.content,
-      }));
+            // Retourner la question avec toutes ses propriétés importantes
+            return {
+                id: question.id,  // S'assurer que l'ID est bien présent
+                question: question.content,
+                reponse,
+                type: question.type,
+                time: question.displayTime,
+                points: question.points
+            };
+        })
+    );
 
-
-      console.log({
-        question: question.content,
-        reponse,
-        type: question.type,
-        time: question.displayTime
-      })
-
-      return {
-        question: question.content,
-        reponse,
-        type: question.type,
-        time: question.displayTime
-      };
-    })
-  );
-
-  return { quizz };
+    console.log('Questions formatées:', quizz);
+    return { quizz };
 }
 
 // ~/services/quizService.ts
@@ -98,41 +93,96 @@ export async function createQuiz(quizData: any): Promise<any> {
 }
 
 
-export async function sendAnswer(answer : QuizzAnswer ): Promise<void> {
+// Mise à jour de la fonction sendAnswer dans quizzService.ts
 
-  const sessionAnswerUrl = '/api/session_responses';
-  const isCorrectAnswerUrl = '/api/answer/';
+// Correction finale de la fonction sendAnswer dans quizzService.ts
 
-    console.log(answer);
+export async function sendAnswer(answer: QuizzAnswer): Promise<void> {
+    try {
+        console.log('Préparation de l\'envoi de la réponse:', answer);
 
-    const responseAnswerValid = await fetch(isCorrectAnswerUrl + answer.questionId, {
-      method: 'GET',
-    });
+        // Valider les données avant l'envoi
+        if (!answer.sessionId || answer.sessionId <= 0) {
+            throw new Error('ID de session invalide');
+        }
 
-    if (!responseAnswerValid.ok) {
-      throw new Error('Erreur lors de la récupération de la réponse');
+        if (!answer.participantId || answer.participantId <= 0) {
+            throw new Error('ID de participant invalide');
+        }
+
+        if (!answer.questionId || answer.questionId <= 0) {
+            throw new Error('ID de question invalide');
+        }
+
+        // Pour les réponses à choix multiples, vérifier si la réponse est correcte
+        let isCorrect = 0; // IMPORTANT: Utiliser 0 ou 1 au lieu de false/true
+
+        if (answer.answerId) {
+            try {
+                const answerId = answer.answerId;
+                // Utiliser l'endpoint GET /answer/{id} pour obtenir les détails de la réponse
+                const responseAnswerValid = await fetch(`/api/answer/${answerId}`, {
+                    method: 'GET',
+                });
+
+                if (responseAnswerValid.ok) {
+                    const answerData = await responseAnswerValid.json();
+                    // Convertir le booléen en entier (0/1)
+                    isCorrect = answerData.isCorrect ? 1 : 0;
+                    console.log(`Réponse ${answerId} vérifiée, isCorrect=${isCorrect}`);
+                } else {
+                    console.warn(`Impossible de vérifier si la réponse ${answerId} est correcte`);
+                }
+            } catch (error) {
+                console.warn('Erreur lors de la vérification de la réponse:', error);
+                // Ne pas bloquer l'envoi, utiliser la valeur par défaut
+            }
+        }
+
+        // Préparer les données à envoyer
+        const payload = {
+            sessionId: answer.sessionId,
+            participantId: answer.participantId,
+            questionId: answer.questionId,
+            answerId: answer.answerId || null,
+            responseText: answer.responseText || '',
+            submittedAt: answer.submittedAt.toISOString(),
+            isCorrect: isCorrect // 0 ou 1, pas de booléen
+        };
+
+        console.log('Envoi des données de réponse:', payload);
+
+        // Envoyer la réponse
+        const sessionAnswerUrl = '/api/session_responses';
+        const response = await fetch(sessionAnswerUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            let errorMessage = `Erreur lors de l'envoi de la réponse: ${response.status}`;
+
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorData.errors?.[0]?.message || errorMessage;
+            } catch (e) {
+                // Ignorer l'erreur de parsing JSON
+            }
+
+            throw new Error(errorMessage);
+        }
+
+        console.log('Réponse envoyée avec succès');
+    } catch (error) {
+        console.error("Erreur lors de l'envoi de la réponse:", error);
+        throw error;
     }
-    
-    const data = await responseAnswerValid.json();
-    const isCorrect = data.isCorrect;
+}
 
-    const response = await fetch(sessionAnswerUrl, {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-        credentials: 'include',  // Important pour recevoir et envoyer les cookies
-        body: JSON.stringify({
-          "sessionId": answer.sessionId,
-          "participantId": answer.participantId,
-          "questionId": answer.questionId,
-          "answerId": answer.answerId,
-          "responseText": answer.responseText,
-          "submittedAt": answer.submittedAt,
-          "isCorrect": isCorrect
-        }),
-    });
-  }
 
 export async function getQuizzFromSession(sessionCode : String ): Promise<Number> {
 
