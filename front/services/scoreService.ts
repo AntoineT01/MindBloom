@@ -26,6 +26,7 @@ export interface LeaderboardDto {
       });
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('Détails de l\'erreur:', errorData);
         throw new Error(errorData.message || 'Erreur lors de l\'envoi du score');
       }
       return await response.json();
@@ -33,7 +34,7 @@ export interface LeaderboardDto {
       console.error('Erreur dans sendScore:', error);
       throw error;
     }
-  }
+  }  
   
   /**
    * Récupère le leaderboard complet depuis l'API.
