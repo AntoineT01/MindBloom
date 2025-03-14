@@ -8,9 +8,6 @@
           <p class="text-xl mb-2">
             Score : <span class="font-bold">{{ score }}</span>
           </p>
-          <p class="text-xl">
-            Classement : <span class="font-bold">{{ ranking }}</span>
-          </p>
         </div>
       </div>
     </div>
@@ -19,71 +16,27 @@
   <script lang="ts" setup>
   import { ref, onMounted } from 'vue';
   import { useRoute } from 'vue-router';
-  import { sendScore, fetchLeaderboard, LeaderboardDto } from '@/services/scoreService';
-  import { getQuizzFromSession } from '@/services/quizzService';
+  import { calculateScore } from '@/services/scoreCalculationService';
   
-  // Récupération des query params
+  // Récupération des paramètres de l'URL
   const route = useRoute();
-  const participantIdParam = route.query.participantId;
-  const sessionCodeParam = route.query.sessionCode;
+  const sessionCode = route.query.sessionCode as string;
+  const participantId = route.query.participantId ? Number(route.query.participantId) : 1;
   
-  // Convertir en nombres (si disponibles)
-  const currentParticipantId: Number = participantIdParam ? Number(participantIdParam) : 1;
-  let currentQuizSessionId: Number
-  
-  // États réactifs pour l'affichage
+  // États réactifs pour le chargement, le score et les erreurs
   const loading = ref(true);
   const error = ref('');
   const score = ref(0);
-  const ranking = ref(0);
-  
-  // Score calculé (à remplacer par votre logique de calcul)
-  const calculatedScore = 85;
   
   /**
-   * Met à jour le leaderboard en :
-   *  1. Récupérant le quizSessionId depuis le session code (via getQuizzFromSession)
-   *  2. Envoyant le score calculé via sendScore
-   *  3. Récupérant l'ensemble des scores pour déterminer le classement du participant.
+   * Met à jour le score en appelant la fonction calculateScore.
    */
-  const updateLeaderboard = async () => {
+  const updateScore = async () => {
     try {
-      // Récupérer le quizSessionId via le session code passé dans l'URL
-      if (sessionCodeParam && typeof sessionCodeParam === 'string') {
-        currentQuizSessionId = await getQuizzFromSession(sessionCodeParam);
-      }
-  
-      // Préparation de l'objet à envoyer
-      const leaderboardEntry: LeaderboardDto = {
-        quizSessionId: currentQuizSessionId,
-        participantId: currentParticipantId,
-        score: calculatedScore
-      };
-  
-      // Envoi du score
-      await sendScore(leaderboardEntry);
-  
-      // Récupération du leaderboard complet
-      const leaderboard = await fetchLeaderboard();
-  
-      // Tri décroissant par score
-      leaderboard.sort((a, b) => b.score - a.score);
-  
-      // Recherche de l'entrée correspondant au participant et au quiz (ou session)
-      const index = leaderboard.findIndex(
-        (entry) =>
-          entry.participantId === currentParticipantId &&
-          entry.quizSessionId === currentQuizSessionId
-      );
-  
-      if (index !== -1) {
-        ranking.value = index + 1; // Le classement commence à 1
-        score.value = leaderboard[index].score;
-      } else {
-        error.value = 'Aucun score trouvé pour ce participant.';
-      }
+      // Le calcul du score est basé sur le sessionCode et le participantId
+      score.value = await calculateScore(sessionCode, participantId);
     } catch (err: any) {
-      error.value = "Erreur lors de la récupération du leaderboard.";
+      error.value = "Erreur lors du calcul du score.";
       console.error(err);
     } finally {
       loading.value = false;
@@ -91,7 +44,7 @@
   };
   
   onMounted(() => {
-    updateLeaderboard();
+    updateScore();
   });
   </script>
   
