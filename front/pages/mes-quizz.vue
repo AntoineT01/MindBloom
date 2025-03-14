@@ -133,9 +133,28 @@ const handleConfirm = async () => {
     await stopQuizSession(payload)
   }
   if (confirmAction.value === 'reactivate' && selectedQuiz.value) {
-    await updateQuizStatus(selectedQuiz.value.id, "ACTIVE")
-  }
-  if (confirmAction.value === 'delete' && selectedQuiz.value) {
+    // Récupération de l'utilisateur connecté (creator)
+    const userData = getUserData();
+
+    // Construction du payload complet
+    const payload = {
+      id: selectedQuiz.value.id,
+      title: selectedQuiz.value.title,
+      description: selectedQuiz.value.description,
+      creator: userData,
+      isPublic: selectedQuiz.value.isPublic,
+      showAnswers: selectedQuiz.value.showAnswers,
+      showFinalScore: selectedQuiz.value.showFinalScore,
+      timeLimit: selectedQuiz.value.timeLimit,
+      createdAt: selectedQuiz.value.createdAt,
+      updatedAt: new Date().toISOString(),
+      status: "ACTIVE",
+      shareCode: selectedQuiz.value.shareCode
+    };
+
+    // Appel de la fonction updateQuizStatus avec le payload complet
+    await updateQuizStatus(payload);
+  }  if (confirmAction.value === 'delete' && selectedQuiz.value) {
     await deleteQuiz(selectedQuiz.value.id)
   }
   confirmAction.value = null

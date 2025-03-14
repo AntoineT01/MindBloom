@@ -175,11 +175,11 @@ export async function getQuizzesByUser(userId: number): Promise<Array<any>> {
     return await res.json();
 }
 
-export async function updateQuizStatus(quizId: number, status: string): Promise<any> {
-    const res = await fetch(`/api/quiz/${quizId}`, {
+export async function updateQuizStatus(quiz) {
+    const res = await fetch(`/api/quiz/${quiz.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
+        body: JSON.stringify(quiz)
     });
     return await res.json();
 }
