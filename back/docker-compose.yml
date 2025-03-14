@@ -39,31 +39,31 @@ services:
       - "8180:1080"
       - "8125:1025"
 
-  swagger:
-    build: 
-      context: .  # Chemin vers le répertoire contenant le Dockerfile
-      dockerfile: Dockerfile  # Assurez-vous que ce fichier existe
-    depends_on:
-      db:
-        condition: service_healthy
-    ports:
-      - "8081:8081"
-    env_file:
-      - ./.env
+#  swagger:
+#    build:
+#      context: .  # Chemin vers le répertoire contenant le Dockerfile
+#      dockerfile: Dockerfile  # Assurez-vous que ce fichier existe
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#    ports:
+#      - "8081:8081"
+#    env_file:
+#      - ./.env
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    restart: always
-    environment:
-      PMA_ARBITRARY: 1
-      PMA_HOST: db  # Doit correspondre au nom du service MySQL
-      PMA_USER: admin
-      PMA_PASSWORD: admin
-      MYSQL_ROOT_PASSWORD: admin
-    depends_on:
-      - db
-    ports:
-      - "8082:80"  # Accès via http://localhost:8082
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin
+#    restart: always
+#    environment:
+#      PMA_ARBITRARY: 1
+#      PMA_HOST: db  # Doit correspondre au nom du service MySQL
+#      PMA_USER: admin
+#      PMA_PASSWORD: admin
+#      MYSQL_ROOT_PASSWORD: admin
+#    depends_on:
+#      - db
+#    ports:
+#      - "8082:80"  # Accès via http://localhost:8082
 
 
 volumes:

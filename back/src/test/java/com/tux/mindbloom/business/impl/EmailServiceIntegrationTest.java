@@ -50,7 +50,7 @@ class EmailServiceIntegrationTest {
             .hasSize(1)
             .contains("whatever@example.com");
     assertThat(greenMail.getReceivedMessages()[0]
-            .getSubject()).isEqualTo("Template app - Vérification de l'adresse mail");
+            .getSubject()).isEqualTo("MindBloom - Vérification de l'adresse mail");
   }
 
   @Test
@@ -68,7 +68,7 @@ class EmailServiceIntegrationTest {
             .hasSize(1)
             .contains("whatever@example.com");
     assertThat(greenMail.getReceivedMessages()[0]
-            .getSubject()).isEqualTo("Template App - Reset your password");
+            .getSubject()).isEqualTo("MindBloom - Reset your password");
   }
 
   @Test
@@ -86,7 +86,7 @@ class EmailServiceIntegrationTest {
             .hasSize(1)
             .contains("whatever@example.com");
     assertThat(greenMail.getReceivedMessages()[0]
-            .getSubject()).isEqualTo("Template app - Modification du mot de passe");
+            .getSubject()).isEqualTo("MindBloom - Modification du mot de passe");
   }
 
   @Test
@@ -104,6 +104,6 @@ class EmailServiceIntegrationTest {
             .hasSize(1)
             .contains("whatever@example.com");
     assertThat(greenMail.getReceivedMessages()[0]
-            .getSubject()).isEqualTo("Template app - Finalisation de l'inscription");
+            .getSubject()).isEqualTo("MindBloom - Finalisation de l'inscription");
   }
 }

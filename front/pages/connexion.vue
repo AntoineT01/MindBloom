@@ -90,7 +90,7 @@ onMounted(() => {
   if (process.client) {
     auth.checkAuth();
     if (auth.isAuthenticated.value) {
-      navigateTo('/accueilConnecte');
+      navigateTo('/accueil-connecte');
     }
   }
 })
@@ -148,7 +148,7 @@ const handleLogin = async () => {
 
     if (success) {
       popup.showPopup("Connexion réussie !", "Succès");
-      await navigateTo('/accueilConnecte');
+      await navigateTo('/accueil-connecte');
     } else {
       popup.showPopup(auth.error.value || "Échec de la connexion", "Erreur");
     }

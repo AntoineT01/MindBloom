@@ -79,7 +79,7 @@ export async function getQuizz(id: Number): Promise<QuizzResponse> {
 
 export async function createQuiz(quizData: any): Promise<any> {
     try {
-        const response = await fetch('http://localhost:8081/quiz', {
+        const response = await fetch('api/quiz', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

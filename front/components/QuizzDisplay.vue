@@ -23,8 +23,8 @@
     </div>
 
     <!-- Zone de réponse pour le type "open" -->
-    <div v-if="type === 'open'" class="w-full bottom-10 flex justify-center m-10">
-      <TheOpenAnswer class="flex justify-center" @sendMessage="setUserAnswer"/>
+    <div v-if="type === 'open_answer'" class="w-full bottom-10 flex justify-center m-10">
+      <TheOpenAnswer class="flex justify-center" @sendMessage="emitNext"/>
     </div>
 
     <!-- Bouton de validation et timer -->
