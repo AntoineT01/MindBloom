@@ -1,6 +1,8 @@
-// File: ~/services/quizSessionService.ts
+import { createParticipant } from './participantService';
+import { getUserData } from './authService';
+
 interface QuizSessionResponse {
-    id?: string;
+    id?: string | number;
     quizId?: number;
     sessionMode?: string;
     status?: string;
@@ -8,10 +10,15 @@ interface QuizSessionResponse {
     endTime?: string;
     sessionCode?: string;
     message?: string;
+    participants?: Array<{ id: number, name: string }>;
+    hostId?: number;
 }
 
 export async function getAllQuizSessions(): Promise<Array<QuizSessionResponse>> {
-    const res = await fetch('/api/quiz_session', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+    const res = await fetch('/api/quiz_session', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    });
     return await res.json();
 }
 
@@ -23,76 +30,82 @@ export async function startQuizSession(payload: any): Promise<QuizSessionRespons
     });
     return await res.json();
 }
+
 /**
- * Vérifie si une session de quiz existe et tente de la rejoindre
+ * Vérifie et rejoint une session de quiz en créant un participant
  * @param sessionCode Code de la session à rejoindre
- * @returns Les données de la session si trouvée
- * @throws Error si la session n'existe pas ou autre erreur
+ * @returns Données de la session et le participant créé
  */
 export async function joinQuizSession(sessionCode: string): Promise<QuizSessionResponse> {
     try {
         console.log('Vérification de la session avec code:', sessionCode);
 
-        // URL pour vérifier si la session existe
-        const checkUrl = `/api/quizzsession/${sessionCode}/check`;
+        if (!sessionCode) {
+            throw new Error('Code de session non fourni');
+        }
 
+        // Étape 1: Vérifier que la session existe
+        const checkUrl = `/api/quiz_session/${sessionCode}`;
         console.log('URL de vérification:', checkUrl);
 
-        // Headers pour la requête
-        const headers: HeadersInit = {
-            'Content-Type': 'application/json',
-        };
-
-        // Vérifier si la session existe
         const checkResponse = await fetch(checkUrl, {
             method: 'GET',
-            headers
+            headers: { 'Content-Type': 'application/json' }
         });
 
         console.log('Response status (check):', checkResponse.status);
 
-        // Vérifier si la réponse a du contenu JSON
-        const contentType = checkResponse.headers.get('content-type');
-        const hasContent = contentType && contentType.includes('application/json');
-
         if (!checkResponse.ok) {
-            if (hasContent) {
-                const errorData = await checkResponse.json();
-                throw new Error(errorData.message || `La session ${sessionCode} n'existe pas`);
-            } else {
-                throw new Error(`Erreur ${checkResponse.status}: ${checkResponse.statusText}`);
-            }
+            const errorData = await checkResponse.json().catch(() => null);
+            throw new Error(errorData?.message || `La session ${sessionCode} n'existe pas`);
         }
 
-        // Si pas de contenu JSON, retourner une réponse par défaut
-        if (!hasContent) {
-            console.log('La réponse ne contient pas de JSON valide');
-            return { message: 'Session trouvée' };
-        }
-
-        // Parser la réponse JSON
+        // Étape 2: Récupérer les données de la session
         const sessionData = await checkResponse.json();
         console.log('Session trouvée:', sessionData);
 
-        // Si la session est active, tenter de la rejoindre
-        if (sessionData.status === 'active' || sessionData.status === 'waiting') {
-            const joinUrl = `/api/quizz_session/${sessionCode}/join`;
+        // Étape 3: Créer un participant pour cette session
+        if (sessionData && sessionData.id) {
+            try {
+                const currentUser = getUserData();
+                let nickname = 'Invité';
+                let accountId = null;
 
-            // Requête pour rejoindre la session
-            const joinResponse = await fetch(joinUrl, {
-                method: 'POST',
-                headers
-            });
+                if (currentUser) {
+                    nickname = `${currentUser.firstname} ${currentUser.lastname}`.trim();
+                    accountId = currentUser.id;
+                } else {
+                    // Générer un nom aléatoire pour les utilisateurs anonymes
+                    nickname = `Invité-${Math.floor(Math.random() * 10000)}`;
+                }
 
-            if (!joinResponse.ok) {
-                const joinError = await joinResponse.json();
-                throw new Error(joinError.message || "Impossible de rejoindre la session");
+                // Préparer les données pour créer un participant
+                const participantData = {
+                    sessionId: parseInt(sessionData.id.toString()),
+                    accountId: accountId,
+                    nickname: nickname,
+                    joinedAt: new Date().toISOString()
+                };
+
+                // Créer le participant
+                const participantResponse = await createParticipant(participantData);
+                console.log('Participant créé:', participantResponse);
+
+                // Retourner les données de session avec le participant créé
+                return {
+                    ...sessionData,
+                    participantCreated: true,
+                    participantId: participantResponse.id
+                };
+            } catch (participantError) {
+                // Si la création du participant échoue, continuer car la session existe
+                console.warn('Erreur lors de la création du participant, mais la session existe:', participantError);
+                return {
+                    ...sessionData,
+                    participantCreated: false,
+                    error: 'Impossible de créer un participant'
+                };
             }
-
-            const joinData = await joinResponse.json();
-            console.log('Session rejointe avec succès:', joinData);
-
-            return joinData;
         }
 
         return sessionData;
@@ -105,6 +118,29 @@ export async function joinQuizSession(sessionCode: string): Promise<QuizSessionR
     }
 }
 
+export async function getQuizSession(sessionCode: string): Promise<QuizSessionResponse> {
+    try {
+        if (!sessionCode) {
+            throw new Error('Code de session non fourni');
+        }
+
+        console.log('Récupération des détails de la session:', sessionCode);
+        const res = await fetch(`/api/quiz_session/${sessionCode}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => null);
+            throw new Error(errorData?.message || `La session ${sessionCode} n'existe pas`);
+        }
+
+        return await res.json();
+    } catch (error) {
+        console.error('Erreur lors de la récupération de la session:', error);
+        throw error;
+    }
+}
 
 export async function stopQuizSession(payload: any): Promise<QuizSessionResponse> {
     const fullPayload = {
@@ -125,11 +161,17 @@ export async function stopQuizSession(payload: any): Promise<QuizSessionResponse
 }
 
 export async function deleteQuiz(quizId: number): Promise<void> {
-    await fetch(`/api/quiz/${quizId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } });
+    await fetch(`/api/quiz/${quizId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+    });
 }
 
 export async function getQuizzesByUser(userId: number): Promise<Array<any>> {
-    const res = await fetch(`/api/quiz/user/${userId}`, { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+    const res = await fetch(`/api/quiz/user/${userId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    });
     return await res.json();
 }
 

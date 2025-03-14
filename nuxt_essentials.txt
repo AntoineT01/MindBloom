@@ -1,0 +1,3906 @@
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\app.vue
+-----------------------------------------------
+
+<template>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
+</template>
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\nuxt.config.ts
+-----------------------------------------------
+
+export default defineNuxtConfig({
+  modules: [
+    '@pinia/nuxt',
+    '@nuxt/content',
+    '@nuxtjs/tailwindcss',
+    '@nuxt/image'
+  ],
+  css: ['~/assets/css/tailwind.css'],
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
+  build: {
+    transpile: ['pinia']
+  },
+  pinia: {
+    autoImports: ['defineStore', 'storeToRefs']
+  },
+  imports: {
+    dirs: ['stores']
+  },
+  vite: {
+    optimizeDeps: {
+      include: ['pinia']
+    }
+  },
+  app: {
+    head: {
+      title: 'MindBloom',       titleTemplate: '%s - TUX',       meta: [
+        { name: 'description', content: 'NDI - 2024 - TUX' }
+      ],
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }
+      ],
+      script: [
+        {
+          innerHTML: `
+            (function() {
+              const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+              document.documentElement.classList.toggle('dark', theme === 'dark');
+            })();
+          `,
+          type: 'text/javascript',
+        },
+      ],
+    }
+  },
+  components: {
+    global: true,
+    dirs: ['~/components']
+  },
+  nitro: {
+    devProxy: {
+      '/api/': {
+        target: 'https:        changeOrigin: true,
+        autoRewrite: true
+      }
+    }
+  },
+  compatibilityDate: '2024-09-24'
+})
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\assets\css\tailwind.css
+-----------------------------------------------
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@layer base {
+    body {
+        @apply bg-neutral-50 text-neutral-800;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        @apply text-primary-800 font-bold;
+    }
+    a {
+        @apply text-secondary-700 hover:text-secondary-800 transition-colors duration-300;
+    }
+}
+@layer components {
+    .btn {
+        @apply px-4 py-2 rounded-md font-semibold transition-all duration-300;
+    }
+    .btn-primary {
+        @apply bg-primary-700 text-white hover:bg-primary-800;
+    }
+    .btn-secondary {
+        @apply bg-secondary-600 text-white hover:bg-secondary-700;
+    }
+    .card {
+        @apply bg-white rounded-lg shadow-md p-6;
+    }
+    .input {
+        @apply bg-neutral-100 border border-neutral-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500;
+    }
+}
+@font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-Black.ttf') format('truetype');
+    font-weight: 900; 
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-Bold.ttf') format('truetype');
+    font-weight: 700; 
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-ExtraBold.ttf') format('truetype');
+    font-weight: 800; 
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-Medium.ttf') format('truetype');
+    font-weight: 500; 
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-Regular.ttf') format('truetype');
+    font-weight: 400; 
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-SemiBold.ttf') format('truetype');
+    font-weight: 600; 
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('@/assets/fonts/Orbitron/Orbitron-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900; 
+    font-style: normal;
+  }
+  
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\BaseButton.vue
+-----------------------------------------------
+
+
+<template>
+  <div
+      :class="[
+      'rounded-full relative cursor-pointer transition-transform duration-150 ease-in-out transform hover:scale-105',
+      className,
+      buttonStyles[currentState],
+      isGoButton ? 'h-10 w-10' : 'h-12 w-48',
+      disabled ? 'opacity-50 cursor-not-allowed' : ''
+    ]"
+      @mouseenter="handleMouseEnter"
+      @mouseleave="handleMouseLeave"
+      @mousedown="handleMouseDown"
+      @mouseup="handleMouseUp"
+      @click="handleClick"
+  >
+    <div
+        class="font-['Orbitron-Regular'] text-base absolute text-center flex items-center justify-center"
+        :class="[
+        textStyles[currentState],
+        isGoButton ? 'w-10 top-2' : 'w-48 top-3 left-0'
+      ]"
+    >
+      <slot></slot>
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+const props = defineProps({
+  property1: {
+    type: String,
+    required: true,
+    validator: (value: string) => [
+      "delete-click",
+      "link1-hover",
+      "link2-hover",
+      "link1-click",
+      "link-1",
+      "delete",
+      "validation",
+      "delete-hover",
+      "validation-hover",
+      "link2-click",
+      "link-2",
+      "validation-click",
+      "go",
+      "go-hover",
+      "go-click"
+    ].includes(value)
+  },
+  className: { type: String, default: "" },
+  disabled: { type: Boolean, default: false }
+})
+const emit = defineEmits(['click'])
+const isHovered = ref(false)
+const isClicked = ref(false)
+const isGoButton = computed(() => ['go', 'go-hover', 'go-click'].includes(props.property1))
+const currentState = computed(() => {
+  if (props.disabled) { return props.property1 }
+  if (isClicked.value) {
+    switch (props.property1) {
+      case 'link-1': return 'link1-click'
+      case 'link-2': return 'link2-click'
+      case 'delete': return 'delete-click'
+      case 'validation': return 'validation-click'
+      case 'go': return 'go-click'
+      default: return props.property1
+    }
+  }
+  if (isHovered.value) {
+    switch (props.property1) {
+      case 'link-1': return 'link1-hover'
+      case 'link-2': return 'link2-hover'
+      case 'delete': return 'delete-hover'
+      case 'validation': return 'validation-hover'
+      case 'go': return 'go-hover'
+      default: return props.property1
+    }
+  }
+  return props.property1
+})
+const handleMouseEnter = () => { if (!props.disabled) { isHovered.value = true } }
+const handleMouseLeave = () => { if (!props.disabled) { isHovered.value = false; isClicked.value = false } }
+const handleMouseDown = () => { if (!props.disabled) { isClicked.value = true } }
+const handleMouseUp = () => { if (!props.disabled) { isClicked.value = false } }
+const handleClick = () => { if (!props.disabled) { emit('click') } }
+const buttonStyles = {
+  'link2-click': 'bg-gray-100 shadow-inner',
+  'validation': 'bg-green-600 shadow-md',
+  'validation-hover': 'bg-green-500 shadow-md',
+  'validation-click': 'bg-green-700 shadow-inner',
+  'link-2': 'bg-indigo-500 shadow-md',
+  'delete-hover': 'bg-red-500 shadow-md',
+  'link-1': 'bg-indigo-300 shadow-md',
+  'delete-click': 'bg-red-700 shadow-inner',
+  'delete': 'bg-red-600 shadow-md',
+  'link2-hover': 'bg-gray-100 shadow-md',
+  'link1-click': 'bg-gray-100 shadow-inner',
+  'link1-hover': 'bg-gray-100 shadow-md',
+  'go': 'bg-indigo-300 shadow-md',
+  'go-hover': 'bg-indigo-400 shadow-md',
+  'go-click': 'bg-indigo-500 shadow-inner'
+}
+const textStyles = {
+  'link2-click': 'text-indigo-700',
+  'validation': 'text-white',
+  'validation-hover': 'text-white',
+  'validation-click': 'text-white',
+  'link-2': 'text-white',
+  'delete-hover': 'text-white',
+  'link-1': 'text-white',
+  'delete-click': 'text-white',
+  'delete': 'text-white',
+  'link2-hover': 'text-indigo-700',
+  'link1-click': 'text-indigo-800',
+  'link1-hover': 'text-indigo-800',
+  'go': 'text-indigo-700',
+  'go-hover': 'text-indigo-800',
+  'go-click': 'text-indigo-800'
+}
+</script>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\BaseScore.vue
+-----------------------------------------------
+
+<template>
+    <div class="flex items-center justify-between border-8 border-violet-clair max-w-3xl mx-auto p-4 rounded-xl">
+      
+      <div class="flex-1 text-center">
+        <span class="text-3xl font-orbitron font-bold ">TOP {{ classement }}</span>
+      </div>
+  
+      
+      <div class="flex-1 text-center">
+        <Profile name="Julie.P" avatar="https:      </div>
+  
+      
+      <div class="flex-1 text-center">
+        <span class="text-3xl font-orbitron font-bold ">{{ points }} pts</span>
+      </div>
+    </div>
+  </template>
+  
+  <script>
+  export default {
+    props: {
+      points: {
+        type: Number,
+        required: true
+      },
+      classement: {
+        type: Number,
+        required: true
+      },
+      nom : {
+        type:String,
+        required : true
+      },
+      avatar : {
+        type : String,
+        required : true
+      }
+    }
+  };
+  </script>
+  
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\BaseTextField.vue
+-----------------------------------------------
+
+# components/ChampText.vue
+<template>
+  <div
+      :class="[
+      'relative w-[412px] h-[45px] font-[Orbitron-Regular] rounded-[45px]',
+      'transition-all duration-200 ease-in-out',
+      isHovered && !isPressed ? 'shadow-lg' : '',
+      isPressed ? 'button-shadow-inset' : 'button-shadow',
+    ]"
+      @mouseenter="handleMouseEnter"
+      @mouseleave="handleMouseLeave"
+      @mousedown="handleMouseDown"
+      @mouseup="handleMouseUp"
+  >
+    <div
+        class="rounded-[45px] bg-blanc w-full h-full flex items-center px-6 relative overflow-hidden"
+        :class="[
+        isPressed ? 'button-shadow-inset' : 'button-shadow'
+      ]"
+    >
+      
+      <div v-if="withIcon" class="mr-4 w-6 h-6">
+        <img
+            :src="getIconSrc"
+            alt="icon"
+            class="w-full h-full"
+            :style="{ filter: 'invert(72%) sepia(10%) saturate(574%) hue-rotate(223deg) brightness(89%) contrast(85%)' }"
+        />
+      </div>
+      
+      <input
+          :type="inputType"
+          :placeholder="placeholder"
+          :value="modelValue"
+          @input="$emit('update:modelValue', $event.target.value)"
+          class="bg-transparent outline-none flex-1 font-[Orbitron-Regular] text-violet-fonc placeholder-violet-fonc"
+          :class="[
+          withIcon ? 'pl-2' : 'pl-0',
+        ]"
+      />
+      
+      <div
+          v-if="withButton"
+          class="absolute right-4 w-[35px] h-[35px] rounded-full flex items-center justify-center transition-all duration-200"
+          :class="[
+          isButtonHovered ? 'bg-blanc' : 'bg-faux-blanc',
+          isButtonPressed ? 'button-shadow-inset' : 'button-shadow'
+        ]"
+          @mouseenter="handleButtonMouseEnter"
+          @mouseleave="handleButtonMouseLeave"
+          @mousedown="handleButtonMouseDown"
+          @mouseup="handleButtonMouseUp"
+      >
+        <img
+            src="/icons/X.svg"
+            alt="close"
+            class="w-5 h-5"
+            :style="{ filter: isButtonHovered ? 'invert(22%) sepia(19%) saturate(2407%) hue-rotate(265deg) brightness(98%) contrast(85%)' : 'invert(70%)' }"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+<script setup>
+import { ref, computed } from 'vue'
+const props = defineProps({
+  modelValue: {
+    type: String,
+    default: ''
+  },
+  withIcon: {
+    type: Boolean,
+    default: false
+  },
+  withButton: {
+    type: Boolean,
+    default: false
+  },
+  iconType: {
+    type: String,
+    validator: value => ['email', 'password', 'time', 'points', 'user'].includes(value),
+    default: 'email'
+  },
+  inputType: {
+    type: String,
+    default: 'text'
+  },
+  placeholder: {
+    type: String,
+    default: 'Votre texte...'
+  }
+})
+defineEmits(['update:modelValue'])
+const isHovered = ref(false)
+const isPressed = ref(false)
+const isButtonHovered = ref(false)
+const isButtonPressed = ref(false)
+const getIconSrc = computed(() => {
+  const iconMap = {
+    email: '/icons/at-email.svg',
+    password: '/icons/lock-on.svg',
+    time: '/icons/stopwatch.svg',
+    points: '/icons/trophy.svg',
+    user: '/icons/user.svg'
+  }
+  return iconMap[props.iconType]
+})
+const handleMouseEnter = () => isHovered.value = true
+const handleMouseLeave = () => {
+  isHovered.value = false
+  isPressed.value = false
+}
+const handleMouseDown = () => isPressed.value = true
+const handleMouseUp = () => isPressed.value = false
+const handleButtonMouseEnter = () => isButtonHovered.value = true
+const handleButtonMouseLeave = () => {
+  isButtonHovered.value = false
+  isButtonPressed.value = false
+}
+const handleButtonMouseDown = () => isButtonPressed.value = true
+const handleButtonMouseUp = () => isButtonPressed.value = false
+</script>
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\ConfirmPopup.vue
+-----------------------------------------------
+
+
+<template>
+  <Teleport to="body">
+    <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50" @click="cancel"></div>
+      <div class="bg-white rounded-lg shadow-lg p-6 z-10 max-w-sm mx-auto">
+        <h2 class="text-xl font-bold mb-4">{{ title }}</h2>
+        <p class="mb-6">{{ message }}</p>
+        <div class="flex justify-end space-x-4">
+          <button @click="cancel" class="px-4 py-2 rounded bg-gray-300 text-gray-800 hover:bg-gray-400 transition">Annuler</button>
+          <button @click="confirm" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition">Confirmer</button>
+        </div>
+      </div>
+    </div>
+  </Teleport>
+</template>
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue'
+const props = defineProps({
+  isOpen: { type: Boolean, required: true },
+  title: { type: String, default: 'Confirmation' },
+  message: { type: String, default: 'Êtes-vous sûr ?' }
+})
+const emit = defineEmits(['confirm', 'cancel'])
+const confirm = () => { emit('confirm') }
+const cancel = () => { emit('cancel') }
+</script>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\EventJoin.vue
+-----------------------------------------------
+
+<template>
+  <form @submit.prevent="handleJoinEvent" class="flex items-center justify-center gap-8 bg-violet-clair rounded-[90px] h-[62px] w-[756px] px-[30px] py-[10px] relative overflow-hidden">
+    <p class="font-['Orbitron-Regular'] text-center text-xl m-0">
+      <span class="text-faux-blanc">Rejoignez un </span>
+      <span class="text-blanc">événement</span>
+    </p>
+    <div class="relative h-[45px] w-[274px] -my-[1.5px]">
+      <div class="bg-faux-blanc rounded-[90px] h-[45px] relative w-[272px]">
+        <input
+            v-model="eventCode"
+            type="text"
+            placeholder="Code de l'événement"
+            class="font-['Orbitron-Regular'] text-base h-[17px] left-[21px] absolute top-[14px] w-[230px] text-center placeholder-[#A089AD] text-violet-fonc bg-transparent border-none outline-none"
+        />
+      </div>
+    </div>
+    <Button
+        property1="go"
+        class="-my-[1.5px]"
+        :disabled="loading || !eventCode.trim()"
+        type="submit"
+        @click="handleJoinEvent"
+    >
+      GO
+    </Button>
+  </form>
+  
+  <GlobalPopup
+      :is-open="popupOpen"
+      :message="popupMessage"
+      :title="popupTitle"
+      @close="handleClosePopup"
+  />
+</template>
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import Button from './BaseButton.vue'
+import GlobalPopup from './GlobalPopup.vue'
+import { usePopup } from '~/composables/usePopup'
+const eventCode = ref('')
+const loading = ref(false)
+const popup = usePopup()
+const popupOpen = computed(() => popup.isOpen.value)
+const popupMessage = computed(() => popup.message.value)
+const popupTitle = computed(() => popup.title.value)
+const emit = defineEmits<{
+  (e: 'join-event', code: string): void
+}>()
+const handleClosePopup = () => {
+  popup.closePopup()
+}
+const handleJoinEvent = () => {
+  const code = eventCode.value.trim()
+  if (!code) return
+    loading.value = true
+  console.log('Envoi du code de session au parent:', code)
+  emit('join-event', code)
+    setTimeout(() => {
+    loading.value = false
+  }, 500)
+    console.log('Événement join-event émis avec le code:', code)
+}
+</script>
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\GlobalPopup.vue
+-----------------------------------------------
+
+<template>
+  <Teleport to="body">
+    <div v-if="showPopup" class="fixed inset-0 z-50 flex items-center justify-center">
+      
+      <div class="fixed inset-0 bg-black bg-opacity-50" @click="handleClose"></div>
+      
+      <div class="relative bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4 z-10">
+        <h2 class="text-xl font-semibold mb-2">{{ title }}</h2>
+        <p class="text-gray-600 mb-6">{{ message }}</p>
+        <div class="flex justify-end">
+          <button
+              @click="handleClose"
+              class="px-4 py-2 bg-violet-600 text-white rounded hover:bg-violet-700 transition-colors"
+          >
+            {{ buttonText }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </Teleport>
+</template>
+<script setup lang="ts">
+import { computed } from 'vue'
+interface Props {
+  isOpen: boolean
+  message: string | null
+  title?: string
+  buttonText?: string
+}
+const props = withDefaults(defineProps<Props>(), {
+  title: 'Message',
+  buttonText: 'OK'
+})
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
+const showPopup = computed(() => {
+  return props.isOpen && props.message !== null && props.message !== ''
+})
+const handleClose = () => {
+  emit('close')
+}
+</script>
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\Profile.vue
+-----------------------------------------------
+
+<script setup lang="ts">
+import { defineProps } from 'vue';
+const props = defineProps<{
+  name: string;
+  avatar: string;
+  color: string;
+  tag?: boolean;
+}>();
+const showTag = props.tag !== undefined ? props.tag : true;
+</script>
+<template>
+    <div class="flex space-x-6">
+      
+      <div class="flex flex-col items-center">
+        <div class="relative">
+          <div
+            class="h-[300px] w-[300px] border-[10px] rounded-full bg-white flex items-center justify-center shadow-lg"
+            :style="{ borderColor: props.color, borderStyle: 'solid' }"
+          >
+            <img
+              :src="props.avatar"
+              class="h-[280px] w-[280px] rounded-full"
+              alt="Avatar de l'utilisateur"
+            />
+          </div>
+          <div
+            v-if="showTag"
+            class="min-h-[30px] min-w-[150px] max-w-[225px] absolute bottom-[0px] left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-xl border-[5px] font-orbitron font-medium bg-white text-black flex items-center justify-center"
+            :style="{ borderColor: props.color, borderStyle: 'solid' }"
+          >
+            {{ props.name }}
+          </div>
+        </div>
+      </div>
+    </div>
+</template>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\QuizCard.vue
+-----------------------------------------------
+
+
+<template>
+  <div class="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+    <div class="flex justify-between items-center">
+      <div>
+        <h3 class="text-xl font-bold text-gray-800">{{ quiz.title }}</h3>
+        <p class="mt-2 text-gray-600 text-sm">{{ quiz.description }}</p>
+        <div class="mt-3 text-sm">
+          <p><span class="font-semibold">Share Code:</span> {{ quiz.shareCode }}</p>
+          <p><span class="font-semibold">Time Limit:</span> {{ quiz.timeLimit }} s</p>
+          <div v-if="quiz.activeSession" class="mt-2">
+            <p><span class="font-semibold">Session Code:</span> {{ quiz.activeSession.sessionCode }}</p>
+          </div>
+        </div>
+      </div>
+      <span class="px-3 py-1 rounded-full text-xs font-medium"
+            :class="{
+              'bg-green-100 text-green-800': quiz.status === 'ACTIVE',
+              'bg-red-100 text-red-800': quiz.status === 'INACTIVE',
+              'bg-gray-100 text-gray-800': quiz.status === 'DELETED'
+            }">
+        {{ quiz.status }}
+      </span>
+    </div>
+    <div class="mt-6 flex justify-end space-x-4">
+      <template v-if="quiz.status === 'ACTIVE'">
+        <button
+            v-if="!quiz.activeSession"
+            @click="start"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center">
+          <i class="fas fa-play w-5 text-center"></i>
+          <span>Démarrer</span>
+        </button>
+        <button
+            v-else
+            @click="stop"
+            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center">
+          <i class="fas fa-stop w-5 text-center"></i>
+          <span>Arrêter</span>
+        </button>
+        <button
+            @click="deleteQuiz"
+            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center">
+          <i class="fas fa-trash w-5 text-center"></i>
+          <span>Supprimer</span>
+        </button>
+      </template>
+      <template v-else-if="quiz.status === 'INACTIVE'">
+        <button
+            @click="reactivate"
+            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center">
+          <i class="fas fa-redo w-5 text-center"></i>
+          <span>Réactiver</span>
+        </button>
+        <button
+            @click="deleteQuiz"
+            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center">
+          <i class="fas fa-trash w-5 text-center"></i>
+          <span>Supprimer</span>
+        </button>
+      </template>
+      <template v-else>
+        <button disabled class="px-4 py-2 bg-gray-400 text-white rounded text-sm flex items-center justify-center cursor-not-allowed">
+          <span>Supprimé</span>
+        </button>
+      </template>
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue'
+const props = defineProps<{ quiz: {
+    id: number,
+    title: string,
+    description: string,
+    status: string,
+    shareCode: string,
+    timeLimit: number,
+    activeSession?: { id: number, sessionCode: string }
+  } }>()
+const emit = defineEmits<{
+  (e: 'startSession', quiz: any): void,
+  (e: 'stopSession', quiz: any): void,
+  (e: 'reactivateQuiz', quiz: any): void,
+  (e: 'deleteQuiz', quiz: any): void
+}>()
+const start = () => { emit('startSession', props.quiz) }
+const stop = () => { emit('stopSession', props.quiz) }
+const reactivate = () => { emit('reactivateQuiz', props.quiz) }
+const deleteQuiz = () => { emit('deleteQuiz', props.quiz) }
+</script>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\QuizzDisplay.vue
+-----------------------------------------------
+
+<template>
+  <div class="flex flex-col items-center w-full bg-gray-100 min-h-screen p-6">
+    
+    <div class="w-3/5 flex flex-col items-center bg-white shadow-lg rounded-lg p-6 h-3/5">
+      <div class="w-full flex justify-center">
+        <div class="w-3/4 flex justify-center">
+          <slot></slot>
+        </div>
+      </div>
+      <h2 class="text-center text-xl font-bold mt-4 text-purple-700">{{ question }}</h2>
+    </div>
+    
+    <div v-if="type === 'multiple_choice'" class="w-1/2 grid grid-cols-2 gap-4 mt-6">
+      <ReponseSlots
+        v-for="(rep, index) in reponses"
+        :key="index"
+        :letter="rep.letter"
+        :question="rep.text"
+        :resetSignal="currentIndex"
+        @selected="setUserAnswer(rep)"
+      />
+    </div>
+    
+    <div v-if="type === 'open_answer'" class="w-full bottom-10 flex justify-center m-10">
+      <TheOpenAnswer class="flex justify-center" @sendMessage="emitNext"/>
+    </div>
+    
+    <div class="w-full fixed bottom-10 flex flex-col items-center">
+      <div v-if="type === 'multiple_choice'" class="mt-6">
+        <BaseButton property1="validation" @click="validateAnswer">
+          Valider
+        </BaseButton>
+      </div>
+      <div class="mt-4 w-3/4">
+        
+        <TheTimer :duration="duration" :questionId="currentIndex" @timeUp="validateAnswer" />
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import { sendAnswer } from '@/services/quizzService.ts';
+export default {
+  name: 'QuizzDisplay',
+  props: {
+    question: {
+      type: String,
+      required: true
+    },
+    reponses: {
+      type: Array,
+      required: true
+    },
+    duration: {
+      type: Number,
+      required: true
+    },
+    type: {
+      type: String,
+      required: true
+    }
+  },
+  data() {
+    return {
+      currentIndex: 0,
+            userAnswer: null,
+            answerPayload: {
+        sessionId: 1,               participantId: 1,           questionId: 0,
+        answerId: 0,                responseText: '',           submittedAt: new Date(),
+        isCorrect: false          }
+    }
+  },
+  methods: {
+        setUserAnswer(answer) {
+      this.userAnswer = answer;
+    },
+    async validateAnswer() {
+            this.answerPayload.questionId = this.currentIndex;       if (this.type === 'multiple_choice') {
+                this.answerPayload.answerId = this.userAnswer.id;
+        this.answerPayload.responseText = this.userAnswer.text;
+      } else if (this.type === 'open') {
+                this.answerPayload.responseText = this.userAnswer;
+      }
+            this.answerPayload.submittedAt = new Date();
+      try {
+                await sendAnswer(this.answerPayload);
+        console.log('Réponse envoyée avec succès');
+      } catch (error) {
+        console.error("Erreur lors de l'envoi de la réponse:", error);
+      }
+            this.userAnswer = null;
+            this.currentIndex++;
+      this.$emit('next');
+    }
+  }
+}
+</script>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\ReponseSlots.vue
+-----------------------------------------------
+
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+const props = defineProps({
+  letter: {
+    type: String,
+    required: true,
+  },
+  question: {
+    type: String,
+    required: true,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  resetSignal: {
+    type: Number,
+    default: 0,
+  },
+});
+const emit = defineEmits(['selected']);
+const isClicked = ref(false);
+function handleClick() {
+  if (props.disabled) return;
+  isClicked.value = !isClicked.value;
+  console.log('Button clicked! State:', isClicked.value);
+    emit('selected', {
+    id: props.letter,     text: props.question,
+  });
+}
+watch(
+  () => props.resetSignal,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      isClicked.value = false;
+      console.log('Reset signal received: isClicked reset to false');
+    }
+  }
+);
+</script>
+<template>
+  <button 
+    type="button"
+    :disabled="disabled"
+    :class="[ 
+      disabled 
+        ? 'opacity-50 cursor-not-allowed'
+        : (isClicked ? 'bg-violet-ple' : 'bg-violet-clair'),
+      'inline-flex items-center w-full rounded-3xl min-h-14 max-h-44 px-4 py-2 cursor-pointer font-orbitron font-extrabold'
+    ]"
+    @click="handleClick"
+  >
+    
+    <span
+      :class="[ 
+        disabled 
+          ? 'bg-gray-300 text-gray-600'
+          : (isClicked ? 'bg-violet-clair text-faux-blanc' : 'bg-violet-ple text-violet-fonc'),
+        'shadow-xl rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0 text-center leading-none'
+      ]"
+      class="w-14 h-14"
+    >
+      {{ letter }}
+    </span>
+    
+    <span 
+      :class="[ 
+        disabled 
+          ? 'text-gray-600'
+          : (isClicked ? 'text-violet-fonc' : 'text-faux-blanc'),
+        'text-left font-medium ml-4'
+      ]">
+      {{ question }}
+    </span>
+  </button>
+</template>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\SearchTextField.vue
+-----------------------------------------------
+
+<template>
+  <div class="relative w-full">
+    
+    <div
+        :class="[
+        'flex items-center bg-faux-blanc rounded-[90px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] w-full',
+        'px-[30px] py-2.5',
+        error ? 'border border-red-500' : ''
+      ]"
+    >
+      
+      <div v-if="withIcon" class="mr-3">
+        <slot name="icon">
+          <svg v-if="iconType === 'search'" xmlns="http:            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <svg v-else-if="iconType === 'email'" xmlns="http:            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          <svg v-else-if="iconType === 'password'" xmlns="http:            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </slot>
+      </div>
+      
+      <input
+          :type="inputType"
+          :placeholder="placeholder"
+          class="bg-transparent w-full outline-none font-['Orbitron'] text-violet-fonc placeholder-violet-fonc/60"
+          :value="modelValue"
+          @input="$emit('update:modelValue', $event.target.value)"
+      />
+    </div>
+    
+    <p v-if="error" class="text-red-500 text-sm mt-1 pl-4">{{ error }}</p>
+  </div>
+</template>
+<script setup lang="ts">
+defineProps({
+  modelValue: {
+    type: String,
+    default: ''
+  },
+  withIcon: {
+    type: Boolean,
+    default: true
+  },
+  iconType: {
+    type: String,
+    default: 'search',
+    validator: (value: string) => ['search', 'email', 'password'].includes(value)
+  },
+  inputType: {
+    type: String,
+    default: 'text'
+  },
+  placeholder: {
+    type: String,
+    default: ''
+  },
+  error: {
+    type: String,
+    default: ''
+  }
+})
+defineEmits(['update:modelValue'])
+</script>
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\SessionStatusBadge.vue
+-----------------------------------------------
+
+
+<template>
+  <span :class="badgeClass">{{ statusText }}</span>
+</template>
+<script setup lang="ts">
+import { computed, defineProps } from 'vue'
+const props = defineProps<{ status: string }>()
+const statusText = computed(() => {
+  if (props.status === 'active') return 'Active'
+  if (props.status === 'waiting') return 'En attente'
+  return 'Aucune session'
+})
+const badgeClass = computed(() => {
+  if (props.status === 'active') return 'bg-green-500 text-white px-2 py-1 rounded'
+  if (props.status === 'waiting') return 'bg-yellow-500 text-white px-2 py-1 rounded'
+  return 'bg-gray-500 text-white px-2 py-1 rounded'
+})
+</script>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\TheAnswerDisplay.vue
+-----------------------------------------------
+
+<script setup lang="ts">
+import Profile from './Profile.vue';
+defineProps<{
+  profileEnabled: boolean;   playerName?: string;   playerImage?: string;   texte: string; }>();
+const defaultPlayerName = 'Mathieu';
+const defaultPlayerImage = 'https:</script>
+<template>
+  <div class="relative flex items-center p-4 w-full">
+    
+    <div v-if="profileEnabled" class="flex-shrink-0 relative z-10">
+      
+    </div>
+    
+    <div
+      class="absolute bg-faux-blanc shadow-2xl text-sm rounded-[80px] w-3/4 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-hidden"
+      :style="{
+        height: '60%',       }"
+    >
+      
+      <div
+        class="pl-[8em] pr-[1em] pb-[10em] pt-[1em] font-orbitron text-violet-defaut text-3xl break-words whitespace-normal overflow-auto h-full"
+      >
+        {{ texte }} <br />
+      </div>
+    </div>
+  </div>
+</template>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\TheNavbar.vue
+-----------------------------------------------
+
+
+<template>
+  <nav class="bg-gray-100 shadow-md h-16 w-full">
+    <div class="container mx-auto flex items-center justify-between px-6 h-full">
+      <div class="flex items-center">
+        <NuxtLink to="/" class="flex items-center">
+          <img src="/icon.png" alt="Logo" class="w-8 h-8 mr-2" />
+          <h1 class="text-2xl font-['Orbitron-Regular']" :class="{ 'text-violet-clair': !isLoggedIn, 'text-violet-fonc': isLoggedIn }">
+            MindBloom
+          </h1>
+        </NuxtLink>
+      </div>
+      <div v-if="!isLoggedIn" class="flex items-center space-x-4">
+        <BaseButton property1="link-1" @click="navigateToSignup" class="text-sm px-3 py-1 flex items-center">
+          <i class="fas fa-user-plus mr-1"></i>S'inscrire
+        </BaseButton>
+        <BaseButton property1="link-2" @click="navigateToLogin" class="text-sm px-3 py-1 flex items-center">
+          <i class="fas fa-sign-in-alt mr-1"></i>Se connecter
+        </BaseButton>
+      </div>
+      <template v-else>
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center cursor-pointer" @click="navigateToProfile">
+            <img :src="userAvatar" alt="Profile" class="w-10 h-10 rounded-full object-cover" />
+            <span class="ml-2 font-['Orbitron-Regular'] text-base text-black">{{ userName }}</span>
+          </div>
+          <BaseButton property1="link-2" @click="navigateToManageQuiz" class="text-sm px-3 py-1 flex items-center">
+            <i class="fas fa-list mr-1"></i>Gérer ses quizz
+          </BaseButton>
+          <BaseButton property1="link-2" @click="handleLogout" class="text-sm px-3 py-1 flex items-center">
+            <i class="fas fa-sign-out-alt mr-1"></i>Se déconnecter
+          </BaseButton>
+        </div>
+      </template>
+    </div>
+  </nav>
+</template>
+<script setup lang="ts">
+import { ref, onMounted, onBeforeMount, onUnmounted } from 'vue'
+import BaseButton from '~/components/BaseButton.vue'
+import { useAuth } from '~/composables/useAuth'
+const auth = useAuth()
+const isLoggedIn = ref(false)
+const userAvatar = ref('/default-avatar.png')
+const userName = ref('Utilisateur')
+const updateUserData = () => {
+  isLoggedIn.value = auth.isAuthenticated.value
+  if (isLoggedIn.value && auth.user.value) {
+    userName.value = auth.user.value.firstname || 'Utilisateur'
+    userAvatar.value = auth.user.value.avatar || '/default-avatar.png'
+  }
+}
+onBeforeMount(() => { if (process.client) { auth.checkAuth() } })
+onMounted(() => {
+  if (process.client) {
+    updateUserData()
+    const interval = setInterval(() => { auth.checkAuth(); updateUserData() }, 5000)
+    onUnmounted(() => { clearInterval(interval) })
+  }
+})
+const navigateToSignup = () => { navigateTo('/inscription') }
+const navigateToLogin = () => { navigateTo('/connexion') }
+const navigateToProfile = () => { navigateTo('/profil') }
+const navigateToManageQuiz = () => { navigateTo('/mes-quizz') }
+const handleLogout = async () => { if (process.client) { await auth.logout(); isLoggedIn.value = false } }
+</script>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\TheOpenAnswer.vue
+-----------------------------------------------
+
+<template>
+  <div class="flex items-center bg-white shadow-lg rounded-full p-2 w-full max-w-md">
+    <input 
+      type="text" 
+      placeholder="Entrez votre texte ici..." 
+      class="flex-grow bg-transparent outline-none text-gray-600 px-4" 
+      v-model="inputText"
+    />
+    <button 
+      :class="buttonClass"
+      @mousedown="isClicked = true"
+      @mouseup="isClicked = false"
+      @mouseleave="isClicked = false"
+      @click="sendMessage"
+    >
+      <svg xmlns="http:        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.5 21l8.5-8.5m0 0L10.5 4m8.5 8.5H3" />
+      </svg>
+    </button>
+  </div>
+</template>
+<script>
+import { ref, computed } from 'vue';
+export default {
+  name: 'TheOpenAnswer',
+  emits: ['sendMessage'],
+  setup(props, { emit }) {
+    const inputText = ref('');
+    const isClicked = ref(false);
+    const buttonClass = computed(() => {
+      return isClicked.value
+        ? 'bg-purple-700 text-white rounded-full p-3 transition'
+        : 'bg-purple-500 hover:bg-purple-600 text-white rounded-full p-3 transition';
+    });
+    const sendMessage = () => {
+      if (inputText.value.trim() !== '') {
+        console.log('Message envoyé:', inputText.value);
+                emit('sendMessage');
+        inputText.value = '';
+      }
+    };
+    return {
+      inputText,
+      sendMessage,
+      isClicked,
+      buttonClass
+    };
+  }
+};
+</script>
+<style scoped>
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\TheQuizzRoom.vue
+-----------------------------------------------
+
+<template>
+    <div>
+      <template v-if="!quizEnded">
+        <QuizzDisplay
+          :question="currentQuestion.question"
+          :reponses="currentQuestion.reponses"
+          :duration="currentQuestion.duration"
+          :type="currentQuestion.type"
+          @next="handleNext"
+        />
+      </template>
+      <template v-else>
+        <div class="flex flex-col items-center justify-center min-h-screen">
+          <h2 class="text-2xl font-bold">Fin du Quiz !</h2>
+        </div>
+      </template>
+    </div>
+  </template>
+  
+  <script>
+  import QuizzDisplay from './QuizzDisplay.vue'
+  
+  export default {
+    name: 'QuizRoom',
+    components: { QuizzDisplay },
+    props: {
+      questions: {
+        type: Array,
+        required: true
+      }
+    },
+    data() {
+      return {
+        currentIndex: 0,
+        quizEnded: false
+      }
+    },
+    computed: {
+      currentQuestion() {
+        return this.questions[this.currentIndex]
+      }
+    },
+    methods: {
+      handleNext() {
+        if (this.currentIndex < this.questions.length - 1) {
+          this.currentIndex++;
+          
+        } else {
+          console.log('Quiz terminé !')
+          this.quizEnded = true
+        }
+      }
+    }
+  }
+  </script>
+  
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\components\TheTimer.vue
+-----------------------------------------------
+
+<template>
+  <div class="flex items-center w-full">
+    <div class="w-full flex items-center bg-violet-fonc rounded-full">
+      <div class="h-2 bg-violet-clair rounded-full" :style="{ width: progress + '%' }"></div>
+    </div>
+    <div class="text-black font-bold text-3xl">{{ formatTime(remainingTime) }}s</div>
+  </div>
+</template>
+<script>
+export default {
+  name: 'TheTimer',
+  props: {
+    duration: {
+      type: Number,
+      required: true
+    },
+    questionId: {
+      type: [Number, String],
+      default: 0
+    }
+  },
+  data() {
+    return {
+      remainingTime: this.duration,
+      progress: 100,       interval: null,
+      startTime: null
+    };
+  },
+  watch: {
+        questionId(newVal, oldVal) {
+      if(newVal !== oldVal) {
+        this.resetTimer();
+      }
+    }
+  },
+  mounted() {
+    this.startProgress();
+  },
+  beforeUnmount() {
+    clearInterval(this.interval);
+  },
+  methods: {
+    startProgress() {
+      this.startTime = performance.now();
+      this.interval = setInterval(() => {
+        const elapsed = (performance.now() - this.startTime) / 1000;
+        this.remainingTime = Math.max(this.duration - elapsed, 0);
+        this.progress = Math.max((this.remainingTime / this.duration) * 100, 0).toFixed(2);
+        if (this.remainingTime <= 0) {
+          clearInterval(this.interval);
+          this.$emit('timeUp');
+        }
+      }, 10);
+    },
+    resetTimer() {
+            clearInterval(this.interval);
+      this.remainingTime = this.duration;
+      this.progress = 100;
+      this.startProgress();
+    },
+    formatTime(time) {
+      return `${time.toFixed(1)}`;
+    }
+  }
+};
+</script>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\composables\useAuth.ts
+-----------------------------------------------
+
+import { ref, onMounted } from 'vue'
+import { logoutUser as logoutUserService, getUserData, isUserLoggedIn, loginUser as loginUserService } from '~/services/authService'
+export const useAuth = () => {
+    const user = ref(null)
+    const loading = ref(false)
+    const error = ref(null)
+    const isAuthenticated = ref(false)
+        const checkAuth = () => {
+        if (process.client) {
+            isAuthenticated.value = isUserLoggedIn();
+            if (isUserLoggedIn()) {
+                user.value = getUserData();
+            }
+        }
+    };
+        onMounted(() => {
+        checkAuth();
+    });
+    const login = async (email: string, password: string) => {
+        loading.value = true;
+        error.value = null;
+        try {
+            const response = await loginUserService({ email, password });
+            if (response.success) {
+                user.value = response.user;
+                isAuthenticated.value = true;
+                return true;
+            } else {
+                throw new Error(response.message || 'Échec de la connexion');
+            }
+        } catch (e) {
+            error.value = e.message;
+            return false;
+        } finally {
+            loading.value = false;
+        }
+    };
+    const logout = async () => {
+        logoutUserService();
+        user.value = null;
+        isAuthenticated.value = false;
+        await navigateTo('/');
+    };
+    return {
+        login,
+        logout,
+        user,
+        loading,
+        error,
+        isAuthenticated,
+        checkAuth
+    };
+};
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\composables\usePopup.ts
+-----------------------------------------------
+
+import { ref } from 'vue'
+export const usePopup = () => {
+    const isOpen = ref(false)
+    const message = ref<string | null>(null)
+    const title = ref<string | null>(null)
+    const showPopup = (newMessage: string, newTitle: string = 'Message') => {
+        message.value = newMessage
+        title.value = newTitle
+        isOpen.value = true
+    }
+    const closePopup = () => {
+        isOpen.value = false
+        message.value = null
+        title.value = null
+    }
+    return {
+        isOpen,
+        message,
+        title,
+        showPopup,
+        closePopup
+    }
+}
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\layouts\default.vue
+-----------------------------------------------
+
+<template>
+  <div class="min-h-screen flex flex-col bg-background-light dark:bg-background-dark">
+    <TheNavbar />
+    <main class="flex-grow">
+      <slot />
+    </main>
+    <footer class="bg-primary-light dark:bg-primary-dark text-text-light dark:text-text-dark py-4">
+      <div class="container mx-auto px-4 text-center">
+        <p>&copy; {{ new Date().getFullYear() }} MindBloom. Tous droits réservés.</p>
+      </div>
+    </footer>
+  </div>
+</template>
+<script setup lang="ts">
+import TheNavbar from '~/components/TheNavbar.vue'
+</script>
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\accueil-connecte.vue
+-----------------------------------------------
+
+<template>
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col items-center justify-center min-h-[80vh] max-w-md mx-auto space-y-8">
+      Vous êtes connecté
+    </div>
+  </div>
+</template>
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\affichage.vue
+-----------------------------------------------
+
+<template>
+    <div>
+  
+      
+      <Modal/>
+    </div>
+  </template>
+  
+  <script setup>
+  import { ref } from 'vue'
+  
+  </script>
+  
+  <style>
+  
+  </style>
+  
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\connexion.vue
+-----------------------------------------------
+
+<template>
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col items-center justify-center min-h-[80vh] max-w-md mx-auto space-y-8">
+      <form @submit.prevent="handleLogin" class="w-full space-y-6">
+        
+        <ChampText
+            v-model="loginForm.email"
+            :withIcon="true"
+            :withButton="false"
+            iconType="email"
+            inputType="email"
+            placeholder="Votre email"
+            :error="formErrors.email"
+        />
+        
+        <ChampText
+            v-model="loginForm.password"
+            :withIcon="true"
+            :withButton="false"
+            iconType="password"
+            inputType="password"
+            placeholder="Votre mot de passe"
+            :error="formErrors.password"
+        />
+        
+        <div class="flex justify-center w-full">
+          <Button
+              property1="link-1"
+              :disabled="loading || hasErrors"
+              @click="handleLogin"
+              type="button"
+          >
+            {{ loading ? 'Connexion en cours...' : 'Connexion' }}
+          </Button>
+        </div>
+      </form>
+      
+      <div class="text-center pt-4">
+        <p class="text-violet-fonc mb-4">Vous n'avez pas de compte ?</p>
+        <Button
+            property1="validation"
+            @click="navigateToSignup"
+            type="button"
+        >
+          S'inscrire
+        </Button>
+      </div>
+    </div>
+    
+    <GlobalPopup
+        :is-open="popupOpen"
+        :message="popupMessage"
+        :title="popupTitle"
+        @close="handleClosePopup"
+    />
+  </div>
+</template>
+<script setup lang="ts">
+import { ref, reactive, computed, onMounted } from 'vue'
+import ChampText from '~/components/BaseTextField.vue'
+import Button from '~/components/BaseButton.vue'
+import GlobalPopup from '~/components/GlobalPopup.vue'
+import { usePopup } from '~/composables/usePopup'
+import { useAuth } from '~/composables/useAuth'
+const loginForm = reactive({
+  email: '',
+  password: ''
+})
+const formErrors = reactive({
+  email: '',
+  password: ''
+})
+const popup = usePopup()
+const auth = useAuth()
+const loading = ref(false)
+onMounted(() => {
+  if (process.client) {
+    auth.checkAuth();
+    if (auth.isAuthenticated.value) {
+      navigateTo('/accueil-connecte');
+    }
+  }
+})
+const validateForm = () => {
+  let isValid = true;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!loginForm.email) {
+    formErrors.email = 'L\'email est requis';
+    isValid = false;
+  } else if (!emailRegex.test(loginForm.email)) {
+    formErrors.email = 'Email invalide';
+    isValid = false;
+  } else {
+    formErrors.email = '';
+  }
+  if (!loginForm.password) {
+    formErrors.password = 'Le mot de passe est requis';
+    isValid = false;
+  } else {
+    formErrors.password = '';
+  }
+  return isValid;
+};
+const hasErrors = computed(() => {
+  return !!formErrors.email || !!formErrors.password;
+});
+const popupOpen = computed(() => popup.isOpen.value);
+const popupMessage = computed(() => popup.message.value);
+const popupTitle = computed(() => popup.title.value);
+const handleClosePopup = () => {
+  popup.closePopup();
+};
+const handleLogin = async () => {
+  if (!validateForm()) {
+    return;
+  }
+  loading.value = true;
+  try {
+    const success = await auth.login(loginForm.email, loginForm.password);
+    if (success) {
+      popup.showPopup("Connexion réussie !", "Succès");
+      await navigateTo('/accueil-connecte');
+    } else {
+      popup.showPopup(auth.error.value || "Échec de la connexion", "Erreur");
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    popup.showPopup(
+        error instanceof Error ? error.message : "Erreur de connexion au serveur",
+        "Erreur"
+    );
+  } finally {
+    loading.value = false;
+  }
+};
+const navigateToSignup = () => {
+  navigateTo('/inscription');
+};
+</script>
+<style scoped>
+.font-orbitron {
+  font-family: "Orbitron-Regular", sans-serif;
+}
+</style>
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\cree-quizz.vue
+-----------------------------------------------
+
+
+<template>
+  <div class="container mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
+      <h1 class="text-3xl font-bold text-gray-800 text-center mb-6">Créer un Quiz</h1>
+      <form @submit.prevent="handleCreateQuiz" class="space-y-6">
+        <ChampText v-model="quizName" :withIcon="false" :withButton="false" inputType="text" placeholder="Nom du Quiz" :error="formErrors.quizName" class="w-full"/>
+        <div>
+          <label class="block text-gray-600 mb-2">Description</label>
+          <textarea v-model="quizDescription" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Décrivez votre Quiz..."></textarea>
+        </div>
+        <div v-for="(question, index) in questions" :key="index" class="border rounded p-4 space-y-4">
+          <ChampText v-model="question.questionText" :withIcon="false" :withButton="false" inputType="text" placeholder="Intitulé de la question" :error="formErrors[`questionText_${index}`]" class="w-full"/>
+          <div>
+            <label class="block text-gray-600 mb-2">Type de question</label>
+            <select v-model="question.questionType" class="w-full border border-gray-300 rounded px-3 py-2">
+              <option value="text">Texte (choix multiple)</option>
+              <option value="image">Image (choix multiple)</option>
+              <option value="video">Vidéo (choix multiple)</option>
+              <option value="open">Texte (réponse ouverte)</option>
+            </select>
+          </div>
+          <div v-if="question.questionType === 'image' || question.questionType === 'video'">
+            <label class="block text-gray-600 mb-2">Importer un fichier</label>
+            <input type="file" :accept="question.questionType === 'image' ? 'image/png, image/jpeg' : 'video/mp4'" @change="(e) => handleFileUpload(e, index)" class="w-full"/>
+            <div v-if="question.mediaFile" class="text-sm text-gray-500 mt-2">
+              Fichier sélectionné : {{ question.mediaFile.name }}
+            </div>
+          </div>
+          <template v-if="question.questionType !== 'open'">
+            <div>
+              <span class="block text-gray-600 mb-2">Réponses valides</span>
+              <div v-for="(valid, i) in question.validAnswers" :key="i" class="flex items-center space-x-2 mb-2">
+                <ChampText v-model="question.validAnswers[i]" :withIcon="false" :withButton="false" inputType="text" placeholder="Réponse valide..." class="flex-1"/>
+                <Button property1="link-1" type="button" @click="removeValidAnswer(index, i)" class="text-sm px-3 py-1">Suppr</Button>
+              </div>
+              <Button property1="link-1" type="button" @click="addValidAnswer(index)" class="text-sm px-3 py-1">+ Réponse valide</Button>
+            </div>
+            <div>
+              <span class="block text-gray-600 mb-2">Réponses invalides</span>
+              <div v-for="(invalid, i) in question.invalidAnswers" :key="i" class="flex items-center space-x-2 mb-2">
+                <ChampText v-model="question.invalidAnswers[i]" :withIcon="false" :withButton="false" inputType="text" placeholder="Réponse invalide..." class="flex-1"/>
+                <Button property1="link-1" type="button" @click="removeInvalidAnswer(index, i)" class="text-sm px-3 py-1">Suppr</Button>
+              </div>
+              <Button property1="link-1" type="button" @click="addInvalidAnswer(index)" class="text-sm px-3 py-1">+ Réponse invalide</Button>
+            </div>
+          </template>
+          <div class="flex space-x-4">
+            <label class="flex-1">
+              <span class="block text-gray-600 mb-2">Points</span>
+              <ChampText :modelValue="question.points.toString()" @update:modelValue="val => question.points = Number(val)" :withIcon="false" :withButton="false" inputType="number" placeholder="Points" class="w-full"/>
+            </label>
+            <label class="flex-1">
+              <span class="block text-gray-600 mb-2">Temps (secondes)</span>
+              <ChampText :modelValue="question.time.toString()" @update:modelValue="val => question.time = Number(val)" :withIcon="false" :withButton="false" inputType="number" placeholder="Temps (s)" class="w-full"/>
+            </label>
+          </div>
+          <div class="flex justify-end">
+            <Button property1="link-1" type="button" @click="removeQuestion(index)" class="text-sm px-3 py-1">Supprimer cette question</Button>
+          </div>
+        </div>
+        <Button property1="link-1" type="button" @click="addQuestion" class="text-sm px-3 py-1">+ Ajouter une question</Button>
+        <div class="flex justify-center mt-6">
+          <Button property1="validation" :disabled="loading" type="submit" @click="handleCreateQuiz" class="text-sm px-4 py-2">
+            {{ loading ? 'Création en cours...' : 'Enregistrer le Quiz' }}
+          </Button>
+        </div>
+      </form>
+      <GlobalPopup :is-open="popupOpen" :message="popupMessage" :title="popupTitle" @close="handleClosePopup"/>
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+defineOptions({ name: "createQuiz" })
+import { ref, reactive, computed } from 'vue'
+import ChampText from '~/components/BaseTextField.vue'
+import Button from '~/components/BaseButton.vue'
+import GlobalPopup from '~/components/GlobalPopup.vue'
+import { usePopup } from '~/composables/usePopup'
+import { createQuestion, createAnswer, createMedia } from '~/services/questionService'
+import { getUserData } from '~/services/authService'
+import { createQuiz } from '~/services/quizzService'
+interface LocalQuestion {
+  questionText: string
+  questionType: 'text' | 'image' | 'video' | 'open'
+  mediaFile: File | null
+  validAnswers: string[]
+  invalidAnswers: string[]
+  points: number
+  time: number
+}
+const quizName = ref('')
+const quizDescription = ref('')
+const questions = ref<LocalQuestion[]>([
+  {
+    questionText: '',
+    questionType: 'text',
+    mediaFile: null,
+    validAnswers: [''],
+    invalidAnswers: [''],
+    points: 10,
+    time: 60
+  }
+])
+const loading = ref(false)
+const formErrors = reactive<Record<string, string>>({ quizName: '' })
+const popup = usePopup()
+const popupOpen = computed(() => popup.isOpen.value)
+const popupMessage = computed(() => popup.message.value)
+const popupTitle = computed(() => popup.title.value)
+const handleClosePopup = () => { popup.closePopup() }
+function handleFileUpload(event: Event, questionIndex: number) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (file) { questions.value[questionIndex].mediaFile = file }
+}
+const addQuestion = () => {
+  questions.value.push({
+    questionText: '',
+    questionType: 'text',
+    mediaFile: null,
+    validAnswers: [''],
+    invalidAnswers: [''],
+    points: 10,
+    time: 60
+  })
+}
+const removeQuestion = (index: number) => { questions.value.splice(index, 1) }
+const addValidAnswer = (questionIndex: number) => { questions.value[questionIndex].validAnswers.push('') }
+const removeValidAnswer = (questionIndex: number, answerIndex: number) => { questions.value[questionIndex].validAnswers.splice(answerIndex, 1) }
+const addInvalidAnswer = (questionIndex: number) => { questions.value[questionIndex].invalidAnswers.push('') }
+const removeInvalidAnswer = (questionIndex: number, answerIndex: number) => { questions.value[questionIndex].invalidAnswers.splice(answerIndex, 1) }
+const validateForm = () => {
+  let isValid = true
+  if (!quizName.value) { formErrors.quizName = 'Le nom du Quiz est requis'; isValid = false }
+  else { formErrors.quizName = '' }
+  return isValid
+}
+const handleCreateQuiz = async () => {
+  if (!validateForm()) { return }
+  try {
+    loading.value = true;
+    const currentUser = getUserData();
+    const creator = currentUser ? { id: currentUser.id } : { id: 0 };
+    const quizObj = {
+      title: quizName.value,
+      description: quizDescription.value,
+      isPublic: true,
+      showAnswers: true,
+      showFinalScore: true,
+      timeLimit: 30,
+      status: 'ACTIVE',
+      shareCode: '',
+      creator: creator
+    };
+    const createdQuiz = await createQuiz(quizObj);
+    for (let i = 0; i < questions.value.length; i++) {
+      const q = questions.value[i];
+      const questionObj = {
+        quizId: createdQuiz.id,
+        content: q.questionText,
+        type: q.questionType === 'open' ? 'open_answer' : 'multiple_choice',
+        points: q.points,
+        questionOrder: i + 1,
+        isRequired: true,
+        isActive: true,
+        displayTime: q.time,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        imported: false
+      };
+      const createdQuestion = await createQuestion(questionObj);
+      if (q.questionType !== 'open') {
+        for (let j = 0; j < q.validAnswers.length; j++) {
+          const answerContent = q.validAnswers[j].trim();
+          if (answerContent !== '') {
+            const answerObj = {
+              questionId: createdQuestion.id,
+              content: answerContent,
+              type: createdQuestion.type,
+              isCorrect: true,
+              answerOrder: j + 1,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            };
+            await createAnswer(answerObj);
+          }
+        }
+        for (let j = 0; j < q.invalidAnswers.length; j++) {
+          const answerContent = q.invalidAnswers[j].trim();
+          if (answerContent !== '') {
+            const answerObj = {
+              questionId: createdQuestion.id,
+              content: answerContent,
+              type: createdQuestion.type,
+              isCorrect: false,
+              answerOrder: j + 1,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            };
+            await createAnswer(answerObj);
+          }
+        }
+      }
+      if (q.mediaFile) {
+        const mediaObj = {
+          questionId: createdQuestion.id,
+          type: q.questionType.toUpperCase(),
+          url: q.mediaFile.name
+        };
+        await createMedia(mediaObj);
+      }
+    }
+    popup.showPopup('Quiz créé avec succès!', 'Succès');
+    quizName.value = '';
+    quizDescription.value = '';
+    questions.value = [{
+      questionText: '',
+      questionType: 'text',
+      mediaFile: null,
+      validAnswers: [''],
+      invalidAnswers: [''],
+      points: 10,
+      time: 60
+    }];
+  } catch (error) {
+    popup.showPopup(error instanceof Error ? error.message : "Une erreur est survenue", "Erreur");
+  } finally {
+    loading.value = false;
+  }
+};
+</script>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\creeQuizz.vue
+-----------------------------------------------
+
+<template>
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col items-center justify-center min-h-[80vh] max-w-3xl mx-auto space-y-8">
+      
+      <form @submit.prevent="handleCreateQuiz" class="w-full flex flex-col space-y-6">
+        
+        <ChampText
+            v-model="quizName"
+            :withIcon="false"
+            :withButton="false"
+            inputType="text"
+            placeholder="Nom du Quizz"
+            :error="formErrors.quizName"
+            class="w-full"
+        />
+        
+        <label class="block">
+          <span class="text-gray-600 mb-2">Description</span>
+          <textarea
+              v-model="quizDescription"
+              class="w-full border border-gray-300 rounded px-3 py-2"
+              placeholder="Décrivez votre Quizz..."
+          ></textarea>
+        </label>
+        
+        <div
+            v-for="(question, index) in questions"
+            :key="index"
+            class="border rounded p-4 space-y-4 mb-4"
+        >
+          
+          <ChampText
+              v-model="question.questionText"
+              :withIcon="false"
+              :withButton="false"
+              inputType="text"
+              placeholder="Intitulé de la question"
+              :error="formErrors[`questionText_${index}`]"
+              class="w-full"
+          />
+          
+          <label class="block">
+            <span class="text-gray-600 mb-2">Type de question</span>
+            <select
+                v-model="question.questionType"
+                class="w-full border border-gray-300 rounded px-3 py-2"
+            >
+              <option value="text">Texte (choix multiple)</option>
+              <option value="image">Image (choix multiple)</option>
+              <option value="video">Vidéo (choix multiple)</option>
+              <option value="open">Texte (réponse ouverte)</option>
+            </select>
+          </label>
+          
+          <div v-if="question.questionType === 'image' || question.questionType === 'video'">
+            <label class="block">
+              <span class="text-gray-600 mb-2">Importer un fichier</span>
+              <input
+                  type="file"
+                  :accept="question.questionType === 'image' ? 'image/png, image/jpeg' : 'video/mp4'"
+                  @change="(e) => handleFileUpload(e, index)"
+              />
+            </label>
+            <div v-if="question.mediaFile" class="text-sm text-gray-500 mt-2">
+              Fichier sélectionné : {{ question.mediaFile.name }}
+            </div>
+          </div>
+          
+          <template v-if="question.questionType === 'open'">
+            <div>
+              <span class="text-gray-600 mb-2 block">Réponse suggérée</span>
+              <ChampText
+                  v-model="question.suggestedAnswer"
+                  :withIcon="false"
+                  :withButton="false"
+                  inputType="text"
+                  placeholder="Votre réponse..."
+                  class="w-full"
+              />
+            </div>
+          </template>
+          
+          <template v-else>
+            
+            <div>
+              <span class="text-gray-600 mb-2 block">Réponses valides</span>
+              <div
+                  v-for="(valid, i) in question.validAnswers"
+                  :key="i"
+                  class="flex items-center space-x-2 mb-2"
+              >
+                <ChampText
+                    v-model="question.validAnswers[i]"
+                    :withIcon="false"
+                    :withButton="false"
+                    inputType="text"
+                    placeholder="Réponse valide..."
+                    class="flex-1"
+                />
+                <Button property1="link-1" type="button" @click="removeValidAnswer(index, i)">
+                  Suppr
+                </Button>
+              </div>
+              <Button property1="link-1" type="button" @click="addValidAnswer(index)">
+                + Réponse valide
+              </Button>
+            </div>
+            
+            <div>
+              <span class="text-gray-600 mb-2 block">Réponses invalides</span>
+              <div
+                  v-for="(invalid, i) in question.invalidAnswers"
+                  :key="i"
+                  class="flex items-center space-x-2 mb-2"
+              >
+                <ChampText
+                    v-model="question.invalidAnswers[i]"
+                    :withIcon="false"
+                    :withButton="false"
+                    inputType="text"
+                    placeholder="Réponse invalide..."
+                    class="flex-1"
+                />
+                <Button property1="link-1" type="button" @click="removeInvalidAnswer(index, i)">
+                  Suppr
+                </Button>
+              </div>
+              <Button property1="link-1" type="button" @click="addInvalidAnswer(index)">
+                + Réponse invalide
+              </Button>
+            </div>
+          </template>
+          
+          <div class="flex space-x-4">
+            <label class="flex-1">
+              <span class="text-gray-600 mb-2 block">Points</span>
+              <ChampText
+                  :modelValue="question.points.toString()"
+                  @update:modelValue="val => question.points = Number(val)"
+                  :withIcon="false"
+                  :withButton="false"
+                  inputType="number"
+                  placeholder="Points"
+                  class="w-full"
+              />
+            </label>
+            <label class="flex-1">
+              <span class="text-gray-600 mb-2 block">Temps (secondes)</span>
+              <ChampText
+                  :modelValue="question.time.toString()"
+                  @update:modelValue="val => question.time = Number(val)"
+                  :withIcon="false"
+                  :withButton="false"
+                  inputType="number"
+                  placeholder="Temps (s)"
+                  class="w-full"
+              />
+            </label>
+          </div>
+          
+          <div class="flex justify-end">
+            <Button property1="link-1" type="button" @click="removeQuestion(index)">
+              Supprimer cette question
+            </Button>
+          </div>
+        </div>
+        
+        <Button property1="link-1" type="button" @click="addQuestion">
+          + Ajouter une question
+        </Button>
+        
+        <div class="flex justify-center">
+          <Button property1="validation" :disabled="loading" type="submit" @click="handleCreateQuiz">
+            {{ loading ? 'Création en cours...' : 'Enregistrer le Quizz' }}
+          </Button>
+        </div>
+      </form>
+      
+      <GlobalPopup
+          :is-open="popupOpen"
+          :message="popupMessage"
+          :title="popupTitle"
+          @close="handleClosePopup"
+      />
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+defineOptions({ name: "createQuiz" })
+import { ref, reactive, computed } from 'vue'
+import ChampText from '~/components/BaseTextField.vue'
+import Button from '~/components/BaseButton.vue'
+import GlobalPopup from '~/components/GlobalPopup.vue'
+import { usePopup } from '~/composables/usePopup'
+import { createQuestion, createAnswer, createMedia } from '~/services/questionService'
+import { getUserData } from '~/services/authService'
+import { createQuiz } from '~/services/quizzService'
+interface LocalQuestion {
+  questionText: string;
+  questionType: 'text' | 'image' | 'video' | 'open';
+  mediaFile: File | null;
+  validAnswers: string[];
+  invalidAnswers: string[];
+  suggestedAnswer?: string;   points: number;
+  time: number;
+}
+const quizName = ref('')
+const quizDescription = ref('')
+const questions = ref<LocalQuestion[]>([
+  {
+    questionText: '',
+    questionType: 'text',
+    mediaFile: null,
+    validAnswers: [''],
+    invalidAnswers: [''],
+    points: 10,
+    time: 60
+  }
+])
+const loading = ref(false)
+const formErrors = reactive<Record<string, string>>({ quizName: '' })
+const popup = usePopup()
+const popupOpen = computed(() => popup.isOpen.value)
+const popupMessage = computed(() => popup.message.value)
+const popupTitle = computed(() => popup.title.value)
+const handleClosePopup = () => {
+  popup.closePopup()
+}
+function handleFileUpload(event: Event, questionIndex: number) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (file) {
+    questions.value[questionIndex].mediaFile = file
+  }
+}
+const addQuestion = () => {
+  questions.value.push({
+    questionText: '',
+    questionType: 'text',
+    mediaFile: null,
+    validAnswers: [''],
+    invalidAnswers: [''],
+    suggestedAnswer: '',
+    points: 10,
+    time: 60
+  })
+}
+const removeQuestion = (index: number) => {
+  questions.value.splice(index, 1)
+}
+const addValidAnswer = (questionIndex: number) => {
+  questions.value[questionIndex].validAnswers.push('')
+}
+const removeValidAnswer = (questionIndex: number, answerIndex: number) => {
+  questions.value[questionIndex].validAnswers.splice(answerIndex, 1)
+}
+const addInvalidAnswer = (questionIndex: number) => {
+  questions.value[questionIndex].invalidAnswers.push('')
+}
+const removeInvalidAnswer = (questionIndex: number, answerIndex: number) => {
+  questions.value[questionIndex].invalidAnswers.splice(answerIndex, 1)
+}
+const validateForm = () => {
+  let isValid = true
+  if (!quizName.value) {
+    formErrors.quizName = 'Le nom du Quizz est requis'
+    isValid = false
+  } else {
+    formErrors.quizName = ''
+  }
+  return isValid
+}
+const generateShareCode = (length: number = 6): string => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let shareCode = ''
+  for (let i = 0; i < length; i++) {
+    shareCode += characters.charAt(Math.floor(Math.random() * characters.length))
+  }
+  return shareCode
+}
+const handleCreateQuiz = async () => {
+  console.log('handleCreateQuiz appelé')
+  if (!validateForm()) {
+    console.error('Formulaire invalide')
+    return
+  }
+  try {
+    loading.value = true
+        const currentUser = getUserData()
+    const creator = currentUser ? { id: currentUser.id } : { id: 0 }
+    const quizObj = {
+      title: quizName.value,
+      description: quizDescription.value,
+      isPublic: true,
+      showAnswers: true,
+      showFinalScore: true,
+      timeLimit: 30,
+      status: 'ACTIVE',
+      shareCode: generateShareCode(),
+      creator: creator
+    }
+        const createdQuiz = await createQuiz(quizObj)
+    console.log('Quiz créé:', createdQuiz)
+        for (let i = 0; i < questions.value.length; i++) {
+      const q = questions.value[i]
+      const questionObj = {
+        quizId: createdQuiz.id,
+        content: q.questionText,
+        type: q.questionType === 'open' ? 'open_answer' : 'multiple_choice',
+        points: q.points,
+        questionOrder: i + 1,
+        isRequired: true,
+        isActive: true,
+        displayTime: q.time,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        imported: false
+      }
+      const createdQuestion = await createQuestion(questionObj)
+      console.log(`Question ${i + 1} créée:`, createdQuestion)
+      if (q.questionType === 'open') {
+                const answerContent = q.suggestedAnswer?.trim()
+        if (answerContent && answerContent !== '') {
+          const answerObj = {
+            questionId: createdQuestion.id,
+            content: answerContent,
+            type: createdQuestion.type,             isCorrect: true,
+            answerOrder: 1,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          }
+          const createdAnswer = await createAnswer(answerObj)
+          console.log(`Réponse ouverte pour question ${i + 1}:`, createdAnswer)
+        }
+      } else {
+                for (let j = 0; j < q.validAnswers.length; j++) {
+          const answerContent = q.validAnswers[j].trim()
+          if (answerContent !== '') {
+            const answerObj = {
+              questionId: createdQuestion.id,
+              content: answerContent,
+              type: createdQuestion.type,
+              isCorrect: true,
+              answerOrder: j + 1,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            }
+            const createdAnswer = await createAnswer(answerObj)
+            console.log(`Answer valide ${j + 1} pour question ${i + 1}:`, createdAnswer)
+          }
+        }
+        for (let j = 0; j < q.invalidAnswers.length; j++) {
+          const answerContent = q.invalidAnswers[j].trim()
+          if (answerContent !== '') {
+            const answerObj = {
+              questionId: createdQuestion.id,
+              content: answerContent,
+              type: createdQuestion.type,
+              isCorrect: false,
+              answerOrder: j + 1,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            }
+            const createdAnswer = await createAnswer(answerObj)
+            console.log(`Answer invalide ${j + 1} pour question ${i + 1}:`, createdAnswer)
+          }
+        }
+      }
+            if (q.mediaFile) {
+        const mediaObj = {
+          questionId: createdQuestion.id,
+          type: q.questionType.toUpperCase(),
+          url: q.mediaFile.name
+        }
+        const createdMedia = await createMedia(mediaObj)
+        console.log(`Media pour question ${i + 1}:`, createdMedia)
+      }
+    }
+    popup.showPopup('Quizz créé avec succès!', 'Succès')
+        quizName.value = ''
+    quizDescription.value = ''
+    questions.value = [
+      {
+        questionText: '',
+        questionType: 'text',
+        mediaFile: null,
+        validAnswers: [''],
+        invalidAnswers: [''],
+        points: 10,
+        time: 60
+      }
+    ]
+  } catch (error) {
+    console.error('Erreur lors de la création du quiz:', error)
+    popup.showPopup(
+        error instanceof Error ? error.message : "Une erreur est survenue",
+        "Erreur"
+    )
+  } finally {
+    loading.value = false
+  }
+}
+</script>
+<style scoped>
+</style>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\edit-profile.vue
+-----------------------------------------------
+
+<template>
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col items-center justify-center space-y-8">
+      <h1 class="text-3xl font-bold text-violet-fonc">Modifier mon profil</h1>
+      <div class="w-full max-w-2xl bg-white rounded-lg shadow-xl p-8">
+        
+        <div class="flex justify-center mb-8">
+          <div class="relative">
+            <div
+                class="h-40 w-40 border-[8px] rounded-full bg-white flex items-center justify-center shadow-lg"
+                :style="{ borderColor: '#A1A1A1', borderStyle: 'solid' }"
+            >
+              <img
+                  :src="avatarPreview"
+                  class="h-[90%] w-[90%] rounded-full object-cover"
+                  alt="Avatar de l'utilisateur"
+              />
+            </div>
+          </div>
+        </div>
+        
+        <div class="space-y-6">
+          
+          <div class="space-y-2">
+            <ChampText
+                v-model="formData.firstname"
+                :withIcon="true"
+                :withButton="false"
+                iconType="user"
+                inputType="text"
+                placeholder="Votre prénom"
+                :error="formErrors.firstname"
+            />
+          </div>
+          
+          <div class="space-y-2">
+            <ChampText
+                v-model="formData.lastname"
+                :withIcon="true"
+                :withButton="false"
+                iconType="user"
+                inputType="text"
+                placeholder="Votre nom"
+                :error="formErrors.lastname"
+            />
+          </div>
+          
+          <div class="space-y-2">
+            <ChampText
+                v-model="formData.mail"
+                :withIcon="true"
+                :withButton="false"
+                iconType="email"
+                inputType="email"
+                placeholder="Votre email"
+                :error="formErrors.mail"
+            />
+          </div>
+          
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Langue préférée</label>
+            <select
+                v-model="formData.locale"
+                class="bg-faux-blanc border border-gray-300 text-violet-fonc font-['Orbitron'] rounded-[90px] block w-full p-2.5"
+            >
+              <option value="fr">Français</option>
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="de">Deutsch</option>
+            </select>
+          </div>
+          
+          <div class="flex justify-between pt-4">
+            <Button
+                property1="delete"
+                @click="cancelEdit"
+                type="button"
+            >
+              Annuler
+            </Button>
+            <Button
+                property1="validation"
+                @click="updateProfile"
+                :disabled="loading"
+                type="button"
+            >
+              {{ loading ? 'Mise à jour...' : 'Enregistrer' }}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <GlobalPopup
+        :is-open="popupOpen"
+        :message="popupMessage"
+        :title="popupTitle"
+        @close="handleClosePopup"
+    />
+  </div>
+</template>
+<script setup lang="ts">
+import { ref, reactive, computed, onMounted } from 'vue'
+import ChampText from '~/components/BaseTextField.vue'
+import Button from '~/components/BaseButton.vue'
+import GlobalPopup from '~/components/GlobalPopup.vue'
+import { usePopup } from '~/composables/usePopup'
+import { getUserData, updateUserProfile, isUserLoggedIn } from '~/services/authService'
+const formData = reactive({
+  id: 0,
+  firstname: '',
+  lastname: '',
+  mail: '',
+  profile: { id: 0, label: '' },
+  locale: 'fr'
+})
+const formErrors = reactive({
+  firstname: '',
+  lastname: '',
+  mail: ''
+})
+const loading = ref(false)
+const popup = usePopup()
+const popupOpen = computed(() => popup.isOpen.value)
+const popupMessage = computed(() => popup.message.value)
+const popupTitle = computed(() => popup.title.value)
+const handleClosePopup = () => {
+  popup.closePopup()
+}
+const avatarPreview = computed(() => {
+  return `https:})
+onMounted(() => {
+  if (process.client) {
+        if (!isUserLoggedIn()) {
+      navigateTo('/connexion')
+      return
+    }
+        const userData = getUserData()
+    if (userData) {
+      formData.id = userData.id
+      formData.firstname = userData.firstname || ''
+      formData.lastname = userData.lastname || ''
+      formData.mail = userData.email || ''
+      formData.profile = userData.profile || { id: 1, label: 'User' }
+      formData.locale = userData.locale || 'fr'
+    }
+  }
+})
+const validateForm = () => {
+  let isValid = true
+  if (!formData.firstname) {
+    formErrors.firstname = 'Le prénom est requis'
+    isValid = false
+  } else {
+    formErrors.firstname = ''
+  }
+  if (!formData.lastname) {
+    formErrors.lastname = 'Le nom est requis'
+    isValid = false
+  } else {
+    formErrors.lastname = ''
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!formData.mail) {
+    formErrors.mail = 'L\'email est requis'
+    isValid = false
+  } else if (!emailRegex.test(formData.mail)) {
+    formErrors.mail = 'Email invalide'
+    isValid = false
+  } else {
+    formErrors.mail = ''
+  }
+  return isValid
+}
+const updateProfile = async () => {
+  console.log('Fonction updateProfile appelée');
+  if (!validateForm()) {
+    console.log('Validation du formulaire échouée');
+    return;
+  }
+  loading.value = true;
+  console.log('Début de la mise à jour du profil avec les données:', formData);
+  try {
+    await updateUserProfile({
+      id: formData.id,
+      firstname: formData.firstname,
+      lastname: formData.lastname,
+      mail: formData.mail,
+      profile: formData.profile,
+      locale: formData.locale
+    });
+    console.log('Mise à jour du profil réussie');
+    popup.showPopup('Votre profil a été mis à jour avec succès !', 'Succès');
+        setTimeout(() => {
+      navigateTo('/profil');
+    }, 1500);
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du profil:', error);
+    popup.showPopup(
+        error instanceof Error ? error.message : 'Erreur lors de la mise à jour du profil',
+        'Erreur'
+    );
+  } finally {
+    loading.value = false;
+  }
+};
+const cancelEdit = () => {
+  navigateTo('/profil')
+}
+</script>
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\exemple.vue
+-----------------------------------------------
+
+<template>
+  <div class="container mx-auto px-4 py-8">
+  </div>
+</template>
+<script setup lang="ts">
+</script>
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\index.vue
+-----------------------------------------------
+
+<template>
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex justify-center m-8">
+      <RejoindreEvenement @join-event="handleJoinEvent" />
+    </div>
+    
+    <GlobalPopup
+        :is-open="popupOpen"
+        :message="popupMessage"
+        :title="popupTitle"
+        @close="handleClosePopup"
+    />
+  </div>
+</template>
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import RejoindreEvenement from '~/components/EventJoin.vue'
+import GlobalPopup from '~/components/GlobalPopup.vue'
+import { usePopup } from '~/composables/usePopup'
+import { joinQuizSession } from '~/services/quizSessionService'
+const popup = usePopup()
+const loading = ref(false)
+const popupOpen = computed(() => popup.isOpen.value)
+const popupMessage = computed(() => popup.message.value)
+const popupTitle = computed(() => popup.title.value)
+const handleClosePopup = () => {
+  popup.closePopup()
+}
+const handleJoinEvent = async (code: string) => {
+  console.log('Événement join-event reçu dans le parent avec le code:', code)
+  if (!code || code.trim() === '') {
+    console.error('Code de session vide reçu')
+    popup.showPopup('Veuillez entrer un code de session valide', 'Erreur')
+    return
+  }
+  loading.value = true
+  try {
+    console.log('Tentative de rejoindre la session avec le code:', code)
+        const response = await joinQuizSession(code)
+    console.log('Réponse du service:', response)
+        console.log('Redirection vers /quizzsession/' + code)
+    navigateTo(`/quizzsession/${code}`)
+  } catch (error) {
+    console.error('Erreur lors de la recherche de session:', error)
+        popup.showPopup(
+        error instanceof Error ? error.message : "Session introuvable",
+        "Erreur"
+    )
+  } finally {
+    loading.value = false
+  }
+}
+</script>
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\inscription.vue
+-----------------------------------------------
+
+<template>
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col items-center justify-center min-h-[80vh] max-w-md mx-auto space-y-8">
+      <form @submit.prevent="handleSignup" class="w-full flex flex-col items-center space-y-6">
+        <ChampText
+            v-model="firstname"
+            :withIcon="true"
+            :withButton="false"
+            iconType="user"
+            inputType="text"
+            placeholder="Votre prénom"
+            :error="formErrors.firstname"
+            class="w-full"
+        />
+        <ChampText
+            v-model="lastname"
+            :withIcon="true"
+            :withButton="false"
+            iconType="user"
+            inputType="text"
+            placeholder="Votre nom"
+            :error="formErrors.lastname"
+            class="w-full"
+        />
+        <ChampText
+            v-model="email"
+            :withIcon="true"
+            :withButton="false"
+            iconType="email"
+            inputType="email"
+            placeholder="Votre email"
+            :error="formErrors.email"
+            class="w-full"
+        />
+        <ChampText
+            v-model="password"
+            :withIcon="true"
+            :withButton="false"
+            iconType="password"
+            inputType="password"
+            placeholder="Votre mot de passe"
+            :error="formErrors.password"
+            class="w-full"
+        />
+        <ChampText
+            v-model="confirmPassword"
+            :withIcon="true"
+            :withButton="false"
+            iconType="password"
+            inputType="password"
+            placeholder="Confirmez votre mot de passe"
+            :error="formErrors.confirmPassword"
+            class="w-full"
+        />
+        <div class="flex justify-center w-full">
+          <Button
+              property1="validation"
+              @click="handleSignup"
+              :disabled="loading"
+              type="button"
+          >
+            {{ loading ? 'Inscription en cours...' : 'S\'inscrire' }}
+          </Button>
+        </div>
+      </form>
+      <div class="text-center pt-4 w-full">
+        <p class="text-violet-fonc mb-4">Vous avez déjà un compte ?</p>
+        <div class="flex justify-center w-full">
+          <Button property1="link-1" @click="navigateToLogin">
+            Se connecter
+          </Button>
+        </div>
+      </div>
+    </div>
+    <GlobalPopup
+        :is-open="popupOpen"
+        :message="popupMessage"
+        :title="popupTitle"
+        @close="handleClosePopup"
+    />
+  </div>
+</template>
+<script setup lang="ts">
+import { ref, reactive, computed } from 'vue'
+import ChampText from '~/components/BaseTextField.vue'
+import Button from '~/components/BaseButton.vue'
+import GlobalPopup from '~/components/GlobalPopup.vue'
+import { usePopup } from '~/composables/usePopup'
+import { registerUser } from '~/services/authService'
+const firstname = ref('')
+const lastname = ref('')
+const email = ref('')  const password = ref('')
+const confirmPassword = ref('')
+const loading = ref(false)
+const popup = usePopup()
+const formErrors = reactive({
+  firstname: '',
+  lastname: '',
+  email: '',    password: '',
+  confirmPassword: ''
+})
+const popupOpen = computed(() => popup.isOpen.value)
+const popupMessage = computed(() => popup.message.value)
+const popupTitle = computed(() => popup.title.value)
+const handleClosePopup = () => {
+  popup.closePopup()
+}
+const validateForm = () => {
+  let isValid = true
+  if (!firstname.value) {
+    formErrors.firstname = 'Le prénom est requis'
+    console.log('le prénom est requis')
+    isValid = false
+  } else {
+    formErrors.firstname = ''
+  }
+  if (!lastname.value) {
+    formErrors.lastname = 'Le nom est requis'
+    console.log('le nom est requis')
+    isValid = false
+  } else {
+    formErrors.lastname = ''
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!email.value) {
+    formErrors.email = 'L\'email est requis'
+    console.log('l\'email est requis')
+    isValid = false
+  } else if (!emailRegex.test(email.value)) {
+    formErrors.email = 'Email invalide'
+    console.log('email invalide')
+    isValid = false
+  } else {
+    formErrors.email = ''
+  }
+  if (!password.value) {
+    formErrors.password = 'Le mot de passe est requis'
+    console.log('le mot de passe est requis')
+    isValid = false
+  } else if (password.value.length < 6) {
+    formErrors.password = 'Le mot de passe doit contenir au moins 6 caractères'
+    console.log('le mot de passe doit contenir au moins 6 caractères')
+    isValid = false
+  } else {
+    formErrors.password = ''
+  }
+  if (!confirmPassword.value) {
+    formErrors.confirmPassword = 'La confirmation du mot de passe est requise'
+    console.log('la confirmation du mot de passe est requise')
+    isValid = false
+  } else if (confirmPassword.value !== password.value) {
+    formErrors.confirmPassword = 'Les mots de passe ne correspondent pas'
+    console.log('les mots de passe ne correspondent pas')
+    isValid = false
+  } else {
+    formErrors.confirmPassword = ''
+  }
+  return isValid
+}
+const handleSignup = async () => {
+  try {
+    console.log('Tentative d\'inscription')
+    if (!validateForm()) {
+      console.error('Formulaire invalide')
+      return
+    }
+    loading.value = true
+    const signupData = {
+      firstname: firstname.value,
+      lastname: lastname.value,
+      mail: email.value,        password: password.value
+    }
+    console.log('Envoi des données d\'inscription:', signupData)
+    await registerUser(signupData)
+    console.log('Inscription réussie')
+    popup.showPopup(
+        "Inscription réussie ! Veuillez vérifier votre email pour activer votre compte.",
+        "Succès"
+    )
+        firstname.value = ''
+    lastname.value = ''
+    email.value = ''
+    password.value = ''
+    confirmPassword.value = ''
+  } catch (error) {
+    console.error('Erreur lors de l\'inscription:', error)
+    popup.showPopup(
+        error instanceof Error ? error.message : "Erreur lors de l'inscription",
+        "Erreur"
+    )
+  } finally {
+    loading.value = false
+  }
+}
+const navigateToLogin = () => {
+  navigateTo('/connexion')
+}
+</script>
+<style scoped>
+.font-orbitron {
+  font-family: "Orbitron-Regular", sans-serif;
+}
+</style>
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\mes-quizz.vue
+-----------------------------------------------
+
+
+<template>
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col items-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-800 mb-4">Mes Quiz</h1>
+      <div class="flex space-x-4">
+        <BaseButton property1="validation" @click="navigateToCreate" class="text-sm px-4 py-2 flex items-center">
+          <i class="fas fa-plus mr-2"></i>Créer un quiz
+        </BaseButton>
+      </div>
+    </div>
+    <div v-if="loading" class="text-center text-lg font-medium">Chargement...</div>
+    <div v-else class="grid grid-cols-1 gap-6 max-w-4xl mx-auto">
+      <QuizCard
+          v-for="quiz in mergedQuizzes"
+          :key="quiz.id"
+          :quiz="quiz"
+          @startSession="onStartSession"
+          @stopSession="onStopSession"
+          @reactivateQuiz="onReactivateQuiz"
+          @deleteQuiz="onDeleteQuiz"
+      />
+    </div>
+    <ConfirmPopup
+        v-if="showConfirmPopup"
+        :isOpen="showConfirmPopup"
+        :title="confirmTitle"
+        :message="confirmMessage"
+        @confirm="handleConfirm"
+        @cancel="handleCancel"
+    />
+  </div>
+</template>
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import QuizCard from '~/components/QuizCard.vue'
+import BaseButton from '~/components/BaseButton.vue'
+import ConfirmPopup from '~/components/ConfirmPopup.vue'
+import { getUserData } from '~/services/authService'
+import { getQuizzesByUser, getAllQuizSessions, startQuizSession, stopQuizSession, deleteQuiz, updateQuizStatus } from '~/services/quizSessionService'
+const router = useRouter()
+const loading = ref(true)
+const quizzes = ref<Array<any>>([])
+const sessions = ref<Array<any>>([])
+const mergedQuizzes = computed(() => {
+  return quizzes.value.map(quiz => {
+    const activeSession = sessions.value.find(s => s.quizId === quiz.id && s.status === 'active')
+    return { ...quiz, activeSession }
+  })
+})
+const showConfirmPopup = ref(false)
+const confirmAction = ref<'start' | 'stop' | 'delete' | 'reactivate' | null>(null)
+const selectedQuiz = ref<any>(null)
+const confirmTitle = ref('')
+const confirmMessage = ref('')
+const fetchData = async () => {
+  const user = getUserData()
+  if (user && user.id) {
+    quizzes.value = await getQuizzesByUser(user.id)
+  }
+  sessions.value = await getAllQuizSessions()
+  loading.value = false
+}
+onMounted(() => { fetchData() })
+const onStartSession = (quiz: any) => {
+  if (quiz.status !== 'ACTIVE') return
+  confirmAction.value = 'start'
+  selectedQuiz.value = quiz
+  confirmTitle.value = 'Démarrer la session'
+  confirmMessage.value = 'Voulez-vous démarrer la session pour ce quiz ?'
+  showConfirmPopup.value = true
+}
+const onStopSession = (quiz: any) => {
+  if (!quiz.activeSession) return
+  confirmAction.value = 'stop'
+  selectedQuiz.value = quiz
+  confirmTitle.value = 'Arrêter la session'
+  confirmMessage.value = 'Voulez-vous arrêter la session pour ce quiz ?'
+  showConfirmPopup.value = true
+}
+const onReactivateQuiz = (quiz: any) => {
+  if (quiz.status !== 'INACTIVE') return
+  confirmAction.value = 'reactivate'
+  selectedQuiz.value = quiz
+  confirmTitle.value = 'Réactiver le quiz'
+  confirmMessage.value = 'Voulez-vous réactiver ce quiz ?'
+  showConfirmPopup.value = true
+}
+const onDeleteQuiz = (quiz: any) => {
+  confirmAction.value = 'delete'
+  selectedQuiz.value = quiz
+  confirmTitle.value = 'Supprimer le quiz'
+  confirmMessage.value = 'Voulez-vous supprimer définitivement ce quiz ?'
+  showConfirmPopup.value = true
+}
+const generateSessionCode = () => {
+  return Math.random().toString(36).substring(2, 11).toUpperCase()
+}
+const handleConfirm = async () => {
+  showConfirmPopup.value = false
+  if (confirmAction.value === 'start' && selectedQuiz.value) {
+    const payload = {
+      quizId: selectedQuiz.value.id,
+      sessionMode: "training",
+      status: "active",
+      startTime: new Date().toISOString(),
+      endTime: new Date().toISOString(),
+      sessionCode: generateSessionCode()
+    }
+    await startQuizSession(payload)
+  }
+  if (confirmAction.value === 'stop' && selectedQuiz.value && selectedQuiz.value.activeSession) {
+    const payload = {
+      id: selectedQuiz.value.activeSession.id,
+      quizId: selectedQuiz.value.id,
+      sessionMode: "training",
+      status: "stopped",
+      startTime: new Date().toISOString(),
+      endTime: new Date().toISOString(),
+      sessionCode: selectedQuiz.value.activeSession.sessionCode
+    }
+    await stopQuizSession(payload)
+  }
+  if (confirmAction.value === 'reactivate' && selectedQuiz.value) {
+    await updateQuizStatus(selectedQuiz.value.id, "ACTIVE")
+  }
+  if (confirmAction.value === 'delete' && selectedQuiz.value) {
+    await deleteQuiz(selectedQuiz.value.id)
+  }
+  confirmAction.value = null
+  selectedQuiz.value = null
+  await fetchData()
+}
+const handleCancel = () => {
+  showConfirmPopup.value = false
+  confirmAction.value = null
+  selectedQuiz.value = null
+}
+const navigateToCreate = () => {
+  router.push({ path: '/cree-quizz' })
+}
+</script>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\profil.vue
+-----------------------------------------------
+
+
+<template>
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col items-center justify-center space-y-8">
+      <h1 class="text-3xl font-bold text-violet-fonc">Mon Profil</h1>
+      <div class="w-full max-w-3xl bg-white rounded-lg shadow-xl p-6">
+        <div class="flex flex-col lg:flex-row items-center gap-8">
+          <div class="flex-shrink-0">
+            <div class="relative h-40 w-40 lg:h-64 lg:w-64">
+              <div class="h-full w-full border-4 rounded-full bg-white flex items-center justify-center shadow-md" :style="{ borderColor: '#A1A1A1' }">
+                <img :src="userData.avatar || '/default-avatar.png'" class="h-[90%] w-[90%] rounded-full object-cover" alt="Avatar de l'utilisateur" />
+              </div>
+            </div>
+          </div>
+          <div class="flex-grow">
+            <div class="space-y-4">
+              <div>
+                <h2 class="text-xl font-semibold text-violet-fonc">Informations personnelles</h2>
+                <div class="mt-2 space-y-3">
+                  <div class="flex flex-col">
+                    <span class="text-sm text-gray-500">Prénom</span>
+                    <span class="font-medium">{{ userData.firstname || 'Non renseigné' }}</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="text-sm text-gray-500">Nom</span>
+                    <span class="font-medium">{{ userData.lastname || 'Non renseigné' }}</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="text-sm text-gray-500">Email</span>
+                    <span class="font-medium">{{ userData.email || 'Non renseigné' }}</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="text-sm text-gray-500">Langue</span>
+                    <span class="font-medium">{{ getLocaleLabel(userData.locale) }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="pt-4">
+                <BaseButton property1="validation" @click="navigateToEditProfile" class="text-sm px-3 py-1">Modifier mon profil</BaseButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import BaseButton from '~/components/BaseButton.vue'
+import { getUserData, isUserLoggedIn } from '~/services/authService'
+const userData = ref<any>({})
+const userEvents = ref<any[]>([])
+const locales = { fr: 'Français', en: 'Anglais', es: 'Espagnol', de: 'Allemand' }
+const getLocaleLabel = (localeCode: string) => locales[localeCode as keyof typeof locales] || localeCode || 'Non renseigné'
+onMounted(() => {
+  if (process.client) {
+    if (!isUserLoggedIn()) { navigateTo('/connexion'); return }
+    const user = getUserData()
+    if (user) { userData.value = user }
+    userEvents.value = [
+      { id: 1, title: 'Quiz Science', date: '15 mars 2025' },
+      { id: 2, title: 'Quiz Culture générale', date: '10 mars 2025' },
+      { id: 3, title: 'Quiz Histoire', date: '5 mars 2025' }
+    ]
+  }
+})
+const navigateToEditProfile = () => { navigateTo('/edit-profile') }
+</script>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\quizz.vue
+-----------------------------------------------
+
+<template>
+  <div>
+    
+    <QuizzDisplay v-if="loaded && !quizEnded" :question="question" :reponses="reponses" :duration="duration"
+      :type="type" @next="handleNext" />
+    
+    <div v-else-if="quizEnded" class="flex items-center justify-center min-h-screen">
+      <h2 class="text-2xl font-bold">Fin du quiz !</h2>
+    </div>
+    
+    <div v-else class="flex items-center justify-center min-h-screen">
+      Chargement du quiz...
+    </div>
+  </div>
+</template>
+<script setup>
+import { ref, onMounted } from 'vue'
+import { getQuizzFromSession, getQuizz } from '@/services/quizzService.ts'  
+const props = defineProps({
+  sessionCode: {
+    type: String,
+    required: true
+  }
+})
+const question = ref('')
+const reponses = ref([])
+const duration = ref(0)
+const type = ref('')
+const loaded = ref(false)
+const quizEnded = ref(false)
+const currentIndex = ref(0)
+const questionsList = ref([])
+onMounted(async () => {
+  try {
+    
+    const getQuizzId = await getQuizzFromSession("SESSION1ABC");
+    const quizResponse = await getQuizz(getQuizzId)
+        questionsList.value = quizResponse.quizz
+    if (questionsList.value.length > 0) {
+      updateQuestion(0)
+      loaded.value = true
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération du quiz :', error)
+  }
+})
+function updateQuestion(index) {
+  const currentQuestion = questionsList.value[index]
+  question.value = currentQuestion.question
+  duration.value = currentQuestion.time
+  type.value = currentQuestion.type
+    const letters = ['A', 'B', 'C', 'D', 'E', 'F']
+  reponses.value = currentQuestion.reponse.map((rep, index) => ({
+    letter: letters[index] || '',
+    text: rep.content,         isCorrect: rep.isCorrect   }))
+}
+function handleNext() {
+  if (currentIndex.value < questionsList.value.length - 1) {
+    currentIndex.value++
+    updateQuestion(currentIndex.value)
+  } else {
+        quizEnded.value = true
+  }
+}
+</script>
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\result-page.vue
+-----------------------------------------------
+
+<template>
+    <div class="p-8 flex flex-col items-center space-y-8">
+      
+      <div class="flex justify-center space-x-8">
+        <div
+          v-for="(item, index) in topThree"
+          :key="item.type + '-' + index"
+          class="flex flex-col items-center"
+          :class="{ 'transform -translate-y-16': index === 1 }"
+        >
+          <Profile
+            :name="item.name"
+            :avatar="item.avatar"
+            :color="item.color"
+            :tag="true"
+          />
+          <p class="mt-2 text-center font-semibold">{{ item.points }} pts</p>
+        </div>
+      </div>
+  
+      
+      <div class="grid grid-cols-3 gap-8">
+        <div
+          v-for="item in others"
+          :key="item.classement"
+          class="flex flex-col items-center rounded-xl p-4"
+        >
+          <div class="transform scale-90">
+            <BaseScore :points="item.points" :classement="item.classement" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <script setup>
+  import { computed, ref } from 'vue'
+  import Profile from '@/components/Profile.vue'
+  import BaseScore from '@/components/BaseScore.vue'
+  
+    const scores = ref([
+        {
+      type: 'top',
+      name: 'Jane Doe',
+      avatar: 'https:      color: '#C0C0C0',
+      points: 800,
+    },
+    {
+      type: 'top',
+      name: 'John Doe',
+      avatar: 'https:      color: '#FFD700',
+      points: 1000,
+    },
+    {
+      type: 'top',
+      name: 'Mike',
+      avatar: 'https:      color: '#CE8946',
+      points: 600,
+    },
+        { type: 'others', classement: 4, points: 10 },
+    { type: 'others', classement: 5, points: 10 },
+    { type: 'others', classement: 6, points: 10 },
+    { type: 'others', classement: 7, points: 10 },
+    { type: 'others', classement: 8, points: 10 },
+    { type: 'others', classement: 9, points: 10 },
+    { type: 'others', classement: 9, points: 10 },
+    { type: 'others', classement: 9, points: 10 },
+    { type: 'others', classement: 9, points: 10 },
+    { type: 'others', classement: 9, points: 10 },
+    { type: 'others', classement: 9, points: 10 },
+    { type: 'others', classement: 9, points: 10 },
+    { type: 'others', classement: 9, points: 10 },
+    { type: 'others', classement: 9, points: 10 },
+    { type: 'others', classement: 9, points: 10 },
+    { type: 'others', classement: 9, points: 10 },
+    { type: 'others', classement: 9, points: 10 },
+  ]);
+  
+    const topThree = computed(() => scores.value.filter(item => item.type === 'top'));
+    const others = computed(() => scores.value.filter(item => item.type === 'others'));
+  </script>
+  
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\waiting-room.vue
+-----------------------------------------------
+
+<template>
+    <div class="p-8 flex flex-col items-center space-y-8">
+      
+      <h2 class="text-2xl font-bold text-center">Salle d'attente</h2>
+      
+      
+      <div class="grid grid-cols-3 gap-8">
+        <div
+          v-for="user in waitingUsers"
+          :key="user.id"
+          class="flex flex-col items-center rounded-xl p-4 border"
+        >
+          <Profile
+            :name="user.name"
+            :avatar="user.avatar"
+            :color="user.color"
+            :tag="false"
+          />
+          <p class="mt-2 text-center font-semibold">{{ user.status }}</p>
+          <button class="mt-2 bg-blue-500 text-white py-1 px-4 rounded">
+            Rejoindre
+          </button>
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <script setup>
+  import { ref } from 'vue'
+  import Profile from '@/components/Profile.vue'
+  
+    const waitingUsers = ref([
+    {
+      id: 1,
+      name: 'Alice',
+      avatar: 'https:      color: '#FF5733',
+      status: 'En attente'
+    },
+    {
+      id: 2,
+      name: 'Bob',
+      avatar: 'https:      color: '#33C1FF',
+      status: 'En attente'
+    },
+    {
+      id: 3,
+      name: 'Charlie',
+      avatar: 'https:      color: '#8E44AD',
+      status: 'En attente'
+    },
+      ])
+  </script>
+  
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\quiz-session\[sessioncode].vue
+-----------------------------------------------
+
+[Contenu non accessible pour: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\quiz-session\[sessioncode].vue]
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\verify-email\[token].vue
+-----------------------------------------------
+
+[Contenu non accessible pour: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\pages\verify-email\[token].vue]
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\services\authService.ts
+-----------------------------------------------
+
+interface LoginData {
+    email: string;
+    password: string;
+}
+interface SignupData {
+    firstname: string;
+    lastname: string;
+    mail: string;
+    password: string;
+}
+interface LoginResponse {
+    user?: any;
+    message?: string;
+    success?: boolean;
+}
+interface SignupResponse {
+    message?: string;
+    success?: boolean;
+}
+interface UpdateProfileData {
+    id: number;
+    firstname: string;
+    lastname: string;
+    mail: string;
+    profile?: {
+        id: number;
+        label: string;
+    };
+    locale?: string;
+    oauthProvider?: string;
+    oauthId?: string;
+}
+export async function loginUser(data: LoginData): Promise<LoginResponse> {
+    try {
+        console.log('Tentative de connexion avec:', data);
+        const url = '/api/login';
+        console.log('URL de l\'API:', url);
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',              body: JSON.stringify({
+                email: data.email,
+                password: data.password
+            }),
+        });
+        console.log('Response status:', response.status);
+                if (response.status === 200) {
+            console.log('Connexion réussie - Cookie JWT reçu');
+                        if (typeof window !== 'undefined') {
+                localStorage.setItem('is_authenticated', 'true');
+            }
+                        const userData = await fetchUserData();
+            if (userData && typeof window !== 'undefined') {
+                localStorage.setItem('user_data', JSON.stringify(userData));
+            }
+            return {
+                user: userData,
+                message: 'Connexion réussie',
+                success: true
+            };
+        }
+                if (response.status === 400) {
+            throw new Error('Données invalides');
+        } else if (response.status === 401) {
+            throw new Error('Email ou mot de passe incorrect');
+        } else if (response.status === 409) {
+            throw new Error('Conflit avec les données existantes');
+        } else if (response.status === 500) {
+            throw new Error('Erreur serveur');
+        } else {
+            throw new Error('Une erreur est survenue');
+        }
+    } catch (error) {
+        console.error('Login error in service:', error);
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error('Erreur lors de la connexion');
+    }
+}
+export async function registerUser(data: SignupData): Promise<SignupResponse> {
+    try {
+        console.log('Tentative d\'inscription avec:', data);
+        const url = '/api/signup';
+        console.log('URL de l\'API:', url);
+                const signupData = {
+            firstname: data.firstname,
+            lastname: data.lastname,
+            mail: data.mail,
+            password: data.password,
+            locale: "fr"
+        };
+        console.log('Données envoyées à l\'API:', JSON.stringify(signupData, null, 2));
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(signupData),
+        });
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+                        try {
+                const errorData = await response.json();
+                console.error('Détails de l\'erreur:', errorData);
+                                if (errorData.errors && errorData.errors.length > 0) {
+                    console.error('Messages d\'erreur spécifiques:');
+                    errorData.errors.forEach((err: any, index: number) => {
+                        console.error(`Erreur ${index + 1}:`, err.code, '-', err.message);
+                    });
+                                        const errorMessages = errorData.errors.map((err: any) => err.message).join('; ');
+                    throw new Error(errorMessages || `Erreur ${response.status}: ${response.statusText}`);
+                }
+            } catch (e) {
+                                console.error('Impossible de parser les détails de l\'erreur:', e);
+                throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+            }
+            throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+        }
+        try {
+                        const responseData = await response.json();
+            console.log('Inscription réussie:', responseData);
+            return {
+                success: true,
+                message: 'Inscription réussie. Veuillez vérifier votre email pour confirmer votre compte.'
+            };
+        } catch (e) {
+                        console.log('La réponse ne contient pas de JSON valide');
+            return {
+                success: true,
+                message: 'Inscription réussie. Veuillez vérifier votre email pour confirmer votre compte.'
+            };
+        }
+    } catch (error) {
+        console.error('Registration error in service:', error);
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error('Erreur lors de l\'inscription');
+    }
+}
+async function fetchUserData(): Promise<any> {
+    try {
+        const response = await fetch('/api/accounts/me', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'          });
+        if (!response.ok) {
+            console.error('Erreur lors de la récupération des données utilisateur:', response.status);
+            return null;
+        }
+        const userData = await response.json();
+        console.log('Données utilisateur récupérées:', userData);
+        return {
+            id: userData.id,
+            firstname: userData.firstname,
+            lastname: userData.lastname,
+            email: userData.mail,
+            profile: userData.profile,
+            locale: userData.locale,
+                        avatar: `https:        };
+    } catch (error) {
+        console.error('Erreur lors de la récupération des données utilisateur:', error);
+        return null;
+    }
+}
+export async function updateUserProfile(profileData: UpdateProfileData): Promise<any> {
+    try {
+        console.log('Tentative de mise à jour du profil:', profileData);
+                const url = `/api/accounts/me`;
+        console.log('URL de l\'API:', url);
+                if (!isUserLoggedIn()) {
+            throw new Error('Utilisateur non authentifié');
+        }
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',              body: JSON.stringify(profileData),
+        });
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+                        try {
+                const errorData = await response.json();
+                console.error('Détails de l\'erreur:', errorData);
+                                if (errorData.errors && errorData.errors.length > 0) {
+                    console.error('Messages d\'erreur spécifiques:');
+                    errorData.errors.forEach((err: any, index: number) => {
+                        console.error(`Erreur ${index + 1}:`, err.code, '-', err.message);
+                    });
+                                        const errorMessages = errorData.errors.map((err: any) => err.message).join('; ');
+                    throw new Error(errorMessages || `Erreur ${response.status}: ${response.statusText}`);
+                }
+            } catch (e) {
+                                console.error('Impossible de parser les détails de l\'erreur:', e);
+                throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+            }
+            throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+        }
+                const updatedUserData = await response.json();
+        console.log('Mise à jour du profil réussie:', updatedUserData);
+                if (typeof window !== 'undefined') {
+            localStorage.setItem('user_data', JSON.stringify({
+                id: updatedUserData.id,
+                firstname: updatedUserData.firstname,
+                lastname: updatedUserData.lastname,
+                email: updatedUserData.mail,
+                profile: updatedUserData.profile,
+                locale: updatedUserData.locale,
+                avatar: `https:            }));
+        }
+        return updatedUserData;
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error('Erreur lors de la mise à jour du profil');
+    }
+}
+export function isUserLoggedIn(): boolean {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('is_authenticated') === 'true';
+}
+export function getUserData(): any | null {
+    if (typeof window === 'undefined') return null;
+    const userData = localStorage.getItem('user_data');
+    if (userData) {
+        try {
+            return JSON.parse(userData);
+        } catch (error) {
+            console.error('Erreur lors du parsing des données utilisateur:', error);
+            return null;
+        }
+    }
+    return null;
+}
+export function logoutUser(): void {
+    if (typeof window !== 'undefined') {
+                localStorage.removeItem('is_authenticated');
+        localStorage.removeItem('user_data');
+                fetch('/api/logout', {
+            method: 'POST',
+            credentials: 'include'          }).then(() => {
+            console.log('Déconnexion réussie côté serveur');
+        }).catch(error => {
+            console.error('Erreur lors de la déconnexion côté serveur:', error);
+        });
+        console.log('Déconnexion réussie, données supprimées');
+    }
+}
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\services\questionService.ts
+-----------------------------------------------
+
+
+export interface Question {
+  id?: number;
+  quizId: number;
+  content: string;
+  type: string;   points: number;
+  questionOrder: number;
+  isRequired: boolean;
+  isActive: boolean;
+  displayTime: number;
+  timeMin?: number;
+  timeMax?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  imported: boolean;
+}
+export async function createQuestion(questionData: Question): Promise<Question> {
+  try {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json'
+    };
+    const response = await fetch('/api/question', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(questionData)
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Erreur lors de la création de la question');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Erreur dans createQuestion:', error);
+    throw error;
+  }
+}
+export interface Answer {
+  id?: number;
+  questionId: number;
+  content: string;
+  type: string;   isCorrect: boolean;
+  answerOrder: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+export async function createAnswer(answerData: Answer): Promise<Answer> {
+  try {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json'
+    };
+    const response = await fetch('/api/answer', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(answerData)
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Erreur lors de la création de la réponse');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Erreur dans createAnswer:', error);
+    throw error;
+  }
+}
+export interface Media {
+  id?: number;
+  questionId: number;
+  type: string;   url: string;
+}
+export async function createMedia(mediaData: Media): Promise<Media> {
+  try {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json'
+    };
+    const response = await fetch('/api/media', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(mediaData)
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Erreur lors de la création du média');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Erreur dans createMedia:', error);
+    throw error;
+  }
+}
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\services\quizSessionService.ts
+-----------------------------------------------
+
+interface QuizSessionResponse {
+    id?: string;
+    quizId?: number;
+    sessionMode?: string;
+    status?: string;
+    startTime?: string;
+    endTime?: string;
+    sessionCode?: string;
+    message?: string;
+}
+export async function getAllQuizSessions(): Promise<Array<QuizSessionResponse>> {
+    const res = await fetch('/api/quiz_session', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+    return await res.json();
+}
+export async function startQuizSession(payload: any): Promise<QuizSessionResponse> {
+    const res = await fetch('/api/quiz_session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    return await res.json();
+}
+export async function joinQuizSession(sessionCode: string): Promise<QuizSessionResponse> {
+    try {
+        console.log('Vérification de la session avec code:', sessionCode);
+                const checkUrl = `/api/quizzsession/${sessionCode}/check`;
+        console.log('URL de vérification:', checkUrl);
+                const headers: HeadersInit = {
+            'Content-Type': 'application/json',
+        };
+                const checkResponse = await fetch(checkUrl, {
+            method: 'GET',
+            headers
+        });
+        console.log('Response status (check):', checkResponse.status);
+                const contentType = checkResponse.headers.get('content-type');
+        const hasContent = contentType && contentType.includes('application/json');
+        if (!checkResponse.ok) {
+            if (hasContent) {
+                const errorData = await checkResponse.json();
+                throw new Error(errorData.message || `La session ${sessionCode} n'existe pas`);
+            } else {
+                throw new Error(`Erreur ${checkResponse.status}: ${checkResponse.statusText}`);
+            }
+        }
+                if (!hasContent) {
+            console.log('La réponse ne contient pas de JSON valide');
+            return { message: 'Session trouvée' };
+        }
+                const sessionData = await checkResponse.json();
+        console.log('Session trouvée:', sessionData);
+                if (sessionData.status === 'active' || sessionData.status === 'waiting') {
+            const joinUrl = `/api/quizz_session/${sessionCode}/join`;
+                        const joinResponse = await fetch(joinUrl, {
+                method: 'POST',
+                headers
+            });
+            if (!joinResponse.ok) {
+                const joinError = await joinResponse.json();
+                throw new Error(joinError.message || "Impossible de rejoindre la session");
+            }
+            const joinData = await joinResponse.json();
+            console.log('Session rejointe avec succès:', joinData);
+            return joinData;
+        }
+        return sessionData;
+    } catch (error) {
+        console.error('Erreur dans le service quizSessionService:', error);
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error('Erreur lors de la recherche de la session');
+    }
+}
+export async function stopQuizSession(payload: any): Promise<QuizSessionResponse> {
+    const fullPayload = {
+        id: payload.id,
+        quizId: payload.quizId,
+        sessionMode: payload.sessionMode,
+        status: payload.status,
+        startTime: payload.startTime,
+        endTime: payload.endTime,
+        sessionCode: payload.sessionCode
+    };
+    const res = await fetch(`/api/quiz_session/${payload.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fullPayload)
+    });
+    return await res.json();
+}
+export async function deleteQuiz(quizId: number): Promise<void> {
+    await fetch(`/api/quiz/${quizId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } });
+}
+export async function getQuizzesByUser(userId: number): Promise<Array<any>> {
+    const res = await fetch(`/api/quiz/user/${userId}`, { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+    return await res.json();
+}
+export async function updateQuizStatus(quizId: number, status: string): Promise<any> {
+    const res = await fetch(`/api/quiz/${quizId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+    });
+    return await res.json();
+}
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\services\quizzService.ts
+-----------------------------------------------
+
+interface QuizzResponse {
+  quizz: {
+    question: string;
+    reponse: {
+      id : Number;
+      content: string;
+    }[];
+    type: string;
+    time: number;
+  }[];
+}
+interface QuizzAnswer{
+  sessionId: Number;
+  participantId: Number;
+  questionId: Number;
+  answerId:Number;
+  responseText: String;
+  submittedAt: Date;
+  isCorrect: Boolean
+}
+interface res {
+  quizz: {
+    question: string;
+    reponse: string[];
+    type: string;
+    time: number;
+  }[];
+}
+export async function getQuizz(id: Number): Promise<QuizzResponse> {
+  const questionsUrl = '/api/question/quiz/' + id;
+  console.log('URL des questions:', questionsUrl);
+    const questionsResponse = await fetch(questionsUrl, { method: 'GET' });
+  const questions = await questionsResponse.json();
+    const quizz = await Promise.all(
+    questions.map(async (question: any) => {
+      const answersUrl = '/api/answer/question/' + question.id;
+      console.log('URL des réponses:', answersUrl);
+      const answersResponse = await fetch(answersUrl, { method: 'GET' });
+      const answers = await answersResponse.json();
+      console.log(answers);
+            const reponse: { id: number; content: string }[] = answers.map((answer: any) => ({
+        id: answer.id,
+        content: answer.content,
+      }));
+      console.log({
+        question: question.content,
+        reponse,
+        type: question.type,
+        time: question.displayTime
+      })
+      return {
+        question: question.content,
+        reponse,
+        type: question.type,
+        time: question.displayTime
+      };
+    })
+  );
+  return { quizz };
+}
+export async function createQuiz(quizData: any): Promise<any> {
+    try {
+        const response = await fetch('api/quiz', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(quizData)
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Erreur lors de la création du quiz');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Erreur dans createQuiz:", error);
+        throw error;
+    }
+}
+export async function sendAnswer(answer : QuizzAnswer ): Promise<void> {
+  const sessionAnswerUrl = '/api/session_responses';
+  const isCorrectAnswerUrl = '/api/answer/';
+    console.log(answer);
+    const responseAnswerValid = await fetch(isCorrectAnswerUrl + answer.questionId, {
+      method: 'GET',
+    });
+    if (!responseAnswerValid.ok) {
+      throw new Error('Erreur lors de la récupération de la réponse');
+    }
+    
+    const data = await responseAnswerValid.json();
+    const isCorrect = data.isCorrect;
+    const response = await fetch(sessionAnswerUrl, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+        credentials: 'include',          body: JSON.stringify({
+          "sessionId": answer.sessionId,
+          "participantId": answer.participantId,
+          "questionId": answer.questionId,
+          "answerId": answer.answerId,
+          "responseText": answer.responseText,
+          "submittedAt": answer.submittedAt,
+          "isCorrect": isCorrect
+        }),
+    });
+  }
+export async function getQuizzFromSession(sessionCode : String ): Promise<Number> {
+  const sessionUrl = '/api/quiz_session/';
+    const responseAnswerValid = await fetch(sessionUrl + sessionCode, {
+      method: 'GET',
+    });
+    if (!responseAnswerValid.ok) {
+      throw new Error('Erreur lors de la récupération de la réponse');
+    }
+    
+    const data = await responseAnswerValid.json();
+    return data.quizId;
+}
+
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\stores\projects.ts
+-----------------------------------------------
+
+import { defineStore } from 'pinia'
+interface Project {
+    id: number
+    title: string
+    description: string
+}
+export const useProjectsStore = defineStore('projects', {
+    state: () => ({
+        projects: [] as Project[]
+    }),
+    actions: {
+        async fetchProjects() {
+                        this.projects = [
+                { id: 1, title: 'Projet 1', description: 'Description du projet 1' },
+                { id: 2, title: 'Projet 2', description: 'Description du projet 2' },
+                { id: 3, title: 'Projet 3', description: 'Description du projet 3' },
+                { id: 4, title: 'Projet 4', description: 'Description du projet 4' },
+                { id: 5, title: 'Projet 5', description: 'Description du projet 5' },
+            ]
+        }
+    }
+})
+
+
+-----------------------------------------------
+Fichier: C:\Users\antoi\Documents\Fac\M2\S9\MindBloom\front\utils\encryption.ts
+-----------------------------------------------
+
+import CryptoJS from 'crypto-js';
+const generateSalt = (): string => {
+  return CryptoJS.lib.WordArray.random(128 / 8).toString(); };
+export const encryptPassword = (password: string, salt: string): string => {
+  const secretKey = 'your-secret-keyy';   const saltedPassword = password + salt;
+    const iv = CryptoJS.lib.WordArray.random(128 / 8);
+    const encrypted = CryptoJS.AES.encrypt(saltedPassword, CryptoJS.enc.Utf8.parse(secretKey), { iv: iv });
+    return iv.toString(CryptoJS.enc.Hex) + ':' + encrypted.toString();
+};
+export const generateSaltAndEncryptPassword = (password: string): string => {
+  const salt = generateSalt();
+  return encryptPassword(password, salt);
+};
+
+
+

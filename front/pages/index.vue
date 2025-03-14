@@ -4,7 +4,6 @@
       <RejoindreEvenement @join-event="handleJoinEvent" />
     </div>
 
-    <!-- Popup pour les messages d'erreur -->
     <GlobalPopup
         :is-open="popupOpen"
         :message="popupMessage"
@@ -14,13 +13,15 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import RejoindreEvenement from '~/components/EventJoin.vue'
 import GlobalPopup from '~/components/GlobalPopup.vue'
 import { usePopup } from '~/composables/usePopup'
 import { joinQuizSession } from '~/services/quizSessionService'
 
+const router = useRouter()
 const popup = usePopup()
 const loading = ref(false)
 
@@ -32,7 +33,7 @@ const handleClosePopup = () => {
   popup.closePopup()
 }
 
-const handleJoinEvent = async (code: string) => {
+const handleJoinEvent = async (code) => {
   console.log('Événement join-event reçu dans le parent avec le code:', code)
 
   if (!code || code.trim() === '') {
@@ -46,17 +47,29 @@ const handleJoinEvent = async (code: string) => {
   try {
     console.log('Tentative de rejoindre la session avec le code:', code)
 
-    // Appel au service pour vérifier si la session existe
-    const response = await joinQuizSession(code)
-    console.log('Réponse du service:', response)
+    // Vérification de l'existence de la session et création du participant
+    const sessionData = await joinQuizSession(code)
+    console.log('Réponse du service:', sessionData)
 
-    // Redirection vers la page de session
-    console.log('Redirection vers /quizzsession/' + code)
-    navigateTo(`/quizzsession/${code}`)
+    if (!sessionData || !sessionData.id) {
+      throw new Error('Session introuvable ou données invalides')
+    }
+
+    // Stocker les données de session dans le localStorage
+    localStorage.setItem('current_session', JSON.stringify({
+      sessionId: sessionData.id,
+      sessionCode: code,
+      participantId: sessionData.participantId,
+      quizId: sessionData.quizId,
+      joinedAt: new Date().toISOString()
+    }));
+
+    // Redirection vers la page de salle d'attente
+    console.log('Redirection vers /quiz-session/' + code)
+    router.push(`/quiz-session/${code}`)
   } catch (error) {
     console.error('Erreur lors de la recherche de session:', error)
 
-    // Affiche un message d'erreur
     popup.showPopup(
         error instanceof Error ? error.message : "Session introuvable",
         "Erreur"
