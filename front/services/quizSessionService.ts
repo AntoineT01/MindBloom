@@ -1,13 +1,28 @@
-// ~/services/quizSessionService.ts
-
+// File: ~/services/quizSessionService.ts
 interface QuizSessionResponse {
     id?: string;
-    code?: string;
+    quizId?: number;
+    sessionMode?: string;
     status?: string;
+    startTime?: string;
+    endTime?: string;
+    sessionCode?: string;
     message?: string;
-    // Ajoutez d'autres champs selon la structure de votre API
 }
 
+export async function getAllQuizSessions(): Promise<Array<QuizSessionResponse>> {
+    const res = await fetch('/api/quiz_session', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+    return await res.json();
+}
+
+export async function startQuizSession(payload: any): Promise<QuizSessionResponse> {
+    const res = await fetch('/api/quiz_session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    return await res.json();
+}
 /**
  * Vérifie si une session de quiz existe et tente de la rejoindre
  * @param sessionCode Code de la session à rejoindre
@@ -23,12 +38,10 @@ export async function joinQuizSession(sessionCode: string): Promise<QuizSessionR
 
         console.log('URL de vérification:', checkUrl);
 
-
         // Headers pour la requête
         const headers: HeadersInit = {
             'Content-Type': 'application/json',
         };
-
 
         // Vérifier si la session existe
         const checkResponse = await fetch(checkUrl, {
@@ -63,7 +76,7 @@ export async function joinQuizSession(sessionCode: string): Promise<QuizSessionR
 
         // Si la session est active, tenter de la rejoindre
         if (sessionData.status === 'active' || sessionData.status === 'waiting') {
-            const joinUrl = `/api/quizzsession/${sessionCode}/join`;
+            const joinUrl = `/api/quizz_session/${sessionCode}/join`;
 
             // Requête pour rejoindre la session
             const joinResponse = await fetch(joinUrl, {
@@ -92,35 +105,39 @@ export async function joinQuizSession(sessionCode: string): Promise<QuizSessionR
     }
 }
 
-/**
- * Récupère les détails d'une session de quiz
- * @param sessionCode Code de la session à récupérer
- * @returns Les données détaillées de la session
- */
-export async function getQuizSession(sessionCode: string): Promise<QuizSessionResponse> {
-    try {
-        const url = `/api/quizzsession/${sessionCode}`;
 
-        const headers: HeadersInit = {
-            'Content-Type': 'application/json',
-        };
+export async function stopQuizSession(payload: any): Promise<QuizSessionResponse> {
+    const fullPayload = {
+        id: payload.id,
+        quizId: payload.quizId,
+        sessionMode: payload.sessionMode,
+        status: payload.status,
+        startTime: payload.startTime,
+        endTime: payload.endTime,
+        sessionCode: payload.sessionCode
+    };
+    const res = await fetch(`/api/quiz_session/${payload.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fullPayload)
+    });
+    return await res.json();
+}
 
-        const response = await fetch(url, {
-            method: 'GET',
-            headers
-        });
+export async function deleteQuiz(quizId: number): Promise<void> {
+    await fetch(`/api/quiz/${quizId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } });
+}
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || "Impossible de récupérer les données de la session");
-        }
+export async function getQuizzesByUser(userId: number): Promise<Array<any>> {
+    const res = await fetch(`/api/quiz/user/${userId}`, { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+    return await res.json();
+}
 
-        return await response.json();
-    } catch (error) {
-        console.error('Erreur lors de la récupération de la session:', error);
-        if (error instanceof Error) {
-            throw error;
-        }
-        throw new Error('Erreur lors de la récupération des données de la session');
-    }
+export async function updateQuizStatus(quizId: number, status: string): Promise<any> {
+    const res = await fetch(`/api/quiz/${quizId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+    });
+    return await res.json();
 }

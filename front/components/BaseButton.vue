@@ -1,10 +1,11 @@
+<!-- File: components/BaseButton.vue -->
 <template>
   <div
       :class="[
-      'rounded-[90px] relative cursor-pointer',
+      'rounded-full relative cursor-pointer transition-transform duration-150 ease-in-out transform hover:scale-105',
       className,
       buttonStyles[currentState],
-      isGoButton ? 'h-[45px] w-[45px]' : 'h-[50px] w-[200px]',
+      isGoButton ? 'h-10 w-10' : 'h-12 w-48',
       disabled ? 'opacity-50 cursor-not-allowed' : ''
     ]"
       @mouseenter="handleMouseEnter"
@@ -14,10 +15,10 @@
       @click="handleClick"
   >
     <div
-        class="font-['Orbitron-Regular'] text-base absolute text-center"
+        class="font-['Orbitron-Regular'] text-base absolute text-center flex items-center justify-center"
         :class="[
         textStyles[currentState],
-        isGoButton ? 'w-[45px] top-[12px]' : 'w-[200px] top-[14px] left-0'
+        isGoButton ? 'w-10 top-2' : 'w-48 top-3 left-0'
       ]"
     >
       <slot></slot>
@@ -27,7 +28,6 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-
 const props = defineProps({
   property1: {
     type: String,
@@ -48,34 +48,17 @@ const props = defineProps({
       "go",
       "go-hover",
       "go-click"
-    ].includes(value),
+    ].includes(value)
   },
-  className: {
-    type: String,
-    default: "",
-  },
-  disabled: {
-    type: Boolean,
-    default: false
-  }
+  className: { type: String, default: "" },
+  disabled: { type: Boolean, default: false }
 })
-
-// Définir les émetteurs d'événements
 const emit = defineEmits(['click'])
-
 const isHovered = ref(false)
 const isClicked = ref(false)
-
-const isGoButton = computed(() => {
-  return ['go', 'go-hover', 'go-click'].includes(props.property1)
-})
-
+const isGoButton = computed(() => ['go', 'go-hover', 'go-click'].includes(props.property1))
 const currentState = computed(() => {
-  if (props.disabled) {
-    // Retourner l'état de base lorsque le bouton est désactivé
-    return props.property1
-  }
-
+  if (props.disabled) { return props.property1 }
   if (isClicked.value) {
     switch (props.property1) {
       case 'link-1': return 'link1-click'
@@ -98,74 +81,43 @@ const currentState = computed(() => {
   }
   return props.property1
 })
-
-const handleMouseEnter = () => {
-  if (!props.disabled) {
-    isHovered.value = true
-  }
-}
-
-const handleMouseLeave = () => {
-  if (!props.disabled) {
-    isHovered.value = false
-    isClicked.value = false
-  }
-}
-
-const handleMouseDown = () => {
-  if (!props.disabled) {
-    isClicked.value = true
-  }
-}
-
-const handleMouseUp = () => {
-  if (!props.disabled) {
-    isClicked.value = false
-  }
-}
-
-// Nouvelle fonction pour gérer les clics - sans preventDefault
-const handleClick = (event) => {
-  if (!props.disabled) {
-    emit('click')
-  }
-}
-
+const handleMouseEnter = () => { if (!props.disabled) { isHovered.value = true } }
+const handleMouseLeave = () => { if (!props.disabled) { isHovered.value = false; isClicked.value = false } }
+const handleMouseDown = () => { if (!props.disabled) { isClicked.value = true } }
+const handleMouseUp = () => { if (!props.disabled) { isClicked.value = false } }
+const handleClick = () => { if (!props.disabled) { emit('click') } }
 const buttonStyles = {
-  // Styles existants
-  'link2-click': 'bg-faux-blanc shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25)]',
-  'validation': 'bg-vert shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
-  'validation-hover': 'bg-faux-blanc shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
-  'validation-click': 'bg-faux-blanc shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25)]',
-  'link-2': 'bg-violet-ple shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
-  'delete-hover': 'bg-faux-blanc shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
-  'link-1': 'bg-violet-clair shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
-  'delete-click': 'bg-faux-blanc shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25)]',
-  'delete': 'bg-violet-fonc shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
-  'link2-hover': 'bg-faux-blanc shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
-  'link1-click': 'bg-faux-blanc shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25)]',
-  'link1-hover': 'bg-faux-blanc shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
-  'go': 'bg-violet-ple shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
-  'go-hover': 'bg-faux-blanc shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
-  'go-click': 'bg-faux-blanc shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25)]',
+  'link2-click': 'bg-gray-100 shadow-inner',
+  'validation': 'bg-green-600 shadow-md',
+  'validation-hover': 'bg-green-500 shadow-md',
+  'validation-click': 'bg-green-700 shadow-inner',
+  'link-2': 'bg-indigo-500 shadow-md',
+  'delete-hover': 'bg-red-500 shadow-md',
+  'link-1': 'bg-indigo-300 shadow-md',
+  'delete-click': 'bg-red-700 shadow-inner',
+  'delete': 'bg-red-600 shadow-md',
+  'link2-hover': 'bg-gray-100 shadow-md',
+  'link1-click': 'bg-gray-100 shadow-inner',
+  'link1-hover': 'bg-gray-100 shadow-md',
+  'go': 'bg-indigo-300 shadow-md',
+  'go-hover': 'bg-indigo-400 shadow-md',
+  'go-click': 'bg-indigo-500 shadow-inner'
 }
-
 const textStyles = {
-  // Styles existants
-  'link2-click': 'text-violet-fonc',
-  'validation': 'text-faux-blanc',
-  'validation-hover': 'text-vert',
-  'validation-click': 'text-vert',
-  'link-2': 'text-violet-fonc',
-  'delete-hover': 'text-violet-fonc',
-  'link-1': 'text-faux-blanc',
-  'delete-click': 'text-violet-fonc',
-  'delete': 'text-faux-blanc',
-  'link2-hover': 'text-violet-fonc',
-  'link1-click': 'text-violet-clair',
-  'link1-hover': 'text-violet-clair',
-  'go': 'text-violet-fonc',
-  'go-hover': 'text-violet-clair',
-  'go-click': 'text-violet-clair',
+  'link2-click': 'text-indigo-700',
+  'validation': 'text-white',
+  'validation-hover': 'text-white',
+  'validation-click': 'text-white',
+  'link-2': 'text-white',
+  'delete-hover': 'text-white',
+  'link-1': 'text-white',
+  'delete-click': 'text-white',
+  'delete': 'text-white',
+  'link2-hover': 'text-indigo-700',
+  'link1-click': 'text-indigo-800',
+  'link1-hover': 'text-indigo-800',
+  'go': 'text-indigo-700',
+  'go-hover': 'text-indigo-800',
+  'go-click': 'text-indigo-800'
 }
 </script>
