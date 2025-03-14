@@ -18,28 +18,42 @@
   
   <script lang="ts" setup>
   import { ref, onMounted } from 'vue';
+  import { useRoute } from 'vue-router';
   import { sendScore, fetchLeaderboard, LeaderboardDto } from '@/services/scoreService';
+  import { getQuizzFromSession } from '@/services/quizzService';
   
-  // États réactifs
+  // Récupération des query params
+  const route = useRoute();
+  const participantIdParam = route.query.participantId;
+  const sessionCodeParam = route.query.sessionCode;
+  
+  // Convertir en nombres (si disponibles)
+  const currentParticipantId: Number = participantIdParam ? Number(participantIdParam) : 1;
+  let currentQuizSessionId: Number
+  
+  // États réactifs pour l'affichage
   const loading = ref(true);
   const error = ref('');
   const score = ref(0);
   const ranking = ref(0);
   
-  // Identifiants simulés pour le participant et la session
-  const currentParticipantId = 202;
-  const currentQuizSessionId = 101;
-  
   // Score calculé (à remplacer par votre logique de calcul)
   const calculatedScore = 85;
   
   /**
-   * Met à jour le leaderboard en envoyant le score calculé
-   * puis en récupérant l'ensemble des scores pour déterminer le classement.
+   * Met à jour le leaderboard en :
+   *  1. Récupérant le quizSessionId depuis le session code (via getQuizzFromSession)
+   *  2. Envoyant le score calculé via sendScore
+   *  3. Récupérant l'ensemble des scores pour déterminer le classement du participant.
    */
   const updateLeaderboard = async () => {
     try {
-      // Préparation des données à envoyer
+      // Récupérer le quizSessionId via le session code passé dans l'URL
+      if (sessionCodeParam && typeof sessionCodeParam === 'string') {
+        currentQuizSessionId = await getQuizzFromSession(sessionCodeParam);
+      }
+  
+      // Préparation de l'objet à envoyer
       const leaderboardEntry: LeaderboardDto = {
         quizSessionId: currentQuizSessionId,
         participantId: currentParticipantId,
@@ -55,7 +69,7 @@
       // Tri décroissant par score
       leaderboard.sort((a, b) => b.score - a.score);
   
-      // Recherche de l'entrée correspondant au participant et à la session courante
+      // Recherche de l'entrée correspondant au participant et au quiz (ou session)
       const index = leaderboard.findIndex(
         (entry) =>
           entry.participantId === currentParticipantId &&

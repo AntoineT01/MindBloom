@@ -195,7 +195,7 @@ function handleNext() {
 function navigateToResults() {
   // Redirection vers la page des résultats
   router.push({
-    path: '/result-page',
+    path: '/score',
     query: {
       sessionCode: sessionCode.value,
       participantId: participantId.value

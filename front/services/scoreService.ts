@@ -2,8 +2,8 @@
 
 export interface LeaderboardDto {
     id?: number;            // Optionnel lors de la création
-    quizSessionId: number;  // ID de la session de quiz associée
-    participantId: number;  // ID du participant
+    quizSessionId: Number;  // ID de la session de quiz associée
+    participantId: Number;  // ID du participant
     score: number;          // Score obtenu
   }
   
