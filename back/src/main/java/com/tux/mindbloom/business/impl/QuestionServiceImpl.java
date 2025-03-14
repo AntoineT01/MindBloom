@@ -73,11 +73,28 @@ public class QuestionServiceImpl implements QuestionService {
    */
   @Override
   public QuestionDto create(QuestionDto dto) {
-    log.info("Service: POST create question");
-    Question question = mapper.toEntity(dto);
-    Question created = repository.save(question);
-    return mapper.toDto(created);
+      log.info("Service: POST create question");
+
+      // Récupérer le Quiz correspondant à l'ID fourni dans le DTO
+      Quiz quiz = quizRepository.findById(dto.getQuizId())
+              .orElseThrow(() -> new EntityNotFoundException("Quiz", dto.getQuizId()));
+
+      // Mapper le DTO vers l'entité Question
+      Question question = mapper.toEntity(dto);
+
+      // Associer l'objet Quiz récupéré à la Question
+      question.setQuiz(quiz);
+
+      // Définir la date de création si nécessaire
+      if (question.getCreatedAt() == null) {
+          question.setCreatedAt(LocalDateTime.now());
+      }
+
+      // Sauvegarder la question en base
+      Question created = repository.save(question);
+      return mapper.toDto(created);
   }
+
 
   /**
    * {@inheritDoc}

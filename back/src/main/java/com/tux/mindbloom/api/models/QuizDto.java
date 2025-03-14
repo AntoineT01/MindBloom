@@ -4,10 +4,8 @@ import com.tux.mindbloom.config.validation.annotation.MustBeAbsentForCreation;
 import com.tux.mindbloom.config.validation.annotation.MustBePresentForUpdate;
 import com.tux.mindbloom.config.validation.annotation.MustBeTheSameAsInPathOrMyself;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,13 +26,6 @@ public class QuizDto {
 
   /**
    * Internal identifier for a quiz
-   *
-   * @implNote Additional validations:
-   * <ul>
-   *   <li>Must be present for update/patch requests</li>
-   *   <li>Must be absent for creation requests</li>
-   *   <li>Must be the same as in path params for update/patch requests or path must be "/me"</li>
-   * </ul>
    */
   @Schema(nullable = true, example = "1", description = """
         Internal identifier for a valid quiz<br/>
@@ -56,7 +47,6 @@ public class QuizDto {
    */
   @Schema(example = "Math Course 2nd Grade", description = "The title of a quiz")
   @Size(min = 1, max = 255)
-  @Pattern(regexp = "[a-zA-Z '-]*")
   private String title;
 
   /**
@@ -64,7 +54,6 @@ public class QuizDto {
    */
   @Schema(example = "The quiz includes various math questions...", description = "The description of a quiz")
   @Size(min = 1, max = 255)
-  @Pattern(regexp = "[a-zA-Z '-]*")
   private String description;
 
   /**
@@ -72,7 +61,7 @@ public class QuizDto {
    */
   @Schema(description = "The account that created the quiz")
   @NotNull
-  private AccountDto accountCreator;
+  private AccountDto creator;
 
   /**
    * Whether the quiz is public or not
@@ -98,9 +87,7 @@ public class QuizDto {
   /**
    * The maximum amount of time in **seconds** to complete each question
    */
-  @Schema(example = "30", description = """
-        The maximum amount of time in **seconds** to complete each question
-        """)
+  @Schema(example = "30", description = "The maximum amount of time in **seconds** to complete each question")
   @NotNull
   private Integer timeLimit;
 
