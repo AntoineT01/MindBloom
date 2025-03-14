@@ -43,7 +43,8 @@
     methods: {
       handleNext() {
         if (this.currentIndex < this.questions.length - 1) {
-          this.currentIndex++
+          this.currentIndex++;
+          
         } else {
           console.log('Quiz terminé !')
           this.quizEnded = true
