@@ -16,25 +16,24 @@
   <script lang="ts" setup>
   import { ref, onMounted } from 'vue';
   import { useRoute } from 'vue-router';
-  import { calculateScore } from '@/services/scoreCalculationService';
+  import { calculateScoreForParticipant } from '@/services/scoreCalculationService';
   
-  // Récupération des paramètres de l'URL
+  // Récupérer les paramètres d'URL (exemple : /score?sessionCode=ABC123&participantId=1)
   const route = useRoute();
   const sessionCode = route.query.sessionCode as string;
   const participantId = route.query.participantId ? Number(route.query.participantId) : 1;
   
-  // États réactifs pour le chargement, le score et les erreurs
+  // États réactifs
   const loading = ref(true);
   const error = ref('');
   const score = ref(0);
   
   /**
-   * Met à jour le score en appelant la fonction calculateScore.
+   * Met à jour le score en appelant la fonction calculateScoreForParticipant
    */
   const updateScore = async () => {
     try {
-      // Le calcul du score est basé sur le sessionCode et le participantId
-      score.value = await calculateScore(sessionCode, participantId);
+      score.value = await calculateScoreForParticipant(sessionCode, participantId);
     } catch (err: any) {
       error.value = "Erreur lors du calcul du score.";
       console.error(err);
