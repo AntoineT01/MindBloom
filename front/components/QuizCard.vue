@@ -8,7 +8,14 @@
         <div class="mt-3 text-sm">
           <p><span class="font-semibold">Share Code:</span> {{ quiz.shareCode }}</p>
           <p><span class="font-semibold">Time Limit:</span> {{ quiz.timeLimit }} s</p>
-          <div v-if="quiz.activeSession" class="mt-2">
+          <!-- Affiche le statut de la session uniquement si le quiz est actif -->
+          <p v-if="quiz.status === 'ACTIVE'">
+            <span class="font-semibold">Session:</span>
+            <span :class="quiz.activeSession ? 'text-green-600' : 'text-red-600'">
+      {{ quiz.activeSession ? ' Active' : ' Inactive' }}
+    </span>
+          </p>
+          <div v-if="quiz.activeSession && quiz.status != 'DELETED'" class="mt-2">
             <p><span class="font-semibold">Session Code:</span> {{ quiz.activeSession.sessionCode }}</p>
           </div>
         </div>
@@ -60,7 +67,8 @@
         </button>
       </template>
       <template v-else>
-        <button disabled class="px-4 py-2 bg-gray-400 text-white rounded text-sm flex items-center justify-center cursor-not-allowed">
+        <button disabled
+                class="px-4 py-2 bg-gray-400 text-white rounded text-sm flex items-center justify-center cursor-not-allowed">
           <span>Supprimé</span>
         </button>
       </template>
@@ -68,8 +76,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
-const props = defineProps<{ quiz: {
+import {defineProps, defineEmits} from 'vue'
+
+const props = defineProps<{
+  quiz: {
     id: number,
     title: string,
     description: string,
@@ -77,15 +87,24 @@ const props = defineProps<{ quiz: {
     shareCode: string,
     timeLimit: number,
     activeSession?: { id: number, sessionCode: string }
-  } }>()
+  }
+}>()
 const emit = defineEmits<{
   (e: 'startSession', quiz: any): void,
   (e: 'stopSession', quiz: any): void,
   (e: 'reactivateQuiz', quiz: any): void,
   (e: 'deleteQuiz', quiz: any): void
 }>()
-const start = () => { emit('startSession', props.quiz) }
-const stop = () => { emit('stopSession', props.quiz) }
-const reactivate = () => { emit('reactivateQuiz', props.quiz) }
-const deleteQuiz = () => { emit('deleteQuiz', props.quiz) }
+const start = () => {
+  emit('startSession', props.quiz)
+}
+const stop = () => {
+  emit('stopSession', props.quiz)
+}
+const reactivate = () => {
+  emit('reactivateQuiz', props.quiz)
+}
+const deleteQuiz = () => {
+  emit('deleteQuiz', props.quiz)
+}
 </script>
