@@ -34,35 +34,35 @@
         <button
             v-if="!quiz.activeSession"
             @click="start"
-            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center">
-          <i class="fas fa-play w-5 text-center"></i>
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center gap-2">
+          <i class="fas fa-play w-5"></i>
           <span>Démarrer</span>
         </button>
         <button
             v-else
             @click="stop"
-            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center">
-          <i class="fas fa-stop w-5 text-center"></i>
+            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center gap-2">
+          <i class="fas fa-stop w-5"></i>
           <span>Arrêter</span>
         </button>
         <button
             @click="deleteQuiz"
-            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center">
-          <i class="fas fa-trash w-5 text-center"></i>
+            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center gap-2">
+          <i class="fas fa-trash w-5"></i>
           <span>Supprimer</span>
         </button>
       </template>
       <template v-else-if="quiz.status === 'INACTIVE'">
         <button
             @click="reactivate"
-            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center">
-          <i class="fas fa-redo w-5 text-center"></i>
+            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center gap-2">
+          <i class="fas fa-redo w-5"></i>
           <span>Réactiver</span>
         </button>
         <button
             @click="deleteQuiz"
-            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center">
-          <i class="fas fa-trash w-5 text-center"></i>
+            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded text-sm transition transform hover:scale-105 flex items-center justify-center gap-2">
+          <i class="fas fa-trash w-5"></i>
           <span>Supprimer</span>
         </button>
       </template>
@@ -75,9 +75,9 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
-import {defineProps, defineEmits} from 'vue'
 
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue'
 const props = defineProps<{
   quiz: {
     id: number,
