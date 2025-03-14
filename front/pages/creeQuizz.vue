@@ -194,7 +194,9 @@
   import GlobalPopup from '~/components/GlobalPopup.vue'
   import { usePopup } from '~/composables/usePopup'
   import { createQuestion, createAnswer, createMedia } from '~/services/questionService'
-  
+  import { getUserData } from '~/services/authService'
+  import { createQuiz } from '~/services/quizzService'
+
   // Interface pour nos questions locales
   interface LocalQuestion {
     questionText: string
@@ -283,38 +285,39 @@
     }
     return isValid
   }
-  
+
   const handleCreateQuiz = async () => {
     console.log('handleCreateQuiz appelé');
     if (!validateForm()) {
       console.error('Formulaire invalide');
       return;
     }
-  
+
     try {
       loading.value = true;
-      const now = new Date().toISOString();
-  
-      // Préparation de l'objet quiz (sans id, celui-ci est généré par le serveur)
+
+      // Récupérer les données de l'utilisateur connecté
+      const currentUser = getUserData();
+      const creator = currentUser ? { id: currentUser.id } : { id: 0 };
+
       const quizObj = {
         title: quizName.value,
         description: quizDescription.value,
-        accountCreator: 'exemple', // Dans un vrai cas, ce sera un objet utilisateur
         isPublic: true,
-        showAnswers: false,
+        showAnswers: true,        // mis à true selon l'exemple
         showFinalScore: true,
-        timeLimit: 30, // Optionnel
-        createdAt: now,
-        updatedAt: now,
-        status: 'active',
-        shareCode: 'ABC123'
+        timeLimit: 30,
+        status: 'ACTIVE',         // en majuscules
+        // Laisser shareCode vide si généré automatiquement, ou l'omettre
+        shareCode: '',
+        creator: creator
       };
-  
-      // Créer le quiz
+
+      // Créer le quiz via l'API
       const createdQuiz = await createQuiz(quizObj);
       console.log('Quiz créé:', createdQuiz);
-  
-      // Pour chaque question, créer la question et les réponses associées
+
+      // Puis continuer avec la création des questions, réponses et médias
       for (let i = 0; i < questions.value.length; i++) {
         const q = questions.value[i];
         const questionObj = {
@@ -326,17 +329,16 @@
           isRequired: true,
           isActive: true,
           displayTime: q.time,
-          createdAt: now,
-          updatedAt: now,
+          createdAt: new Date().toISOString(), // si nécessaire
+          updatedAt: new Date().toISOString(), // si nécessaire
           imported: false
         };
-  
+
         const createdQuestion = await createQuestion(questionObj);
         console.log(`Question ${i + 1} créée:`, createdQuestion);
-  
-        // Si ce n'est pas une question ouverte, créer les réponses
+
         if (q.questionType !== 'open') {
-          // Réponses valides
+          // Créer les réponses valides
           for (let j = 0; j < q.validAnswers.length; j++) {
             const answerContent = q.validAnswers[j].trim();
             if (answerContent !== '') {
@@ -346,14 +348,14 @@
                 type: createdQuestion.type,
                 isCorrect: true,
                 answerOrder: j + 1,
-                createdAt: now,
-                updatedAt: now
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
               };
               const createdAnswer = await createAnswer(answerObj);
               console.log(`Answer valide ${j + 1} pour question ${i + 1}:`, createdAnswer);
             }
           }
-          // Réponses invalides
+          // Créer les réponses invalides
           for (let j = 0; j < q.invalidAnswers.length; j++) {
             const answerContent = q.invalidAnswers[j].trim();
             if (answerContent !== '') {
@@ -363,28 +365,27 @@
                 type: createdQuestion.type,
                 isCorrect: false,
                 answerOrder: j + 1,
-                createdAt: now,
-                updatedAt: now
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
               };
               const createdAnswer = await createAnswer(answerObj);
               console.log(`Answer invalide ${j + 1} pour question ${i + 1}:`, createdAnswer);
             }
           }
         }
-  
+
         // Si un média est attaché, le créer
         if (q.mediaFile) {
           const mediaObj = {
             questionId: createdQuestion.id,
-            type: q.questionType.toUpperCase(), // Par exemple "IMAGE" ou "VIDEO"
-            // Dans un cas réel, vous auriez à uploader le fichier pour obtenir une URL
+            type: q.questionType.toUpperCase(), // par exemple "IMAGE" ou "VIDEO"
             url: q.mediaFile.name
           };
           const createdMedia = await createMedia(mediaObj);
           console.log(`Media pour question ${i + 1}:`, createdMedia);
         }
       }
-  
+
       popup.showPopup('Quizz créé avec succès!', 'Succès');
       // Réinitialisation du formulaire
       quizName.value = '';
@@ -403,8 +404,8 @@
     } catch (error) {
       console.error('Erreur lors de la création du quiz:', error);
       popup.showPopup(
-        error instanceof Error ? error.message : "Une erreur est survenue",
-        "Erreur"
+          error instanceof Error ? error.message : "Une erreur est survenue",
+          "Erreur"
       );
     } finally {
       loading.value = false;
