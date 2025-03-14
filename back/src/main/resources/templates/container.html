@@ -4,65 +4,89 @@
     <title th:text="#{project}"></title>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
     <style>
+        :root {
+            --tw-bg-opacity: 1;
+            --main-color: rgb(173 73 225 / var(--tw-bg-opacity));
+            --main-color-light: rgb(200 120 255 / var(--tw-bg-opacity));
+        }
+        /* Police de base et reset */
         body {
-            background-color: #f2dabd;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
-
-        .logo {
-            width: 70px;
-            height: 70px;
-        }
-
+        /* Conteneur centré et limité en largeur */
         .container {
-            padding: 40px;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
         }
-
+        /* Section principale avec ombre portée et bords arrondis */
         .section {
-            margin-left: auto;
-            margin-right: auto;
-            min-width: 320px;
-            border: solid 1px #8c0b52;
-            border-radius: 6px;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
+        /* En-tête avec dégradé élégant utilisant la nouvelle couleur principale */
         .header {
-            background-color: #716e6e;
-            padding: 4px 4px 2px 4px;
+            background: linear-gradient(135deg, var(--main-color), var(--main-color-light));
+            padding: 20px;
+            text-align: center;
         }
-
-        .article {
-            padding: 15px 15px 15px 15px;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 1.2em;
-            background-color: #fff;
-            color: #333;
-        }
-
-        .project {
-            font-size: 50px;
-            padding-left: 10px;
-            padding-top: 5px;
-        }
-
-        .title {
+        .header .title {
             display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        .footer {
-            background-color: #716e6e;
-            height: 30px;
-            padding: 4px 4px 0 4px;
-            text-align: right;
+        .header .logo {
+            width: 60px;
+            height: auto;
+            max-height: 60px;
+            margin-right: 15px;
+            object-fit: contain;
         }
-
-        .article a {
-            color: #0066cc;
-            text-decoration: none;
+        .header .project {
+            font-size: 36px;
+            color: #ffffff;
             font-weight: bold;
         }
-
+        /* Corps du mail */
+        .article {
+            padding: 20px;
+            color: #333333;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .article a {
+            color: var(--main-color);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--main-color);
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+        }
         .article a:hover {
+            color: var(--main-color-light);
+            border-bottom-color: var(--main-color-light);
             text-decoration: underline;
+        }
+        /* Pied de page discret */
+        .footer {
+            background-color: #f0f0f0;
+            text-align: right;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: #777777;
+        }
+        /* Adaptation mobile */
+        @media only screen and (max-width: 600px) {
+            .header .project {
+                font-size: 28px;
+            }
+            .article {
+                font-size: 15px;
+            }
         }
     </style>
 </head>
@@ -72,7 +96,7 @@
         <div class="header">
             <div class="title">
                 <img alt="" class="logo" data-th-src="|cid:logo-ludotheque|" src=""/>
-                <span class="project" th:utext="#{project}"/>
+                <span class="project" th:utext="#{project}"></span>
             </div>
         </div>
 

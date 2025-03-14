@@ -54,7 +54,7 @@ public class SwaggerConfiguration {
    */
   @Bean
   public OpenAPI openApi() {
-    Info info = new Info().title("Template app [" + activeProfiles + "]").version(version);
+    Info info = new Info().title("MindBloom [" + activeProfiles + "]").version(version);
 
     String description = getMarkdownDescription();
     if (description != null) {
