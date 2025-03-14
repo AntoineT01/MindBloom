@@ -1,10 +1,6 @@
 <template>
   <div class="flex flex-col items-center w-full bg-gray-100 min-h-screen p-6">
-    <!-- Afficher des informations de débogage temporaires -->
-    <div v-if="debug" class="bg-gray-800 text-white p-4 mb-4 w-full text-xs">
-      <p>Debug - QuestionID: {{ questionId || 'non défini' }}</p>
-      <p>Debug - CurrentQuestion ID: {{ getCurrentQuestionId() }}</p>
-    </div>
+
 
     <div class="w-3/5 flex flex-col items-center bg-white shadow-lg rounded-lg p-6 h-3/5">
       <div class="w-full flex justify-center">
