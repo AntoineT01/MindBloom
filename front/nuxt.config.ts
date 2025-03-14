@@ -61,7 +61,7 @@ export default defineNuxtConfig({
   nitro: {
     devProxy: {
       '/api/': {
-        target: 'https://mindbloom-4ibi.onrender.com',
+        target: 'http://localhost:8081',
         changeOrigin: true,
         autoRewrite: true
       }
