@@ -1,0 +1,148 @@
+ARBORESCENCE DU PROJET NUXT
+==========================
+
+C:\Users\antoi\Documents\Fac\M2\S9\MindBloom
+|-- .idea
+|   |-- dataSources
+|   |   |-- 38d61c6f-e760-45fb-acba-ebfb4b35d48d
+|   |   |   |-- storage_v2
+|   |   |   |   |-- _src_
+|   |   |   |   |   |-- schema
+|   |-- shelf
+|   |   |-- Uncommitted_changes_before_Update_at_14_03_2025_12_00_[Changes]
+|   |   |-- Uncommitted_changes_before_Update_at_14_03_2025_13_25_[Changes]
+|   |   |-- Uncommitted_changes_before_Update_at_14_03_2025_13_25_[Changes]1
+|-- back
+|   |-- .gradle
+|   |   |-- 8.5
+|   |   |   |-- checksums
+|   |   |   |-- dependencies-accessors
+|   |   |   |-- executionHistory
+|   |   |   |-- fileChanges
+|   |   |   |-- fileHashes
+|   |   |   |-- vcsMetadata
+|   |   |-- buildOutputCleanup
+|   |   |-- vcs-1
+|   |-- .idea
+|   |-- .run
+|   |-- docker
+|   |   |-- timezoned-mysql
+|   |-- gradle
+|   |   |-- wrapper
+|   |-- src
+|   |   |-- main
+|   |   |   |-- java
+|   |   |   |   |-- com
+|   |   |   |   |   |-- tux
+|   |   |   |   |   |   |-- mindbloom
+|   |   |   |   |   |   |   |-- api
+|   |   |   |   |   |   |   |   |-- exceptions
+|   |   |   |   |   |   |   |   |-- impl
+|   |   |   |   |   |   |   |   |-- models
+|   |   |   |   |   |   |   |-- business
+|   |   |   |   |   |   |   |   |-- impl
+|   |   |   |   |   |   |   |   |-- mappers
+|   |   |   |   |   |   |   |-- config
+|   |   |   |   |   |   |   |   |-- database
+|   |   |   |   |   |   |   |   |-- env
+|   |   |   |   |   |   |   |   |-- exceptions
+|   |   |   |   |   |   |   |   |-- mail
+|   |   |   |   |   |   |   |   |-- mappers
+|   |   |   |   |   |   |   |   |-- security
+|   |   |   |   |   |   |   |   |   |-- impl
+|   |   |   |   |   |   |   |   |-- swagger
+|   |   |   |   |   |   |   |   |-- validation
+|   |   |   |   |   |   |   |   |   |-- annotation
+|   |   |   |   |   |   |   |   |   |-- validator
+|   |   |   |   |   |   |   |-- dao
+|   |   |   |   |   |   |   |   |-- db
+|   |   |   |   |   |   |   |   |   |-- entities
+|   |   |   |   |   |   |   |-- enums
+|   |   |   |   |   |   |   |-- utils
+|   |   |   |-- resources
+|   |   |   |   |-- db
+|   |   |   |   |   |-- data
+|   |   |   |   |   |-- migration
+|   |   |   |   |-- templates
+|   |   |   |   |   |-- images
+|   |   |-- test
+|   |   |   |-- java
+|   |   |   |   |-- com
+|   |   |   |   |   |-- tux
+|   |   |   |   |   |   |-- mindbloom
+|   |   |   |   |   |   |   |-- api
+|   |   |   |   |   |   |   |   |-- models
+|   |   |   |   |   |   |   |-- business
+|   |   |   |   |   |   |   |   |-- impl
+|   |   |   |   |   |   |   |-- dao
+|   |   |   |   |   |   |   |   |-- db
+|   |   |   |   |   |   |   |   |   |-- entities
+|   |   |   |   |   |   |   |-- util
+|   |   |   |   |   |   |   |   |-- helper
+|   |   |   |-- resources
+|-- front
+|   |-- .vscode
+|   |-- assets
+|   |   |-- css
+|   |   |   |-- tailwind.css
+|   |   |-- fonts
+|   |   |   |-- Orbitron
+|   |   |-- images
+|   |-- components
+|   |   |-- BaseButton.vue
+|   |   |-- BaseScore.vue
+|   |   |-- BaseTextField.vue
+|   |   |-- ConfirmPopup.vue
+|   |   |-- EventJoin.vue
+|   |   |-- GlobalPopup.vue
+|   |   |-- Profile.vue
+|   |   |-- QuizCard.vue
+|   |   |-- QuizzDisplay.vue
+|   |   |-- ReponseSlots.vue
+|   |   |-- SearchTextField.vue
+|   |   |-- SessionStatusBadge.vue
+|   |   |-- TheAnswerDisplay.vue
+|   |   |-- TheNavbar.vue
+|   |   |-- TheOpenAnswer.vue
+|   |   |-- TheQuizzRoom.vue
+|   |   |-- TheTimer.vue
+|   |-- composables
+|   |   |-- useAuth.ts
+|   |   |-- usePopup.ts
+|   |-- content
+|   |-- layouts
+|   |   |-- default.vue
+|   |-- pages
+|   |   |-- quiz-session
+|   |   |   |-- [sessioncode].vue
+|   |   |-- verify-email
+|   |   |   |-- [token].vue
+|   |   |-- accueil-connecte.vue
+|   |   |-- affichage.vue
+|   |   |-- connexion.vue
+|   |   |-- cree-quizz.vue
+|   |   |-- creeQuizz.vue
+|   |   |-- edit-profile.vue
+|   |   |-- exemple.vue
+|   |   |-- index.vue
+|   |   |-- inscription.vue
+|   |   |-- mes-quizz.vue
+|   |   |-- profil.vue
+|   |   |-- quizz.vue
+|   |   |-- result-page.vue
+|   |   |-- waiting-room.vue
+|   |-- public
+|   |   |-- icons
+|   |   |-- images
+|   |-- server
+|   |-- services
+|   |   |-- authService.ts
+|   |   |-- questionService.ts
+|   |   |-- quizSessionService.ts
+|   |   |-- quizzService.ts
+|   |-- stores
+|   |   |-- projects.ts
+|   |-- utils
+|   |   |-- encryption.ts
+|   |-- app.vue
+|   |-- nuxt.config.ts
