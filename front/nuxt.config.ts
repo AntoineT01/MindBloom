@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
@@ -39,7 +38,11 @@ export default defineNuxtConfig({
         { name: 'description', content: 'NDI - 2024 - TUX' }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
+        {
+          rel: 'stylesheet',
+          href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css'
+        }
       ],
       script: [
         {
