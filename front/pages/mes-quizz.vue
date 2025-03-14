@@ -26,11 +26,13 @@
         :isOpen="showConfirmPopup"
         :title="confirmTitle"
         :message="confirmMessage"
-        @confirm="handleConfirm"
-        @cancel="handleCancel"
+        :loading="confirmLoading"
+    @confirm="handleConfirm"
+    @cancel="handleCancel"
     />
   </div>
 </template>
+
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -42,6 +44,7 @@ import { getQuizzesByUser, getAllQuizSessions, startQuizSession, stopQuizSession
 
 const router = useRouter()
 const loading = ref(true)
+const confirmLoading = ref(false) // Variable pour le chargement sur le bouton de confirmation
 const quizzes = ref<Array<any>>([])
 const sessions = ref<Array<any>>([])
 
@@ -109,57 +112,60 @@ const generateSessionCode = () => {
 
 const handleConfirm = async () => {
   showConfirmPopup.value = false
-  if (confirmAction.value === 'start' && selectedQuiz.value) {
-    const payload = {
-      quizId: selectedQuiz.value.id,
-      sessionMode: "training",
-      status: "active",
-      startTime: new Date().toISOString(),
-      endTime: new Date().toISOString(),
-      sessionCode: generateSessionCode()
+  confirmLoading.value = true
+  try {
+    if (confirmAction.value === 'start' && selectedQuiz.value) {
+      const payload = {
+        quizId: selectedQuiz.value.id,
+        sessionMode: "training",
+        status: "active",
+        startTime: new Date().toISOString(),
+        endTime: new Date().toISOString(),
+        sessionCode: generateSessionCode()
+      }
+      await startQuizSession(payload)
     }
-    await startQuizSession(payload)
-  }
-  if (confirmAction.value === 'stop' && selectedQuiz.value && selectedQuiz.value.activeSession) {
-    const payload = {
-      id: selectedQuiz.value.activeSession.id,
-      quizId: selectedQuiz.value.id,
-      sessionMode: "training",
-      status: "stopped",
-      startTime: new Date().toISOString(),
-      endTime: new Date().toISOString(),
-      sessionCode: selectedQuiz.value.activeSession.sessionCode
+    if (confirmAction.value === 'stop' && selectedQuiz.value && selectedQuiz.value.activeSession) {
+      const payload = {
+        id: selectedQuiz.value.activeSession.id,
+        quizId: selectedQuiz.value.id,
+        sessionMode: "training",
+        status: "stopped",
+        startTime: new Date().toISOString(),
+        endTime: new Date().toISOString(),
+        sessionCode: selectedQuiz.value.activeSession.sessionCode
+      }
+      await stopQuizSession(payload)
     }
-    await stopQuizSession(payload)
+    if (confirmAction.value === 'reactivate' && selectedQuiz.value) {
+      const userData = getUserData();
+      const payload = {
+        id: selectedQuiz.value.id,
+        title: selectedQuiz.value.title,
+        description: selectedQuiz.value.description,
+        creator: userData,
+        isPublic: selectedQuiz.value.isPublic,
+        showAnswers: selectedQuiz.value.showAnswers,
+        showFinalScore: selectedQuiz.value.showFinalScore,
+        timeLimit: selectedQuiz.value.timeLimit,
+        createdAt: selectedQuiz.value.createdAt,
+        updatedAt: new Date().toISOString(),
+        status: "ACTIVE",
+        shareCode: selectedQuiz.value.shareCode
+      };
+      await updateQuizStatus(payload);
+    }
+    if (confirmAction.value === 'delete' && selectedQuiz.value) {
+      await deleteQuiz(selectedQuiz.value.id)
+    }
+  } catch (error) {
+    console.error("Une erreur s'est produite :", error)
+  } finally {
+    confirmLoading.value = false
+    confirmAction.value = null
+    selectedQuiz.value = null
+    await fetchData()
   }
-  if (confirmAction.value === 'reactivate' && selectedQuiz.value) {
-    // Récupération de l'utilisateur connecté (creator)
-    const userData = getUserData();
-
-    // Construction du payload complet
-    const payload = {
-      id: selectedQuiz.value.id,
-      title: selectedQuiz.value.title,
-      description: selectedQuiz.value.description,
-      creator: userData,
-      isPublic: selectedQuiz.value.isPublic,
-      showAnswers: selectedQuiz.value.showAnswers,
-      showFinalScore: selectedQuiz.value.showFinalScore,
-      timeLimit: selectedQuiz.value.timeLimit,
-      createdAt: selectedQuiz.value.createdAt,
-      updatedAt: new Date().toISOString(),
-      status: "ACTIVE",
-      shareCode: selectedQuiz.value.shareCode
-    };
-
-    // Appel de la fonction updateQuizStatus avec le payload complet
-    await updateQuizStatus(payload);
-  }  if (confirmAction.value === 'delete' && selectedQuiz.value) {
-    await deleteQuiz(selectedQuiz.value.id)
-  }
-  confirmAction.value = null
-  selectedQuiz.value = null
-  await fetchData()
 }
 
 const handleCancel = () => {
