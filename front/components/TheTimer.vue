@@ -14,6 +14,10 @@ export default {
     duration: {
       type: Number,
       required: true
+    },
+    questionId: {
+      type: [Number, String],
+      default: 0
     }
   },
   data() {
@@ -23,6 +27,14 @@ export default {
       interval: null,
       startTime: null
     };
+  },
+  watch: {
+    // Dès que questionId change, on réinitialise le timer
+    questionId(newVal, oldVal) {
+      if(newVal !== oldVal) {
+        this.resetTimer();
+      }
+    }
   },
   mounted() {
     this.startProgress();
@@ -43,12 +55,16 @@ export default {
         }
       }, 10);
     },
+    resetTimer() {
+      // On arrête l'intervalle en cours et on réinitialise le timer
+      clearInterval(this.interval);
+      this.remainingTime = this.duration;
+      this.progress = 100;
+      this.startProgress();
+    },
     formatTime(time) {
       return `${time.toFixed(1)}`;
     }
   }
 };
 </script>
-
-<style scoped>
-</style>

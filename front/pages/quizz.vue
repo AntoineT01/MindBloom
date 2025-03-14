@@ -1,14 +1,8 @@
 <template>
   <div>
     <!-- Affichage du quiz si les données sont chargées et qu'il reste des questions -->
-    <QuizzDisplay
-      v-if="loaded && !quizEnded"
-      :question="question"
-      :reponses="reponses"
-      :duration="duration"
-      :type="type"
-      @next="handleNext"
-    />
+    <QuizzDisplay v-if="loaded && !quizEnded" :question="question" :reponses="reponses" :duration="duration"
+      :type="type" @next="handleNext" />
     <!-- Affichage du message de fin du quiz -->
     <div v-else-if="quizEnded" class="flex items-center justify-center min-h-screen">
       <h2 class="text-2xl font-bold">Fin du quiz !</h2>
@@ -22,12 +16,13 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getQuizz } from '@/services/quizzService.ts'  // Ajustez le chemin selon votre projet
+import { getQuizzFromSession, getQuizz } from '@/services/quizzService.ts'  // Ajustez le chemin selon votre projet
+
 
 // La prop quizzId permet d'identifier le quiz à charger
 const props = defineProps({
-  quizzId: {
-    type: Number,
+  sessionCode: {
+    type: String,
     required: true
   }
 })
@@ -45,8 +40,10 @@ const questionsList = ref([])
 onMounted(async () => {
   try {
     // Appel à la fonction getQuizz en passant l'ID du quiz (converti en chaîne)
-    const quizResponse = await getQuizz(1)
-    
+
+    const getQuizzId = await getQuizzFromSession("SESSION1ABC");
+    const quizResponse = await getQuizz(getQuizzId)
+
     // Stocker l'ensemble des questions dans questionsList
     questionsList.value = quizResponse.quizz
 
@@ -68,9 +65,10 @@ function updateQuestion(index) {
 
   // Transformation du tableau de réponses (tableau de string) en objets avec lettre et texte.
   const letters = ['A', 'B', 'C', 'D', 'E', 'F']
-  reponses.value = currentQuestion.reponse.map((text, index) => ({
+  reponses.value = currentQuestion.reponse.map((rep, index) => ({
     letter: letters[index] || '',
-    text
+    text: rep.content,     // récupère le contenu de la réponse
+    isCorrect: rep.isCorrect // récupère la valeur de isCorrect
   }))
 }
 
